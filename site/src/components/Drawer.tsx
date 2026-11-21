@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Check, Copy, ExternalLink, X } from "lucide-react";
 import type { Detail } from "../types";
 import { TryIt } from "./TryIt";
+import { CommandFields } from "./CommandFields";
 
 const repoBase = (() => {
   const host = window.location.hostname;
@@ -113,7 +114,7 @@ export function Drawer({
               <pre>{String(item.payload || "—")}</pre>
             </div>
             <Field label="Op / command" value={String(item.op ?? "")} mono />
-            <Field label="Field layout" value={String(item.layout ?? "")} />
+            <CommandFields command={detail.item} />
             <Field label="Response" value={String(item.response ?? "")} />
             <Field label="Families / SKUs" value={String(item.families ?? "")} />
             <Field label="Source" value={String(item.source ?? "")} mono />
