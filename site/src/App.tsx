@@ -19,11 +19,13 @@ import {
   Hash,
   Layers,
   Menu,
+  Moon,
   Radio,
   RotateCcw,
   Search,
   SlidersHorizontal,
   Sparkles,
+  Sun,
   Terminal,
   Waves,
   Wifi,
@@ -156,6 +158,10 @@ export default function App() {
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [toast, setToast] = useState("");
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    const saved = localStorage.getItem("atlas-theme");
+    return saved === "dark" ? "dark" : "light";
+  });
 
   // devices
   const [devQ, setDevQ] = useState("");
@@ -188,6 +194,11 @@ export default function App() {
   const [selectedDoc, setSelectedDoc] = useState<string>("doc:PROTOCOLS");
 
   const [navOpen, setNavOpen] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("atlas-theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     fetch(new URL("data/site.json", document.baseURI))
@@ -341,7 +352,6 @@ export default function App() {
 
   return (
     <div className="app">
-      <div className="aurora" aria-hidden="true" />
       <header className="topbar">
         <button className="brand" onClick={() => setTab("overview")}>
           <span className="brand-mark">
@@ -375,6 +385,14 @@ export default function App() {
             <Search size={15} />
             <span>Search</span>
             <kbd>⌘K</kbd>
+          </button>
+          <button
+            className="icon-btn"
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            aria-label="Toggle colour theme"
+            title={theme === "light" ? "Switch to dark" : "Switch to light"}
+          >
+            {theme === "light" ? <Moon size={17} /> : <Sun size={17} />}
           </button>
           <a className="icon-btn" href={repoUrl} target="_blank" rel="noreferrer" aria-label="GitHub">
             <GitBranch size={18} />
@@ -790,11 +808,11 @@ function Overview({
     <>
       <section className="hero">
         <div className="hero-copy">
-          <div className="hero-badge"><span className="dot" /> Govee Home 7.7.21 · protocol research</div>
+          <div className="hero-badge"><span className="dot" /> Govee Home 7.7.21 · 45 protocol modules</div>
           <h1>
-            Every Govee byte,
+            The Govee
             <br />
-            <span className="grad">finally searchable.</span>
+            <em>protocol field manual.</em>
           </h1>
           <p>
             BLE frames, IoT JSON, segment effects, readings and device families from 45 decompiled

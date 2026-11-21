@@ -81,7 +81,7 @@ export function Drawer({
             : String(item.property);
   const subtitle =
     detail.kind === "command"
-      ? `${String(item.transport)} command · ${split}`
+      ? `${String(item.transport) === "iot" ? "IoT" : String(item.transport) === "ble-notify" ? "Notification" : "BLE"} command · ${split}`
       : detail.kind === "device"
         ? String(item.family)
         : detail.kind === "effect"
