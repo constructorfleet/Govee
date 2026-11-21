@@ -9,7 +9,7 @@ const repoBase = (() => {
     const project = window.location.pathname.split("/").filter(Boolean)[0];
     if (owner && project) return `https://github.com/${owner}/${project}`;
   }
-  return "https://github.com/Teagan42/govee";
+  return "https://github.com/constructorfleet/Govee";
 })();
 const repo = `${repoBase}/blob/main/`;
 

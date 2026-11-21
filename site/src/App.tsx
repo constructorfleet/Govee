@@ -336,7 +336,7 @@ export default function App() {
       const project = window.location.pathname.split("/").filter(Boolean)[0];
       if (owner && project) return `https://github.com/${owner}/${project}`;
     }
-    return "https://github.com/Teagan42/govee";
+    return "https://github.com/constructorfleet/Govee";
   })();
 
   return (
