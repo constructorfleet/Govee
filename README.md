@@ -31,6 +31,8 @@ Features:
 - Devices, Commands, Effects, Readings, Status and Docs tabs
 - filters by transport, split module, sub-mode and free text
 - detail drawer with payload, layout, response, source and copy buttons
+- **Try it out** builder for BLE frames and IoT MQTT envelopes, with generated controls
+- transport wrappers (`ptReal`, `multiSync`, …) separated from actual commands
 - Markdown deep-dive viewer
 
 ```bash

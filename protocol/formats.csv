@@ -1,0 +1,82 @@
+split,format,role,command_key,payload,source,notes
+split_pact_bbqnew,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}",BLeDataComm; Model,"{""cmd"":""ptReal"",""data"":{""command"":[""...""]}}"
+split_pact_bbqnew,op,read envelope,op,"{""command"":[""<base64 20-byte frame>""]}",Vm4BbqOpManager.parsePtResponse,"{""cmd"":""op"",""data"":{""command"":[""...""]}}"
+split_pact_bulblightstringv1,pt,transport wrapper,pt,"{""op"":""mode|sleep|wakeup|timer|scenes"",""value"":[""<base64 20-byte BLE frame>""]}",com/govee/bulblightstringv1/iot/CmdPt.java; com/govee/h7022/iot/CmdPt.java,
+split_pact_bulblightstringv1,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte BLE frame>""]}",com/govee/bulblightstringv2/iot/CmdPtReal.java; com/govee/bulblightv3/iot/CmdPtReal.java,
+split_pact_fanlight,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}",base2light/kt/iot/Cmd4PtReal; fanlight VM4Light.getCurCompleteCmd,
+split_pact_floorlamp,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}",h6071/iot/CmdPtReal.java; h60b0/pact/Comm.java; h60b1/pact/Comm.java,
+split_pact_floorlamp,ptUrl,transport wrapper,ptUrl,"{""url"":""string"",""command"":""base64 workspace""}",base2light/light/AbsOpCommDialog4BleIot CmdPtUrl,
+split_pact_h512x,op,read envelope,op,"{""command"":[""<base64 20-byte frame>""]}",h5127/pact/Model.java; H5127ParseUtils.e,"{""cmd"":""op"",""data"":{""command"":[""...""]}}"
+split_pact_h5901,ptReal,transport wrapper,ptReal,"{""command"":[""base64(20-byte frame)""]}",jadx-splits/split_pact_h5901/sources/com/govee/h5901/iot/H5901GWIotManager.java,
+split_pact_h5901,multiSync,transport wrapper,multiSync,"{""command"":[""base64 frames""]}",jadx-splits/split_pact_h5901/sources/com/govee/h5901/iot/H5901GWIotManager.java,
+split_pact_h6047,ptReal,transport wrapper,ptReal,"{""command"":[""base64(20-byte BLE frame)""]}",jadx-splits/split_pact_h6047/sources/com/govee/h6047/iot/CmdPtReal.java,
+split_pact_h6047,ptIot,transport wrapper,ptIot,"{""command"":[""base64""]}",jadx-splits/split_pact_h6047/sources/com/govee/h6047/iot/Cmd.java,
+split_pact_h604a,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte>""]}",jadx-splits/split_pact_h604a/sources/com/govee/h604a/iot/CmdPtReal.java,"{""msg"":{""type"":1,""cmd"":""ptReal"",""data"":{""command"":[""M...""]}}}"
+split_pact_h604a,ptIot,transport wrapper,ptIot,"{""raw"":""passthrough""}",iot/Cmd.java,"{""msg"":{""type"":1,""cmd"":""ptIot"",""data"":{}}}"
+split_pact_h6061,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}","cubelight/iot/CmdPtReal.java, h6067/iot/CmdPtReal.java",
+split_pact_h6062,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte>""],""musicCode"":""int"",""musicSensitivity"":""int"",""opVersion"":""int""}",jadx-splits/split_pact_h6062/sources/com/govee/striplight/iot/CmdPtReal.java,"{""msg"":{""type"":1,""cmd"":""ptReal"",""data"":{""command"":[""M...""]}}}"
+split_pact_h6079,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}","…/h6079/iot/CmdPtReal.java, …/h6020/iot/CmdPtReal.java","{msg:{...,cmd:""ptReal"",data:{command:[""MwUB...""]}}}"
+split_pact_h6079,pt,transport wrapper,pt,raw passthrough,…/h6079/iot/Cmd.java,
+split_pact_h6092,ptReal,transport wrapper,ptReal,"{""command"":[""base64(20-byte frame)""]}",jadx-splits/split_pact_h6092/sources/com/govee/h6092/iot/CmdPtReal.java,
+split_pact_h6092,pt,transport wrapper,pt,"{""command"":""raw passthrough""}",jadx-splits/split_pact_h6092/sources/com/govee/h6092/iot/Cmd.java,
+split_pact_h6099,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}","pact_h6099/iot/CmdPtReal.java, pact_h605b/iot/CmdPtReal.java","{""msg"":{""type"":1,""cmd"":""ptReal"",""data"":{""command"":[""...""]}}}"
+split_pact_h6099,ptIot,transport wrapper,ptIot,{},*/iot/Cmd.java,{}
+split_pact_h6099,IoTConnected,connection,IoTConnected,{},*/iot/Cmd.java,{}
+split_pact_h60ax,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte>""]}",jadx-splits/split_pact_h60ax/sources/com/govee/pact_h60a0/iot/CmdPtReal.java,"{""msg"":{""type"":1,""cmd"":""ptReal"",""data"":{""command"":[""M...""]}}}"
+split_pact_h61d3,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte>""]}",jadx-splits/split_pact_h61d3/sources/com/govee/h61d3/iot/CmdPtReal.java,"{""msg"":{""type"":1,""cmd"":""ptReal"",""data"":{""command"":[""M...""]}}}"
+split_pact_h6630,state,read envelope,state,"{""onOff"":""0|1"",""brightness"":""0-100""}",h6630/iot/Cmd.java; Info4Detail.Y,"{""cmd"":""state"",""data"":{""onOff"":1,""brightness"":80}}"
+split_pact_h6630,op,read envelope,op,"{""command"":[""<base64 20-byte frame>""]}",Info4Detail.Y,"{""cmd"":""op"",""data"":{""command"":[""...""]}}"
+split_pact_h6630,ptReal,transport wrapper,ptReal,"{""command"":[""<base64>""]}",h6630/iot/Cmd.java,"{""cmd"":""ptReal"",""data"":{""command"":[""...""]}}"
+split_pact_h6630,pt,transport wrapper,pt,"{""command"":[""<base64>""]}",h6630/iot/Cmd.java,"{""cmd"":""pt"",""data"":{""command"":[""...""]}}"
+split_pact_h6630,ptUrl,transport wrapper,ptUrl,"{""command"":""<url>""}",CmdPtUrl; GetIotCmdPtUrlLinkInfo; H6630GifParse,"{""cmd"":""ptUrl"",""data"":{...}}"
+split_pact_h6660,ptUrl,transport wrapper,ptUrl,"{""header"":""0x58 0x00 0x61"",""payload"":""base64 laser effect/drawing""}",jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/diy/LaserDiyParser.java,
+split_pact_h682021,ptReal,transport wrapper,ptReal,"{""command"":[""base64(20-byte frame)""]}",jadx-splits/split_pact_h682021/sources/com/govee/h682021/pact/Comm.java,
+split_pact_h6840,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}","base2light/pact/iot/CmdPtReal.java, h6609/iot/CmdPtReal.java","{""msg"":{""type"":1,""cmd"":""ptReal"",""data"":{""command"":[""...""]}}}"
+split_pact_h6840,state,read envelope,state,{},h6840/pact/Cmd.java,{}
+split_pact_h6840,op,read envelope,op,{},h6840/pact/Cmd.java,{}
+split_pact_h6840,IoTConnected,connection,IoTConnected,{},h6609/iot/Cmd.java,{}
+split_pact_h6840,ptIot,transport wrapper,ptIot,{},h6609/iot/Cmd.java,{}
+split_pact_h7050,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""],""isSetDynamic"":""bool""}",h7050/iot/CmdPtReal.java,"{""msg"":{""type"":1,""cmd"":""ptReal"",""data"":{""command"":[""...""]}}}"
+split_pact_h7050,pt,transport wrapper,pt,{},h7050/iot/Cmd.java,{}
+split_pact_h705a,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte>""]}",jadx-splits/split_pact_h705a/sources/com/govee/h705a/pact/Comm.java,"{""msg"":{""type"":1,""cmd"":""ptReal"",""data"":{""command"":[""M...""]}}}"
+split_pact_h7075,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}",base2light.pact.iot.CmdPtReal,"{""msg"":{""type"":1,""cmd"":""ptReal"",""data"":{""command"":[""M...""]}}}"
+split_pact_h70b1,pt,transport wrapper,pt,"{""op"":""mode|gradual|sleep|timer|wakeup"",""value"":[""<base64 frame>""]}",h70b1/origin/iot/CmdPt.java (origin Cmd),see CmdPt
+split_pact_h70b1,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 frame>""]}",h70b1/origin/iot/CmdPtReal.java; h70b3/iot/CmdPtReal.java; h70dx/iot/CmdPtReal.java,"{""msg"":{""cmd"":""ptReal"",""data"":{""command"":[""WjMB...""]}}}"
+split_pact_h70b1,ptUrl,transport wrapper,ptUrl,"{""url"":""<blob url>"",""op"":""...""}",h70b2/origin/iot/GetIotCmdPtUrlLinkInfo.java; h70b3/iot/GetIotCmdPtUrlLinkInfo.java; h70dx/scenes/GetIotCmdPtUrlLinkInfo.java,GetIotCmdPtUrlLinkInfo.getLongTimePtUrlLink
+split_pact_h7111,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}",base_h71xx/sku_base/iot/CmdPtReal.java,
+split_pact_h7111,multiSync,transport wrapper,multiSync,"{""command"":[""<base64 20-byte frame>""]}",base_h71xx/sku_base/iot/CmdMultiSync.java,
+split_pact_h7120,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte BLE frame>""]}",h7120/adjust/v1/IotOpV1.java,"{""msg"":{""type"":1,""cmd"":""ptReal"",""data"":{""command"":[""...""]}}}"
+split_pact_h7120,multiSync,transport wrapper,multiSync,{},base_h71xx/sku_base/iot/Cmd.java,{}
+split_pact_h7130,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>"",""...""]}",jadx-splits/split_pact_h7130/sources/com/govee/h7130/iot/CmdPtReal.java,"{""msg"":{""type"":1,""cmd"":""ptReal"",""data"":{""command"":[""M...""]}}}"
+split_pact_h7170,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}",base_h71xx/sku_base/iot/CmdPtReal.java,
+split_pact_h7170,multiSync,transport wrapper,multiSync,"{""command"":[""<base64 20-byte frame>""]}",base_h71xx/sku_base/iot/CmdMultiSync.java,
+split_pact_h7172,ptReal,transport wrapper,ptReal,"{""command"":[""base64(20-byte frame)""]}",jadx-splits/split_pact_h7172/sources/com/govee/h7172/adjust/v1/IotOpV1.java,
+split_pact_h7180,ptReal,transport wrapper,ptReal,"{""command"":[""base64(20-byte frame)""]}",jadx-splits/split_pact_h7180/sources/com/govee/h7180/adjust/v1/IotOpV1.java,
+split_pact_hollowlamp,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}",hollowlamp/iot/CmdPtReal.java; h6057/origin/iot/CmdPtReal.java; straightfloorlamp/iot/CmdPtReal.java; tablelampv1/iot/CmdPtReal.java,
+split_pact_humidifier,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}",h7141/iot/CmdPtReal.java,"{""cmd"":""ptReal"",""data"":{""command"":[""M...""]}}"
+split_pact_humidifier,op,read envelope,op,"{""command"":[""<base64 20-byte frame>""]}","h7141/iot/{Cmd,ResultPt}.java; h7140/iot/CmdStatusParseV1.java","{""cmd"":""op"",""data"":{""command"":[""...""]}}"
+split_pact_iceMachine,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}",IceApplicationImp CmdBuilder; GMessageSingleReadWrite,"{""cmd"":""ptReal"",""data"":{""command"":[""...""]}}"
+split_pact_iceMachine,op,read envelope,op,"{""command"":[""<base64 20-byte frame>""]}",H81*Model.k0,"{""cmd"":""op"",""data"":{""command"":[""...""]}}"
+split_pact_iceMachine,multiSync,transport wrapper,multiSync,"{""command"":[""<base64>""]}",IceApplicationImp (CmdMultiSync),"{""cmd"":""multiSync"",""data"":{""command"":[""...""]}}"
+split_pact_leaknew,op,read envelope,op,"{""command"":[""<base64 20-byte frame>""]}",pact/Model; SubDevice4OpResultParse,"{""cmd"":""op"",""data"":{""command"":[""...""]}}"
+split_pact_leaknew,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}",base2light CmdPtReal,"{""cmd"":""ptReal"",""data"":{""command"":[""...""]}}"
+split_pact_outdoorlight,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}",h7086/iot/CmdPtReal.java; h7056/pact/bleiot/OpDiyCommDialog4BleIot.java,"{""msg"":{""cmd"":""ptReal"",""data"":{""command"":[""WjMB...""]}}}"
+split_pact_plugnew,state,read envelope,state,"{""onOff"":""int bitmask""}",h5080/iot/Cmd.java; CmdStatusV0.State,"{""cmd"":""state"",""data"":{""onOff"":1}}"
+split_pact_plugnew,op,read envelope,op,"{""command"":[""<base64 20-byte frame>""]}",h5080/iot/Cmd.java; ResultPt,"{""cmd"":""op"",""data"":{""command"":[""...""]}}"
+split_pact_plugnew,ptReal,transport wrapper,ptReal,"{""command"":[""<base64>""]}",h5080/iot/CmdPtReal.java,"{""cmd"":""ptReal"",""data"":{""command"":[""...""]}}"
+split_pact_plugnew,ptIot,transport wrapper,ptIot,"{""command"":[""<base64>""]}",h5080/iot/Cmd.java (H5089 OTA),"{""cmd"":""ptIot"",""data"":{""command"":[""...""]}}"
+split_pact_rgbiclight,pt,transport wrapper,pt,"{""op"":""mode|gradual|sleep|wakeup|timer"",""value"":[""base64 20-byte frame""]}","rgbiclight/h6160/iot/CmdPt.java, dreamcolorlightv1/iot/CmdPt.java",
+split_pact_rgbiclight,ptReal,transport wrapper,ptReal,"{""command"":[""base64 20-byte frame""]}","rgbiclight/h6160/iot/CmdPtReal.java, dreamcolorlightv1/iot/CmdPtReal.java",
+split_pact_rgbiclight,state,read-key,state (read key),"{""brightness"":""int"",""mode"":""int"",""onOff"":""0|1"",""wifiHardVersion"":""str"",""wifiSoftVersion"":""str""}","dreamcolorlightv1/iot/CmdStatusV0.java, CmdStatusV1.java",
+split_pact_rgbiclight,op,read-key,op (read key),"{""pt|ptReal payloads"":""base64""}",dreamcolorlightv1/iot/Cmd.java#getCmdReadParseKey,
+split_pact_rgblight,pt,transport wrapper,pt,"{""op"":""mode|sleep|wakeup|timer"",""value"":[""base64(20-byte BLE frame)""]}",.../h6159/iot/CmdPt.java,"{""msg"":{...,""cmd"":""pt"",""data"":{""op"":""mode"",""value"":[""<b64 A5 packet>"",""<b64 A3 packet>"",""<b64 05/0A mode frame>""]}}}"
+split_pact_rgblight,ptReal,transport wrapper,ptReal,"{""command"":[""base64(20-byte BLE frame)""]}",.../h6159/iot/CmdPtReal.java,"{""msg"":{...,""cmd"":""ptReal"",""data"":{""command"":[""<b64 20B frame>"",...]}}}"
+split_pact_rgblight,IoTConnected,connection,IoTConnected,{},.../h6104/iot/Cmd.java,"{""msg"":{...,""cmd"":""IoTConnected""}}"
+split_pact_tcsocket,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}",H5770Repository; GxMessageBuilderKt,"{""cmd"":""ptReal"",""data"":{""command"":[""...""]}}"
+split_pact_tcsocket,ptIot,transport wrapper,ptIot,"{""command"":[""<base64 20-byte frame>""]}",H5770SharedViewModel.writeOtaInfo,"{""cmd"":""ptIot"",""data"":{""command"":[""...""]}}"
+split_pact_tcsocket,op,read envelope,op,"{""command"":[""<base64 20-byte frame>""]}",H5770Repository,"{""cmd"":""op"",""data"":{""command"":[""...""]}}"
+split_pact_thnew,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}",IotOpManager; SettingOpManager,"{""cmd"":""ptReal"",""data"":{""command"":[""...""]}}"
+split_pact_thnew,multiSync,transport wrapper,multiSync,"{""command"":[""<base64 20-byte frame>""]}",IotOpManager; Controller4MultiTrigger,"{""cmd"":""multiSync"",""data"":{""command"":[""...""]}}"
+split_pact_tvlightv4,pt,transport wrapper,pt,"{""op"":""mode|gradual|sleep|timer|wakeup"",""value"":[""<base64 20-byte frame>""]}",pact_tvlightv4/iot/CmdPt.java,"{""msg"":{""cmd"":""pt"",""data"":{""op"":""mode"",""value"":[""WjMB...""]}}}"
+split_pact_tvlightv4,ptReal,transport wrapper,ptReal,"{""command"":[""<base64 20-byte frame>""]}",pact_tvlightv4/iot/v2/CmdPtReal.java,"{""msg"":{""cmd"":""ptReal"",""data"":{""command"":[""WjMB...""]}}}"
+split_pact_tvlightv4,IoTConnected,connection,IoTConnected,"{""value"":[""<base64>""]}",pact_tvlightv2/iot/CmdBulb.java,legacy v2 bulb passthrough

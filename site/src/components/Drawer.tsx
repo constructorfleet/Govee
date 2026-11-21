@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Check, Copy, ExternalLink, X } from "lucide-react";
 import type { Detail } from "../types";
+import { TryIt } from "./TryIt";
 
 const repoBase = (() => {
   const host = window.location.hostname;
@@ -164,6 +165,10 @@ export function Drawer({
             <Field label="Carrier" value={String(item.carrier ?? "")} />
             <Field label="Source" value={String(item.source ?? "")} mono />
           </>
+        )}
+
+        {detail.kind === "command" && detail.item.transport !== "ble-notify" && (
+          <TryIt key={detail.item.id} command={detail.item} onCopied={onCopied} />
         )}
 
         <div className="drawer-actions">

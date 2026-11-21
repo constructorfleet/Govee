@@ -20,6 +20,7 @@ import {
   Layers,
   Menu,
   Moon,
+  Play,
   Radio,
   RotateCcw,
   Search,
@@ -173,6 +174,7 @@ export default function App() {
   const [cmdQ, setCmdQ] = useState("");
   const [cmdTransport, setCmdTransport] = useState("all");
   const [cmdSplit, setCmdSplit] = useState("all");
+  const [cmdFormat, setCmdFormat] = useState("all");
   const [cmdPage, setCmdPage] = useState(1);
 
   // effects
@@ -242,7 +244,7 @@ export default function App() {
   }, [paletteOpen, detail]);
 
   useEffect(() => setDevPage(1), [devQ, devTransport, devSplit]);
-  useEffect(() => setCmdPage(1), [cmdQ, cmdTransport, cmdSplit]);
+  useEffect(() => setCmdPage(1), [cmdQ, cmdTransport, cmdSplit, cmdFormat]);
   useEffect(() => setFxPage(1), [fxQ, fxSplit, fxSub]);
   useEffect(() => setRdPage(1), [rdQ, rdSplit]);
 
@@ -263,6 +265,7 @@ export default function App() {
     return data.commands.filter((c) => {
       if (cmdTransport !== "all" && c.transport !== cmdTransport) return false;
       if (cmdSplit !== "all" && c.split !== cmdSplit) return false;
+      if (cmdFormat !== "all" && c.format !== cmdFormat && !c.cloud.split("|").includes(cmdFormat)) return false;
       if (!q) return true;
       return `${c.name} ${c.op} ${c.payload} ${c.layout} ${c.source} ${c.families} ${c.split}`
         .toLowerCase()
@@ -496,13 +499,36 @@ export default function App() {
                   </button>
                 ))}
               </div>
+              <Select value={cmdFormat} onChange={setCmdFormat} label="Format">
+                <option value="all">All formats</option>
+                <option value="BLE frame">BLE frame</option>
+                <option value="BLE notify">BLE notify</option>
+                <option value="IoT JSON">IoT JSON</option>
+                <option value="ptReal">via ptReal</option>
+                <option value="ptIot">via ptIot</option>
+                <option value="pt">via pt</option>
+                <option value="multiSync">via multiSync</option>
+                <option value="ptUrl">via ptUrl</option>
+              </Select>
               <Select value={cmdSplit} onChange={setCmdSplit} label="Split">
                 <option value="all">All split modules</option>
                 {splitOptions.map((s) => <option key={s} value={s}>{s}</option>)}
               </Select>
-              <button className="ghost-btn" onClick={() => { setCmdQ(""); setCmdTransport("all"); setCmdSplit("all"); }}>
+              <button className="ghost-btn" onClick={() => { setCmdQ(""); setCmdTransport("all"); setCmdSplit("all"); setCmdFormat("all"); }}>
                 <RotateCcw size={14} /> Reset
               </button>
+            </div>
+            <div className="formats-panel">
+              <div className="formats-title">Transport formats — not commands</div>
+              <p>
+                <code>ptReal</code>, <code>ptIot</code>, <code>pt</code>, <code>multiSync</code> and <code>ptUrl</code> are
+                cloud envelopes. The actual command is the BLE frame inside. <code>op</code>/<code>state</code> are read envelopes/keys.
+              </p>
+              <div className="format-chips">
+                {[...new Set((data.formats || []).map((f) => f.format))].map((f) => (
+                  <span key={f}>{f}</span>
+                ))}
+              </div>
             </div>
             <div className="result-line">
               <b>{commands.length}</b> commands
@@ -516,11 +542,12 @@ export default function App() {
                   <thead>
                     <tr>
                       <th>Type</th>
-                      <th>Name</th>
+                      <th>Command</th>
+                      <th>Format</th>
                       <th>Op / cmd</th>
                       <th>Payload</th>
                       <th>Split</th>
-                      <th>Source</th>
+                      <th>Try</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -528,10 +555,28 @@ export default function App() {
                       <tr key={c.id} onClick={() => setDetail({ kind: "command", item: c })}>
                         <td><TransportBadge t={c.transport} /></td>
                         <td className="name-cell"><Hi text={c.name} q={cmdQ} /></td>
+                        <td className="format-cell">
+                          <span className="format-badge">{c.format}</span>
+                          {c.cloud && <span className="cloud-badge">via {c.cloud.replaceAll("|", " / ")}</span>}
+                        </td>
                         <td className="mono op-cell"><Hi text={c.op} q={cmdQ} /></td>
                         <td className="payload-cell mono" title={c.payload}><Hi text={c.payload || "—"} q={cmdQ} /></td>
                         <td><SplitButton split={c.split} onClick={() => openDoc(c.split)} /></td>
-                        <td className="source-cell mono" title={c.source}><Hi text={c.source} q={cmdQ} /></td>
+                        <td>
+                          {c.transport !== "ble-notify" ? (
+                            <button
+                              className="try-mini"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDetail({ kind: "command", item: c });
+                              }}
+                            >
+                              <Play size={11} /> Try
+                            </button>
+                          ) : (
+                            <span className="muted">—</span>
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

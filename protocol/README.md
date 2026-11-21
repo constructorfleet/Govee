@@ -11,7 +11,7 @@ Govee Home 7.7.21 `pact_*` split modules, traced against the fully decompiled 7.
   deep dive in one file (~700 KB).
 - **[DEVICES.md](DEVICES.md)** — all 617 SKU rows: family, transports, pact tuple, goodsType.
 - **[COMMANDS.md](COMMANDS.md)** — all 968 BLE command rows + 249 notification rows +
-  300 IoT command rows, with opcodes, payloads, layouts and source files.
+  219 IoT command rows + 81 transport-format rows, with opcodes, payloads, layouts and source files.
 - **[EFFECTS.md](EFFECTS.md)** — all 358 dynamic effect / colour / scene / DIY / music /
   motion payload layouts.
 - **[SEGMENT-CONTROL.md](SEGMENT-CONTROL.md)** — segment color masks, group vs per-segment
@@ -28,9 +28,9 @@ Govee Home 7.7.21 `pact_*` split modules, traced against the fully decompiled 7.
 
 Machine-readable:
 
-- `data/ALL.json` — merged index (devices, commands, effects, readings)
+- `data/ALL.json` — merged index (devices, commands, transport formats, effects, readings)
 - `data/split_pact_*.json`, `data/split_pfdv1.json` — per-split extracts
-- `devices.csv`, `commands.csv`, `effects.csv`, `readings.csv`,
+- `devices.csv`, `commands.csv`, `formats.csv`, `effects.csv`, `readings.csv`,
   `status-properties.csv`
 
 Per-family detail: `splits/<split>.md`.
@@ -43,7 +43,8 @@ Per-family detail: `splits/<split>.md`.
 | SKU rows | 617 |
 | BLE command rows | 968 |
 | BLE notifications / readings | 249 |
-| IoT command rows | 300 |
+| IoT command rows | 219 |
+| Transport format rows (`ptReal`/`multiSync`/…) | 81 |
 | Dynamic effect rows | 358 |
 | Status properties catalogued | 10 |
 | SKUs advertising Matter | 77 |

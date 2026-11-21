@@ -42,6 +42,7 @@ for (const name of fs.readdirSync(splitDir).filter((f) => f.endsWith(".md")).sor
 
 const commands = all.commands.map((c, i) => ({ ...c, id: `cmd-${i}` }));
 const devices = all.devices.map((d, i) => ({ ...d, id: `dev-${i}` }));
+const formats = (all.formats || []).map((f, i) => ({ ...f, id: `fmt-${i}` }));
 const effects = all.effects.map((e, i) => ({ ...e, id: `fx-${i}` }));
 const readings = all.readings.map((r, i) => ({ ...r, id: `read-${i}` }));
 const status = all.status_properties.map((s, i) => ({ ...s, id: `status-${i}` }));
@@ -53,6 +54,7 @@ const site = {
   splits: all.splits,
   devices,
   commands,
+  formats,
   effects,
   readings,
   status_properties: status,

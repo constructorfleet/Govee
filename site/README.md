@@ -28,4 +28,8 @@ subpath). The GitHub Actions workflow deploys `dist/` on every push to `main`.
 - Devices, commands, effects, readings, status and docs tabs
 - Filters by transport, split module, sub-mode and free text
 - Detail drawer with payload, layout, response, source path and copy buttons
+- **Try it out** builder: BLE frame + BCC, base64 and MQTT/`ptReal` JSON for BLE commands;
+  editable MQTT JSON for IoT commands
+- Transport formats (`ptReal`, `ptIot`, `pt`, `multiSync`, `ptUrl`, read envelopes) are
+  separated from actual commands
 - Docs tab renders the per-split deep dives from Markdown

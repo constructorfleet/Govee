@@ -592,6 +592,62 @@ main { max-width: 1460px; margin: 0 auto; padding: 0 30px 80px; }
 .foot { display: flex; flex-wrap: wrap; gap: 10px 22px; justify-content: space-between; max-width: 1460px; margin: 0 auto; padding: 20px 30px 30px; border-top: 1px solid var(--line); font-size: 9px; color: var(--dim); font-family: var(--mono); text-transform: uppercase; letter-spacing: .06em; }
 .foot span { display: inline-flex; align-items: center; gap: 5px; }
 
+
+/* ---------- formats + try it ---------- */
+.formats-panel {
+  margin: 10px 0 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--accent);
+  background: var(--surface);
+}
+.formats-title { font-family: var(--mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.formats-panel p { margin: 5px 0 8px; color: var(--muted); font-size: 11px; max-width: 900px; }
+.formats-panel code { font-family: var(--mono); font-size: 10px; background: var(--surface-2); border: 1px solid var(--line); padding: 0 3px; }
+.format-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.format-chips span { padding: 1px 6px; border: 1px solid var(--line); font-family: var(--mono); font-size: 8.5px; color: var(--dim); text-transform: uppercase; letter-spacing: .05em; }
+.format-cell { min-width: 115px; }
+.format-badge { display: block; font-family: var(--mono); font-size: 8.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.cloud-badge { display: block; margin-top: 2px; font-family: var(--mono); font-size: 8px; color: var(--accent); }
+.try-mini { display: inline-flex; align-items: center; gap: 4px; padding: 3px 7px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); font-size: 9px; text-transform: uppercase; letter-spacing: .06em; }
+.try-mini:hover { color: var(--accent); border-color: var(--accent); }
+
+.try-it { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
+.try-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.try-head h3 { margin: 4px 0 3px; font-family: var(--serif); font-size: 22px; font-weight: 500; letter-spacing: -.02em; }
+.try-head p { margin: 0; color: var(--muted); font-size: 10.5px; max-width: 420px; }
+.try-refresh { display: inline-flex; align-items: center; gap: 5px; padding: 5px 8px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); font-size: 9px; text-transform: uppercase; letter-spacing: .05em; }
+.try-refresh:hover { color: var(--accent); border-color: var(--accent); }
+.try-toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; padding: 8px 9px; border: 1px solid var(--line); background: var(--surface-2); }
+.try-toggle { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+.try-op { display: inline-flex; align-items: center; gap: 6px; color: var(--dim); font-family: var(--mono); font-size: 8.5px; text-transform: uppercase; }
+.try-op input { width: 36px; padding: 3px 4px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-family: var(--mono); font-size: 10px; text-align: center; }
+.try-form { display: grid; gap: 7px; margin-bottom: 10px; padding: 10px; border: 1px solid var(--line); background: var(--surface); }
+.try-row { display: grid; grid-template-columns: 110px 1fr auto; align-items: center; gap: 9px; }
+.try-row > label { color: var(--dim); font-family: var(--mono); font-size: 8.5px; text-transform: uppercase; letter-spacing: .07em; }
+.try-row input[type="text"], .try-row input:not([type]), .try-row input[type="number"], .try-row select {
+  width: 100%; padding: 5px 7px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); font-family: var(--mono); font-size: 10.5px;
+}
+.try-row input[type="range"] { width: 100%; accent-color: var(--accent); }
+.try-row input[type="color"] { width: 38px; height: 26px; padding: 1px; border: 1px solid var(--line); background: var(--surface-2); }
+.try-row .mono { color: var(--muted); font-size: 9.5px; min-width: 34px; text-align: right; }
+.try-raw { grid-template-columns: 110px 1fr; }
+.try-note { margin: 2px 0 0; color: var(--dim); font-size: 9.5px; line-height: 1.5; }
+.try-actions { display: flex; gap: 7px; margin-top: 4px; }
+.try-copy { display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); font-size: 8.5px; text-transform: uppercase; letter-spacing: .05em; }
+.try-copy:hover { color: var(--accent); border-color: var(--accent); }
+.try-output-head { display: flex; align-items: center; justify-content: space-between; margin: 10px 0 4px; color: var(--dim); font-family: var(--mono); font-size: 8.5px; text-transform: uppercase; letter-spacing: .08em; }
+.try-output { margin: 0; padding: 9px 10px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); font-family: var(--mono); font-size: 10px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; max-height: 220px; overflow: auto; }
+.frame-preview { display: flex; flex-wrap: wrap; gap: 2px; }
+.frame-preview span { display: grid; place-items: center; min-width: 25px; height: 24px; border: 1px solid var(--line); background: var(--surface-2); font-family: var(--mono); font-size: 8.5px; color: var(--muted); }
+.frame-preview .fp-pro { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.frame-preview .fp-cmd { border-color: var(--ink); color: var(--ink); }
+.frame-preview .fp-bcc { border-color: var(--notify); color: var(--notify); background: var(--notify-soft); }
+.seg-grid { display: flex; flex-wrap: wrap; gap: 2px; }
+.seg { min-width: 23px; height: 23px; padding: 0 4px; border: 1px solid var(--line); background: var(--surface-2); color: var(--dim); font-family: var(--mono); font-size: 8px; }
+.seg.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.seg:hover { border-color: var(--accent); }
+
 /* ---------- responsive ---------- */
 @media (max-width: 1180px) {
   .hero { grid-template-columns: 1fr; gap: 38px; padding: 52px 0 44px; }

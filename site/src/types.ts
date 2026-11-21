@@ -15,11 +15,24 @@ export type Command = {
   split: string;
   families: string;
   transport: "ble" | "ble-notify" | "iot";
+  format: string;
+  cloud: string;
   name: string;
   op: string;
   payload: string;
   layout: string;
   response: string;
+  source: string;
+  notes: string;
+};
+
+export type Format = {
+  id: string;
+  split: string;
+  format: string;
+  role: string;
+  command_key: string;
+  payload: string;
   source: string;
   notes: string;
 };
@@ -93,6 +106,7 @@ export type SiteData = {
   splits: SplitMeta[];
   devices: Device[];
   commands: Command[];
+  formats: Format[];
   effects: Effect[];
   readings: Reading[];
   status_properties: StatusProperty[];

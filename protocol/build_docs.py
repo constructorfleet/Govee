@@ -70,26 +70,40 @@ def devices_md():
 
 def commands_md():
     out = ["# Command catalog (BLE and IoT)", "",
-           "Every unique command row collected from the 45 device-protocol split modules. "
-           "Rows are deduplicated per split: a command shared by many SKUs appears once and its "
-           "scope is the split's SKU set. `op` is `proType/cmdType` for BLE and the IoT `cmd` "
-           "name for IoT. Payloads are shown after the 20-byte BLE header; see "
-           "`PROTOCOLS.md` for framing.", ""]
+           "Actual device commands, deduplicated per split: a command shared by many SKUs appears "
+           "once and its scope is the split's SKU set. `op` is `proType/cmdType` for BLE and the "
+           "IoT `cmd` name for IoT. Payloads are shown after the 20-byte BLE header; see "
+           "`PROTOCOLS.md` for framing.", "",
+           "**Transport wrappers are not commands.** `pt`, `ptReal`, `ptIot`, `multiSync` and "
+           "`ptUrl` are cloud envelopes that carry one or more 20-byte frames; `op`/`state` are "
+           "read envelopes/keys. They are listed separately under each split's "
+           "**Transport formats** table. The actual command is the semantic BLE/IoT command row "
+           "below (e.g. `timer write` with its `iceSize` field).", ""]
     for s in ALL["splits"]:
         rows = [c for c in ALL["commands"] if c["split"] == s["split"]]
-        if not rows:
+        fmt = [f for f in ALL.get("formats", []) if f["split"] == s["split"]]
+        if not rows and not fmt:
             continue
         out += [f"## {s['split']}", ""]
+        if fmt:
+            out += ["### Transport formats (not commands)", "",
+                    "| Format | Role | Payload / data | Source |",
+                    "|---|---|---|---|"]
+            for f in fmt:
+                out.append("| `{}` | {} | {} | `{}` |".format(
+                    esc(f["format"]), esc(f["role"]), esc(f["payload"]), esc(f["source"])))
+            out.append("")
         for transport, heading in (("ble", "BLE commands"), ("ble-notify", "BLE notifications / readings"), ("iot", "IoT commands")):
             tr = [c for c in rows if c["transport"] == transport]
             if not tr:
                 continue
             out += [f"### {heading}", "",
-                    "| # | Name | Op / cmd | Payload / data | Layout / schema | Response | Source |",
-                    "|---:|---|---|---|---|---|---|"]
+                    "| # | Command | Format / cloud | Op / cmd | Payload / data | Layout / schema | Response | Source |",
+                    "|---:|---|---|---|---|---|---|---|"]
             for i, c in enumerate(tr, 1):
-                out.append("| {} | {} | `{}` | {} | {} | {} | `{}` |".format(
-                    i, esc(c["name"]), esc(c["op"]), esc(c["payload"]), esc(c["layout"]),
+                cloud = f"{c.get('format','')}" + (f" via {c['cloud']}" if c.get("cloud") else "")
+                out.append("| {} | {} | {} | `{}` | {} | {} | {} | `{}` |".format(
+                    i, esc(c["name"]), esc(cloud), esc(c["op"]), esc(c["payload"]), esc(c["layout"]),
                     esc(c["response"]), esc(c["source"])))
             out.append("")
     return "\n".join(out)
@@ -169,6 +183,7 @@ extracts the wire-level parts and leaves the UI behind.
 | BLE command rows (deduplicated per split) | {ble} |
 | BLE notification / reading rows | {notify} |
 | IoT command rows | {iot} |
+| Transport format rows (ptReal/multiSync/etc.) | {formats} |
 | Dynamic effect / mode-payload rows | {fx} |
 | Status properties catalogued | {status} |
 | SKUs advertising Matter | {matter} |
@@ -196,7 +211,7 @@ absent from the 7.7.10/7.7.21 bundles. Its scaffold and capabilities are documen
 | `MISSING-DEVICES.md` | Devices referenced by the app but absent from the bundles (H7184 composter) |
 | `READINGS.md` | Every notification and telemetry/status schema |
 | `STATUS-PROPERTIES.md` | Status flags vs. settings vs. UI-derived properties (`waterShortage`, `tankEmpty`, `waterLack`, …) |
-| `devices.csv` / `commands.csv` / `effects.csv` / `readings.csv` / `status-properties.csv` | The same data as CSV |
+| `devices.csv` / `commands.csv` / `formats.csv` / `effects.csv` / `readings.csv` / `status-properties.csv` | The same data as CSV |
 | `data/ALL.json` | Merged machine-readable index (devices + commands + effects + readings) |
 | `data/split_*.json` | Per-split machine-readable extract |
 | `splits/split_*.md` | Per-split deep dive with source trails |
@@ -305,12 +320,15 @@ Commands are JSON strings built by `makeCmdStr(AbsCmd)`:
 `type` = 1 for write, 0 for read/query. Incoming protocol variants `V0`/`V1`/`V2`
 (`IotMsgProType`) wrap device state differently; splits declare which they parse.
 
-Common command names: `online`, `turn`, `brightness`, `status`, `color`, `colorTem`,
-`colorwc`, `mode`, `timer`, `pt`, `ptReal`, `multiSync`, `ptUrl`, plus appliance commands
-(`workMode`, `oscillate`, `humidity`, `temperature`, `ice`, `cook`, …).
+Common actual commands: `online`, `turn`, `brightness`, `status`, `color`, `colorTem`,
+`colorwc`, `mode`, `timer`, plus appliance commands (`workMode`, `oscillate`, `humidity`,
+`temperature`, `iceSize`, `cook`, …).
 
-`ptReal` payload is `{"command": ["<base64(20-byte BLE frame)>", ...]}` — the BLE tables in
-this collection therefore also describe cloud control for BLE+IoT devices.
+`pt`, `ptReal`, `ptIot`, `multiSync` and `ptUrl` are **transport envelopes**, not command
+names. `ptReal` payload is `{"command": ["<base64(20-byte BLE frame)>", ...]}`; the wrapped
+BLE frame's semantic command (e.g. `timer write` with `iceSize`) is the real command. `op`
+and `state` are read envelopes/keys. The catalogs keep envelope rows under **Transport
+formats** so the command tables only show actual commands.
 
 ## 4. Family map
 
@@ -472,6 +490,7 @@ def main():
         ("{ble}", meta["ble_command_rows"]),
         ("{notify}", meta["ble_notification_rows"]),
         ("{iot}", meta["iot_command_rows"]),
+        ("{formats}", meta.get("format_rows", 0)),
         ("{fx}", meta["dynamic_effect_rows"]),
         ("{status}", meta.get("status_property_rows", 0)),
         ("{matter}", mt),

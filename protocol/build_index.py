@@ -10,6 +10,22 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(ROOT, "data")
 SPLITS = os.path.join(ROOT, "splits")
 
+# IoT command names that are transport/read envelopes, not device commands.
+WRAPPER_KEYS = {
+    "ptreal": ("ptReal", "transport wrapper"),
+    "ptiot": ("ptIot", "transport wrapper"),
+    "multisync": ("multiSync", "transport wrapper"),
+    "pt": ("pt", "transport wrapper"),
+    "pturl": ("ptUrl", "transport wrapper"),
+    "op": ("op", "read envelope"),
+    "state": ("state", "read envelope"),
+    "state (read key)": ("state", "read-key"),
+    "op (read key)": ("op", "read-key"),
+    "iotconnected": ("IoTConnected", "connection"),
+}
+CLOUD_ORDER = ["ptReal", "ptIot", "pt", "multiSync", "ptUrl"]
+CLOUD_KEYS = set(CLOUD_ORDER)
+
 
 def load_all():
     out = []
@@ -64,6 +80,8 @@ def main():
     effects = []
     readings = []
     status_properties = []
+    formats = []
+    iot_counts = {}
 
     for d in splits:
         spl = d.get("split") or d["_file"][:-5]
@@ -81,12 +99,40 @@ def main():
                 ("notes", s.get("notes", "")),
             ]))
 
+        iot = d.get("iot") or {}
+        iot_rows = iot.get("commands") or []
+        iot_actual = []
+        cloud_names = set()
+        for c in iot_rows:
+            raw_name = str(c.get("cmd", c.get("name", "")))
+            key = raw_name.strip().lower()
+            if key in WRAPPER_KEYS:
+                canonical, role = WRAPPER_KEYS[key]
+                if canonical in CLOUD_KEYS:
+                    cloud_names.add(canonical)
+                formats.append(OrderedDict([
+                    ("split", spl),
+                    ("format", canonical),
+                    ("role", role),
+                    ("command_key", raw_name),
+                    ("payload", flatten(c.get("data", c.get("fields", "")))),
+                    ("source", c.get("source", "")),
+                    ("notes", c.get("example", "")),
+                ]))
+            else:
+                iot_actual.append(c)
+        cloud = "|".join(n for n in CLOUD_ORDER if n in cloud_names)
+        iot_actual_count = len(iot_actual)
+        iot_counts[spl] = iot_actual_count
+
         ble = d.get("ble") or {}
         for c in ble.get("commands") or []:
             commands.append(OrderedDict([
                 ("split", spl),
                 ("families", fam),
                 ("transport", "ble"),
+                ("format", "BLE frame"),
+                ("cloud", cloud),
                 ("name", c.get("name", "")),
                 ("op", c.get("op", "")),
                 ("payload", c.get("payload", "")),
@@ -100,6 +146,8 @@ def main():
                 ("split", spl),
                 ("families", fam),
                 ("transport", "ble-notify"),
+                ("format", "BLE notify"),
+                ("cloud", cloud),
                 ("name", c.get("name", "")),
                 ("op", c.get("op", "")),
                 ("payload", c.get("payload", "")),
@@ -111,19 +159,22 @@ def main():
             readings.append(OrderedDict([
                 ("split", spl),
                 ("transport", "ble-notify"),
+                ("format", "BLE notify"),
+                ("cloud", cloud),
                 ("name", c.get("name", "")),
                 ("op", c.get("op", "")),
                 ("layout", c.get("layout", "")),
                 ("source", c.get("source", "")),
             ]))
 
-        iot = d.get("iot") or {}
-        for c in iot.get("commands") or []:
+        for c in iot_actual:
             data = c.get("data", c.get("fields", ""))
             commands.append(OrderedDict([
                 ("split", spl),
                 ("families", fam),
                 ("transport", "iot"),
+                ("format", "IoT JSON"),
+                ("cloud", ""),
                 ("name", c.get("cmd", c.get("name", ""))),
                 ("op", c.get("cmd", "")),
                 ("payload", flatten(data)),
@@ -177,6 +228,7 @@ def main():
             ("iot_command_rows", sum(1 for c in commands if c["transport"] == "iot")),
             ("dynamic_effect_rows", len(effects)),
             ("status_property_rows", len(status_properties)),
+            ("format_rows", len(formats)),
         ])),
         ("transports", dict(Counter(t for dev in devices for t in dev["transports"].split("|") if t))),
         ("splits", [
@@ -187,7 +239,7 @@ def main():
                 ("sku_count", len(d.get("skus") or [])),
                 ("ble_commands", len((d.get("ble") or {}).get("commands") or [])),
                 ("ble_notifications", len((d.get("ble") or {}).get("notifications") or [])),
-                ("iot_commands", len((d.get("iot") or {}).get("commands") or [])),
+                ("iot_commands", iot_counts.get(d.get("split"), 0)),
                 ("dynamic_effects", len(d.get("dynamic_effects") or [])),
                 ("other_protocols", d.get("other_protocols") or []),
                 ("notes", d.get("notes", "")),
@@ -195,6 +247,7 @@ def main():
         ]),
         ("devices", devices),
         ("commands", commands),
+        ("formats", formats),
         ("effects", effects),
         ("readings", readings),
         ("status_properties", status_properties),
@@ -215,7 +268,9 @@ def main():
     write_csv("devices.csv", devices,
               ["split", "sku", "family", "transports", "pact_type", "pact_code", "goods_type", "notes"])
     write_csv("commands.csv", commands,
-              ["split", "families", "transport", "name", "op", "payload", "layout", "response", "source", "notes"])
+              ["split", "families", "transport", "format", "cloud", "name", "op", "payload", "layout", "response", "source", "notes"])
+    write_csv("formats.csv", formats,
+              ["split", "format", "role", "command_key", "payload", "source", "notes"])
     write_csv("effects.csv", effects,
               ["split", "name", "submode", "payload", "attributes", "source"])
     write_csv("readings.csv", readings,
@@ -225,8 +280,8 @@ def main():
 
     print(json.dumps(merged["meta"], indent=2))
     print("transports:", merged["transports"])
-    print("wrote data/ALL.json, devices.csv, commands.csv, effects.csv, readings.csv, "
-          "status-properties.csv")
+    print("wrote data/ALL.json, devices.csv, commands.csv, formats.csv, effects.csv, "
+          "readings.csv, status-properties.csv")
 
 
 if __name__ == "__main__":

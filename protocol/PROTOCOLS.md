@@ -18,7 +18,8 @@ extracts the wire-level parts and leaves the UI behind.
 | SKU rows (SKU -> family -> transports) | 617 |
 | BLE command rows (deduplicated per split) | 968 |
 | BLE notification / reading rows | 249 |
-| IoT command rows | 300 |
+| IoT command rows | 219 |
+| Transport format rows (ptReal/multiSync/etc.) | 81 |
 | Dynamic effect / mode-payload rows | 358 |
 | Status properties catalogued | 10 |
 | SKUs advertising Matter | 77 |
@@ -46,7 +47,7 @@ absent from the 7.7.10/7.7.21 bundles. Its scaffold and capabilities are documen
 | `MISSING-DEVICES.md` | Devices referenced by the app but absent from the bundles (H7184 composter) |
 | `READINGS.md` | Every notification and telemetry/status schema |
 | `STATUS-PROPERTIES.md` | Status flags vs. settings vs. UI-derived properties (`waterShortage`, `tankEmpty`, `waterLack`, …) |
-| `devices.csv` / `commands.csv` / `effects.csv` / `readings.csv` / `status-properties.csv` | The same data as CSV |
+| `devices.csv` / `commands.csv` / `formats.csv` / `effects.csv` / `readings.csv` / `status-properties.csv` | The same data as CSV |
 | `data/ALL.json` | Merged machine-readable index (devices + commands + effects + readings) |
 | `data/split_*.json` | Per-split machine-readable extract |
 | `splits/split_*.md` | Per-split deep dive with source trails |
@@ -155,61 +156,64 @@ Commands are JSON strings built by `makeCmdStr(AbsCmd)`:
 `type` = 1 for write, 0 for read/query. Incoming protocol variants `V0`/`V1`/`V2`
 (`IotMsgProType`) wrap device state differently; splits declare which they parse.
 
-Common command names: `online`, `turn`, `brightness`, `status`, `color`, `colorTem`,
-`colorwc`, `mode`, `timer`, `pt`, `ptReal`, `multiSync`, `ptUrl`, plus appliance commands
-(`workMode`, `oscillate`, `humidity`, `temperature`, `ice`, `cook`, …).
+Common actual commands: `online`, `turn`, `brightness`, `status`, `color`, `colorTem`,
+`colorwc`, `mode`, `timer`, plus appliance commands (`workMode`, `oscillate`, `humidity`,
+`temperature`, `iceSize`, `cook`, …).
 
-`ptReal` payload is `{"command": ["<base64(20-byte BLE frame)>", ...]}` — the BLE tables in
-this collection therefore also describe cloud control for BLE+IoT devices.
+`pt`, `ptReal`, `ptIot`, `multiSync` and `ptUrl` are **transport envelopes**, not command
+names. `ptReal` payload is `{"command": ["<base64(20-byte BLE frame)>", ...]}`; the wrapped
+BLE frame's semantic command (e.g. `timer write` with `iceSize`) is the real command. `op`
+and `state` are read envelopes/keys. The catalogs keep envelope rows under **Transport
+formats** so the command tables only show actual commands.
 
 ## 4. Family map
 
 | Split module | Product family | SKUs | Transports present | BLE cmds | Notify | IoT cmds | Effects |
 |---|---|---:|---|---:|---:|---:|---:|
-| `split_pact_bbqnew` | BBQ thermometers / probes (H5055, H5181–H5199, H5610) | 14 | ble (14), iot (14) | 36 | 4 | 4 | 3 |
-| `split_pact_bulblightstringv1` | bulb-string / bulb-light families | 42 | ble (40), iot (36), matter (1) | 27 | 5 | 15 | 16 |
-| `split_pact_fanlight` | ceiling fan + light (H1310 / H1370) | 2 | ble (2), iot (2) | 20 | 7 | 6 | 9 |
-| `split_pact_floorlamp` | floor lamps (H6071/H6075, H60B0/H60B3/R60B3, H60B1) | 6 | ble (6), iot (6), matter (4), wifi/mqtt (1) | 23 | 7 | 7 | 8 |
+| `split_pact_bbqnew` | BBQ thermometers / probes (H5055, H5181–H5199, H5610) | 14 | ble (14), iot (14) | 36 | 4 | 2 | 3 |
+| `split_pact_bulblightstringv1` | bulb-string / bulb-light families | 42 | ble (40), iot (36), matter (1) | 27 | 5 | 13 | 16 |
+| `split_pact_fanlight` | ceiling fan + light (H1310 / H1370) | 2 | ble (2), iot (2) | 20 | 7 | 5 | 9 |
+| `split_pact_floorlamp` | floor lamps (H6071/H6075, H60B0/H60B3/R60B3, H60B1) | 6 | ble (6), iot (6), matter (4), wifi/mqtt (1) | 23 | 7 | 5 | 8 |
 | `split_pact_h1161` | Govee Sync / pickup-box light controller (H1161) | 1 | ble (1) | 12 | 5 | 0 | 4 |
 | `split_pact_h3a5x` | H3A51 / R3A51 / H3A52 / H3A53 branch light strings | 4 | ble (4), iot (4) | 10 | 4 | 4 | 6 |
-| `split_pact_h512x` | sensors (motion, door/window, button, vibration, pressure, presence) | 9 | ble (9), ble-broadcast (9), iot (1) | 24 | 4 | 3 | 0 |
-| `split_pact_h5901` | H5901 water timer / irrigation gateway | 1 | ble (1), iot (1) | 28 | 2 | 3 | 3 |
-| `split_pact_h6047` | H6047 / H6043 / H6042 / H6039 / H6038 / H6048 TV light bars & strip | 7 | ble (7), iot (7) | 11 | 4 | 5 | 7 |
-| `split_pact_h604a` | H604A/B/C/D bulb strings & camera-calibrated strip lights | 4 | ble (4), iot (4) | 21 | 6 | 9 | 5 |
-| `split_pact_h6061` | H6061 cube / Glide family + H6067 Glide Tri/Y | 7 | ble (7), iot (7), matter (3) | 16 | 4 | 5 | 10 |
-| `split_pact_h6062` | H6062/H606A strip, H610A, H610B light-wall strings | 4 | ble (4), iot (4) | 21 | 6 | 4 | 4 |
-| `split_pact_h6079` | H6079 / H607C / H16B0 + H6020 sub-family | 9 | ble (9), iot (9), matter (4) | 16 | 6 | 6 | 10 |
-| `split_pact_h6092` | H6092 / H6091 / H6093 / H6094 / H6095 / H609D / H7070 / H7071 / H7073 / R1810 / H1811 / H3860 / H1880 | 13 | ble (13), iot (13) | 8 | 6 | 5 | 7 |
-| `split_pact_h6099` | H605B/H605C/H660x (HDMI sync) + H6098/H6099/H66Ax (TV backlight) | 18 | ble (18), iot (18), matter (10) | 46 | 8 | 17 | 21 |
-| `split_pact_h60ax` | H60A0/H60A1/H60A4/H60A6/H60C1, H12xx, H1141 ceiling/wall lights | 13 | ble (13), iot (13) | 25 | 8 | 5 | 7 |
-| `split_pact_h61d3` | neon rope / wall-lining / light-recognition family | 29 | ble (29), iot (29) | 22 | 6 | 4 | 6 |
-| `split_pact_h6630` | gaming pixel light / sound-light bars (H6630, H8630, H6631) | 3 | ble (3), iot (3), matter (3) | 19 | 10 | 10 | 6 |
-| `split_pact_h6660` | H6660 / H3810 laser engraver (LaserPecker-style) | 2 | ble (2), iot (2) | 8 | 6 | 2 | 4 |
-| `split_pact_h682021` | H6820 / H6821 curtain lights (square/planar DIY) | 2 | ble (2), iot (2) | 6 | 2 | 5 | 7 |
-| `split_pact_h6840` | H6840/H6841/H6842/H6843 + H6609 library family | 24 | ble (24), iot (24), matter (3) | 21 | 7 | 17 | 11 |
-| `split_pact_h7050` | H7050/H70xx outdoor & string-light family | 53 | ble (53), iot (48), matter (13) | 11 | 3 | 7 | 10 |
-| `split_pact_h705a` | ceiling lights, downlights, H706x/H805x bulb strings, H3401 | 24 | ble (24), iot (24), matter (5) | 13 | 5 | 4 | 7 |
-| `split_pact_h7075` | downlights, floodlights, COB strips, wall washers, R3352 sensor lights | 15 | ble (15), iot (15), matter (2) | 25 | 8 | 5 | 7 |
-| `split_pact_h70b1` | curtain / icicle / spliceable matrix lights (H70B1/B2/BC, H70B3-5, H6800/681x, H70B6/B8, H70D1-3) | 21 | ble (21), iot (21), matter (18), wifi/mqtt (2) | 23 | 7 | 7 | 19 |
-| `split_pact_h7111` | H7111 / H7100 / H7105 / H7112 heaters, fans & thermometers | 9 | ble (9), iot (9) | 25 | 5 | 4 | 8 |
-| `split_pact_h7120` | H7120…H7129 air purifiers | 7 | ble (7), iot (7), matter (3) | 22 | 8 | 5 | 0 |
-| `split_pact_h7130` | GoveeLife heaters (H7130/H713A/H7131-H7139) | 15 | ble (15), iot (15) | 26 | 8 | 4 | 6 |
-| `split_pact_h7170` | H7170 / H7171 / H717A / H7173 / H7175 kettles & coffee brewers | 5 | ble (5), iot (5) | 17 | 5 | 4 | 6 |
-| `split_pact_h7172` | H7172 / H7178 / H717D ice maker & water dispenser | 3 | ble (3), iot (3) | 7 | 2 | 3 | 3 |
-| `split_pact_h7180` | H7180 smart rice cooker / multi-mode cooker | 1 | ble (1), iot (1) | 11 | 8 | 3 | 7 |
-| `split_pact_hollowlamp` | hollow lamps, straight floor lamps, table lamps, H6057 speaker lamp | 16 | ble (16), iot (15) | 57 | 6 | 6 | 14 |
-| `split_pact_humidifier` | humidifiers (H7140/H714E … H7162) | 16 | ble (16), iot (16) | 23 | 2 | 5 | 9 |
-| `split_pact_iceMachine` | ice makers / nugget ice (H8120, H8121, H8122, H8131, H8150) | 5 | ble (5), iot (5), matter (3) | 20 | 1 | 6 | 5 |
-| `split_pact_leaknew` | leak / water sensors (H5058, H5059, H5830) | 3 | iot (3) | 8 | 3 | 4 | 2 |
-| `split_pact_outdoorlight` | outdoor strips / pathway / garden / curtain (H7040, H7056, H7080, H7086) | 7 | ble (7), iot (2) | 16 | 6 | 4 | 15 |
-| `split_pact_plugnew` | smart plugs (H5080 / H5082 / H5083 / H5085 / H5086 / H5089 / H5160 / H5161) | 8 | ble (8), iot (8), matter (2) | 37 | 9 | 10 | 6 |
+| `split_pact_h512x` | sensors (motion, door/window, button, vibration, pressure, presence) | 9 | ble (9), ble-broadcast (9), iot (1) | 24 | 4 | 2 | 0 |
+| `split_pact_h5901` | H5901 water timer / irrigation gateway | 1 | ble (1), iot (1) | 28 | 2 | 1 | 3 |
+| `split_pact_h6047` | H6047 / H6043 / H6042 / H6039 / H6038 / H6048 TV light bars & strip | 7 | ble (7), iot (7) | 11 | 4 | 3 | 7 |
+| `split_pact_h604a` | H604A/B/C/D bulb strings & camera-calibrated strip lights | 4 | ble (4), iot (4) | 21 | 6 | 7 | 5 |
+| `split_pact_h6061` | H6061 cube / Glide family + H6067 Glide Tri/Y | 7 | ble (7), iot (7), matter (3) | 16 | 4 | 4 | 10 |
+| `split_pact_h6062` | H6062/H606A strip, H610A, H610B light-wall strings | 4 | ble (4), iot (4) | 21 | 6 | 3 | 4 |
+| `split_pact_h6079` | H6079 / H607C / H16B0 + H6020 sub-family | 9 | ble (9), iot (9), matter (4) | 16 | 6 | 4 | 10 |
+| `split_pact_h6092` | H6092 / H6091 / H6093 / H6094 / H6095 / H609D / H7070 / H7071 / H7073 / R1810 / H1811 / H3860 / H1880 | 13 | ble (13), iot (13) | 8 | 6 | 3 | 7 |
+| `split_pact_h6099` | H605B/H605C/H660x (HDMI sync) + H6098/H6099/H66Ax (TV backlight) | 18 | ble (18), iot (18), matter (10) | 46 | 8 | 14 | 21 |
+| `split_pact_h60ax` | H60A0/H60A1/H60A4/H60A6/H60C1, H12xx, H1141 ceiling/wall lights | 13 | ble (13), iot (13) | 25 | 8 | 4 | 7 |
+| `split_pact_h61d3` | neon rope / wall-lining / light-recognition family | 29 | ble (29), iot (29) | 22 | 6 | 3 | 6 |
+| `split_pact_h6630` | gaming pixel light / sound-light bars (H6630, H8630, H6631) | 3 | ble (3), iot (3), matter (3) | 19 | 10 | 5 | 6 |
+| `split_pact_h6660` | H6660 / H3810 laser engraver (LaserPecker-style) | 2 | ble (2), iot (2) | 8 | 6 | 1 | 4 |
+| `split_pact_h682021` | H6820 / H6821 curtain lights (square/planar DIY) | 2 | ble (2), iot (2) | 6 | 2 | 4 | 7 |
+| `split_pact_h6840` | H6840/H6841/H6842/H6843 + H6609 library family | 24 | ble (24), iot (24), matter (3) | 21 | 7 | 12 | 11 |
+| `split_pact_h7050` | H7050/H70xx outdoor & string-light family | 53 | ble (53), iot (48), matter (13) | 11 | 3 | 5 | 10 |
+| `split_pact_h705a` | ceiling lights, downlights, H706x/H805x bulb strings, H3401 | 24 | ble (24), iot (24), matter (5) | 13 | 5 | 3 | 7 |
+| `split_pact_h7075` | downlights, floodlights, COB strips, wall washers, R3352 sensor lights | 15 | ble (15), iot (15), matter (2) | 25 | 8 | 4 | 7 |
+| `split_pact_h70b1` | curtain / icicle / spliceable matrix lights (H70B1/B2/BC, H70B3-5, H6800/681x, H70B6/B8, H70D1-3) | 21 | ble (21), iot (21), matter (18), wifi/mqtt (2) | 23 | 7 | 4 | 19 |
+| `split_pact_h7111` | H7111 / H7100 / H7105 / H7112 heaters, fans & thermometers | 9 | ble (9), iot (9) | 25 | 5 | 2 | 8 |
+| `split_pact_h7120` | H7120…H7129 air purifiers | 7 | ble (7), iot (7), matter (3) | 22 | 8 | 3 | 0 |
+| `split_pact_h7130` | GoveeLife heaters (H7130/H713A/H7131-H7139) | 15 | ble (15), iot (15) | 26 | 8 | 3 | 6 |
+| `split_pact_h7170` | H7170 / H7171 / H717A / H7173 / H7175 kettles & coffee brewers | 5 | ble (5), iot (5) | 17 | 5 | 2 | 6 |
+| `split_pact_h7172` | H7172 / H7178 / H717D ice maker & water dispenser | 3 | ble (3), iot (3) | 7 | 2 | 2 | 3 |
+| `split_pact_h7180` | H7180 smart rice cooker / multi-mode cooker | 1 | ble (1), iot (1) | 11 | 8 | 2 | 7 |
+| `split_pact_hollowlamp` | hollow lamps, straight floor lamps, table lamps, H6057 speaker lamp | 16 | ble (16), iot (15) | 57 | 6 | 5 | 14 |
+| `split_pact_humidifier` | humidifiers, dehumidifiers and aroma diffusers (H7140…H7162) | 16 | ble (16), iot (16) | 23 | 2 | 3 | 9 |
+| `split_pact_iceMachine` | ice makers / nugget ice (H8120, H8121, H8122, H8131, H8150) | 5 | ble (5), iot (5), matter (3) | 20 | 1 | 3 | 5 |
+| `split_pact_leaknew` | leak / water sensors (H5058, H5059, H5830) | 3 | iot (3) | 8 | 3 | 2 | 2 |
+| `split_pact_outdoorlight` | outdoor strips / pathway / garden / curtain (H7040, H7056, H7080, H7086) | 7 | ble (7), iot (2) | 16 | 6 | 3 | 15 |
+| `split_pact_plugnew` | smart plugs (H5080 / H5082 / H5083 / H5085 / H5086 / H5089 / H5160 / H5161) | 8 | ble (8), iot (8), matter (2) | 37 | 9 | 6 | 6 |
 | `split_pact_plugv1` | legacy WiFi plugs / switches (H5001, H5081, H7014) | 3 | iot (3) | 0 | 0 | 8 | 0 |
-| `split_pact_rgbiclight` | RGBIC lighting protocol extract | 83 | ble (83), iot (15), matter (3) | 38 | 11 | 14 | 25 |
-| `split_pact_rgblight` | BLE / IoT protocol extraction | 59 | ble (56), iot (38) | 43 | 1 | 18 | 19 |
+| `split_pact_rgbiclight` | RGBIC lighting protocol extract | 83 | ble (83), iot (15), matter (3) | 38 | 11 | 10 | 25 |
+| `split_pact_rgblight` | BLE / IoT protocol extraction | 59 | ble (56), iot (38) | 43 | 1 | 15 | 19 |
 | `split_pact_security_health` | security, baby monitor, scale, jump rope, health | 5 | ble (2), iot (3) | 4 | 3 | 20 | 4 |
-| `split_pact_tcsocket` | H5770 temperature-control socket | 1 | ble (1), iot (1) | 31 | 16 | 5 | 4 |
-| `split_pact_thnew` | temperature / humidity sensors (H5042 … H5310) | 34 | ble (30), iot (25), wifi (3) | 42 | 3 | 9 | 5 |
-| `split_pact_tvlightv4` | TV backlights / camera DreamView (v2, v3, v4) | 7 | ble (7), iot (6) | 32 | 7 | 9 | 14 |
+| `split_pact_tcsocket` | H5770 temperature-control socket | 1 | ble (1), iot (1) | 31 | 16 | 2 | 4 |
+| `split_pact_thnew` | temperature / humidity sensors (H5042 … H5310) | 34 | ble (30), iot (25), wifi (3) | 42 | 3 | 7 | 5 |
+| `split_pact_tvlightv4` | TV backlights / camera DreamView (v2, v3, v4) | 7 | ble (7), iot (6) | 32 | 7 | 6 | 14 |
 | `split_pfdv1` | bulb strings (H7001 / H7023 / H7024) | 3 | ble (3) | 17 | 5 | 0 | 9 |
 
 ## 5. Cross-cutting command semantics
