@@ -14,6 +14,8 @@ Govee Home 7.7.21 `pact_*` split modules, traced against the fully decompiled 7.
   219 IoT command rows + 81 transport-format rows, with opcodes, payloads, layouts and source files.
 - **[EFFECTS.md](EFFECTS.md)** — all 358 dynamic effect / colour / scene / DIY / music /
   motion payload layouts.
+- **[MODE-CONTAINER.md](MODE-CONTAINER.md)** — how the lighting `0x05` command carries
+  every mode as one tagged union, and how the same tag returns in read-back state.
 - **[SEGMENT-CONTROL.md](SEGMENT-CONTROL.md)** — segment color masks, group vs per-segment
   brightness, group/zonal reads and realtime segment pushes.
 - **[DREAMVIEW-HDMI.md](DREAMVIEW-HDMI.md)** — DreamView camera/video modes, HDMI port/

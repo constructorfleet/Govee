@@ -14,6 +14,7 @@ const topLevelDocs = [
   "PROTOCOLS.md",
   "COMMANDS.md",
   "EFFECTS.md",
+  "MODE-CONTAINER.md",
   "READINGS.md",
   "DEVICES.md",
   "SEGMENT-CONTROL.md",

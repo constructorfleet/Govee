@@ -221,6 +221,10 @@ formats** so the command tables only show actual commands.
 These patterns repeat across families; the per-split tables give the family-specific
 variants and exceptions.
 
+- **Mode container**: `0x33/0x05` writes and `0xAA/0x05` reads a discriminated envelope
+  `[sub-mode][body…]`; byte 0 is the tag (`04` scenes, `0A` DIY, `13` music, `0D`/`15`
+  colour), the read request is the constant payload `01`, and the response repeats the
+  tag. See `MODE-CONTAINER.md`.
 - **Power / switch**: `0x33/0x01`, payload `01` on / `00` off; read `0xAA/0x01` returns
   state in `[0]`. IoT: `turn` with `data.val` 0/1.
 - **Brightness**: `0x33/0x04`, one byte, usually scaled into a per-SKU range
