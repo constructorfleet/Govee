@@ -21,7 +21,11 @@ ships only 4 `pact_*` modules.
 
 ## Interactive protocol atlas
 
-The `protocol/` collection has a static search/filter site in `site/`:
+The `protocol/` collection has a static search/filter site in `site/`.
+
+Planned live URL: **https://constructorfleet.github.io/Govee/** (after Pages is enabled).
+
+Features:
 
 - global command palette (`⌘K` / `Ctrl+K` / `/`)
 - Devices, Commands, Effects, Readings, Status and Docs tabs
