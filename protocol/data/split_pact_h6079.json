@@ -1,0 +1,75 @@
+{
+  "split": "split_pact_h6079",
+  "families": ["H6079", "H607C", "H807C", "H16B0", "H6020", "H6022", "H8022", "H1741", "R1741"],
+  "skus": [
+    {"sku": "H6079", "family": "RGBICWW floor lamp", "transports": ["ble", "iot", "matter"], "pact": {"type": null, "code": null}, "notes": "goodsType 156; 14 segments; 2200-6500K; matter gated soft>=1.00.21/WiFi 3.04.01/hard>=1.01.01/DSP 1.05.02"},
+    {"sku": "H607C", "family": "floor lamp", "transports": ["ble", "iot", "matter"], "pact": {"type": null, "code": null}, "notes": "goodsType 209; 13 segments; 2200-6500K; custom music; matter soft>=1.00.01/WiFi 3.04.01/hard>=1.01.17/DSP 1.04.01"},
+    {"sku": "H807C", "family": "floor lamp", "transports": ["ble", "iot", "matter"], "pact": {"type": null, "code": null}, "notes": "goodsType 209 (shares H607C maker/rules)"},
+    {"sku": "H16B0", "family": "RGBICWW floor lamp", "transports": ["ble", "iot", "matter"], "pact": {"type": null, "code": null}, "notes": "goodsType 376; 17 segments; 1000-10000K; music V3 when music version>=3"},
+    {"sku": "H6020", "family": "table lamp", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 210; colour sub-mode 0x0D; preset multi-scene 0x58; battery"},
+    {"sku": "H6022", "family": "table lamp", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 249; scene op set 0..3,5,12; colour sub-mode 0x0D"},
+    {"sku": "H8022", "family": "table lamp", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 249 alias"},
+    {"sku": "H1741", "family": "table lamp (battery)", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 365; colour sub-mode 0x15; 8 segments; battery/energy-save; white noise 0x71/0x7A"},
+    {"sku": "R1741", "family": "table lamp (battery)", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 365 alias"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC of bytes 0..18; write proType 0x33, read 0xAA",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "01 on | 00 off", "layout": "[0] on/off", "response": "0xAA/0x01 -> valid[0] state", "source": "jadx-splits/split_pact_h6079/sources/com/govee/h6079/scenes/BleSwitchCmdBuilderV1.java -> pact/Comm.makeSwitchController4BleComm -> base2light/ble/controller/SwitchController.java"},
+      {"name": "brightness", "op": "0x33/0x04", "payload": "<1..100>", "layout": "[0] brightness", "response": "0xAA/0x04 -> valid[0]", "source": "…/h6079/scenes/BleBrightnessBuilderV1.java -> BrightnessController.java"},
+      {"name": "mode container", "op": "0x33/0x05", "payload": "<subMode block>", "layout": "[0]=sub-mode 0x02/0x03/0x04/0x0A/0x0D/0x13/0x15", "response": "0xAA/0x05 payload {01} -> valid[0]=sub-mode, rest sub-mode bytes", "source": "…/h6079/ble/ModeController.java, AbsModeController.java, AbsMode.java"},
+      {"name": "colour v2", "op": "0x33/0x05 sub 0x15", "payload": "variant1: 15 01 R G B kHi kLo R2 G2 B2 m0 m1 | variant2: 15 02 B m0 m1 | variant3: 15 03 B0..Bn", "layout": "kelvin BE16; mask LSB=segment0; n<=15", "response": "parsePosColor: 20-byte frame [3]=1, RGB 4..6, kelvin 7..8, RGB2 9..11, mask 12", "source": "…/h6079/ble/SubModeColorV2.java"},
+      {"name": "colour v1 (H6020)", "op": "0x33/0x05 sub 0x0D", "payload": "0D R G B kHi kLo R2 G2 B2", "layout": "9 bytes, kelvin BE16", "response": "SubModeColor.parse", "source": "…/h6020/ble/SubModeColor.java"},
+      {"name": "colour v2 (H1741)", "op": "0x33/0x05 sub 0x15", "payload": "15 01 R G B kHi kLo R2 G2 B2 m0..m6 | 15 02 B m0..m6", "layout": "8-segment boolean mask; only m0 non-zero, bytes 11..16 written as 0", "response": "—", "source": "…/h6020/ble/SubModeColorV2.java"},
+      {"name": "scene", "op": "0x33/0x05 sub 0x04", "payload": "04 <effect LE16> <musicCode LE16>", "layout": "musicCode=0 when music switch off", "response": "SubModeScenes.parse", "source": "…/h6079/ble/SubModeScenes.java, …/h6020/ble/SubModeScenes.java"},
+      {"name": "new DIY select", "op": "0x33/0x05 sub 0x0A", "payload": "0A <diyCode LE16> <slot LE16>", "layout": "slot 0..n for multi-DIY", "response": "SubModeNewDiy.parse", "source": "…/h6079/ble/SubModeNewDiy.java, …/h6020/ble/SubModeNewDiy.java"},
+      {"name": "music v1", "op": "0x33/0x05 sub 0x13", "payload": "13 code sens autoFlag [R G B]; rhythm: 13 72 sens soft autoFlag [R G B]", "layout": "sens 0..99; autoFlag=1 manual fixed colour", "response": "SubModeMusic.parse", "source": "…/h6079/ble/SubModeMusic.java"},
+      {"name": "music v2/v3", "op": "0x33/0x05 sub 0x13", "payload": "13 <code> <sensitivity>", "layout": "H607C version 2, H16B0 version 3", "response": "SubModeMusicV2/V3.parse", "source": "…/h6079/ble/SubModeMusicV2.java, SubModeMusicV3.java"},
+      {"name": "gradual / fade", "op": "0x33/0xA3", "payload": "01 on | 00 off", "layout": "[0] enable", "response": "0xAA/0x05 read gradual strip", "source": "…/h6079/ble/Gradual4BleWifiController.java"},
+      {"name": "remote-control pair", "op": "0x33/0xA4", "payload": "01 pair | 00 exit", "layout": "[0]", "response": "notify 0xA4 -> valid[0]", "source": "…/h6079/ble/RemoteController.java, RemoteControlParse.java"},
+      {"name": "read segment colour groups", "op": "0xAA/0xA5", "payload": "<group index>", "layout": "[0] start group", "response": "17 valid bytes: [idx][brightness][R][G][B] x4", "source": "…/h6079/ble/BulbStringColorControllerV2.java, BulbGroupColorV2.java"},
+      {"name": "device info", "op": "0x33/0x08", "payload": "none", "layout": "—", "response": "0xAA/0x08", "source": "…/h6079/ble/BleProtocol.java (DEVICE_INFO=8)"},
+      {"name": "heart / presence", "op": "0xAA/0x01", "payload": "none", "layout": "—", "response": "valid[0]!=0", "source": "base HeartController.java / BleComm.l()"},
+      {"name": "preset multi-scene (H6020)", "op": "0x33/0x04 or 0x33/0x58", "payload": "multi-packet AbsMultipleControllerV14Scenes; first byte of cloud scene param stripped", "layout": "opcode 0x58 for H6020 and for params starting 0x40/0x41, else 0x04; 0x50 is a parameter marker", "response": "—", "source": "…/h6020/adjust/controller/MultiPresetScenesController.java, pact/Support.g"}
+    ],
+    "notifications": [
+      {"name": "wifi/ble state", "op": "notify cmdType 0x11", "layout": "[0]==0 connected", "source": "…/h6079/ble/WifiNotifyParse.java, …/h6020/ble/WifiNotifyParse.java"},
+      {"name": "brightness", "op": "notify cmdType 0x20", "layout": "h6079 [0]=brightness [1]=aux; h6020 [0]=brightness", "source": "…/h6079/ble/BrightnessNotifyParse.java, …/h6020/ble/BrightnessNotifyParse.java"},
+      {"name": "remote pairing", "op": "notify cmdType 0xA4", "layout": "[0] state", "source": "…/h6079/ble/RemoteControlParse.java"},
+      {"name": "switch status", "op": "notify cmdType 0x30", "layout": "h6079 [1]=switch id [2]==1 on; h6020 [0]==1 -> [1] on/[2]; [0]==0x30 -> [1] battery", "source": "…/h6079/ble/DeviceSwitchStatusNotifyParse.java, …/h6020/ble/DeviceSwitchStatusNotifyParse.java"},
+      {"name": "device status", "op": "notify cmdType 0x40", "layout": "10-byte block", "source": "base2light/ble/DeviceStatusNotifyParse.java"},
+      {"name": "movie feast", "op": "notify cmdType 0x60", "layout": "[0]==1, [1]==1 on", "source": "base2light/ble/controller/MovieFeastOnOffNotifyParse.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite: {msg:{transaction,accountTopic,type:1,origin:32,cmdVersion,cmd,data}}; incoming light responses parsed as State/ResultPt, scene builders use IotMsgProType.V2",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{msg:{type:1,origin:32,cmdVersion:0,cmd:\"turn\",data:{val:1}}}", "response": "status / turn echo", "source": "…/h6079/iot/CmdTurn.java"},
+      {"cmd": "brightness", "data": {"val": "1..100"}, "example": "{msg:{...,cmd:\"brightness\",data:{val:50}}}", "response": "state.brightness", "source": "…/h6079/iot/CmdBrightness.java"},
+      {"cmd": "colorwc", "data": {"color": {"r": "0..255", "g": "0..255", "b": "0..255"}, "colorTemInKelvin": "0|allowed K"}, "example": "{msg:{...,cmd:\"colorwc\",data:{color:{r:255,g:0,b:0},colorTemInKelvin:0}}}", "response": "state.color/colorTemInKelvin", "source": "…/h6079/iot/CmdColorWc.java"},
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte frame>"]}, "example": "{msg:{...,cmd:\"ptReal\",data:{command:[\"MwUB...\"]}}}", "response": "op.command[] parsed by CmdStatusV0 / ResultPt", "source": "…/h6079/iot/CmdPtReal.java, …/h6020/iot/CmdPtReal.java"},
+      {"cmd": "pt", "data": "raw passthrough", "example": null, "response": "—", "source": "…/h6079/iot/Cmd.java"},
+      {"cmd": "status (read)", "data": {}, "example": "{msg:{type:0,origin:32,cmdVersion:0,cmd:\"status\"}}", "response": "state {onOff,brightness,mode,wifiHardVersion,wifiSoftVersion} + op lists", "source": "…/h6079/pact/Model.java V()"}
+    ],
+    "status": {"fields": {"onOff": "int 0|1", "brightness": "int 1..100", "color": "object {r,g,b}", "colorTemInKelvin": "int", "mode": "int", "modeValue": "string[] base64 frames", "sleepValue": "string[]", "wakeupValue": "string[]", "timer": "object", "softVersion": "string", "wifiSoftVersion": "string"}, "source": "base2light/pact/newdetail/iot/State.java, StateV0.java, base2light/iot/common/ResultPt.java"}
+  },
+  "other_protocols": [
+    {"name": "matter", "details": "156/209/376 pairing through MatterInterceptor/MatterManager; version gates in H607CMatterHelper (H607C soft>=1.00.01/WiFi 3.04.01/hard>=1.01.17/DSP 1.04.01; H6079 soft>=1.00.21/WiFi 3.04.01/hard>=1.01.01/DSP 1.05.02; H16B0 any)", "source": "…/h6079/h607c/H607CMatterHelper.java, …/h6079/adjust/SettingAc.java, pact/Support.java"},
+    {"name": "wifi/cloud", "details": "No LAN/UDP implementation in split; cloud MQTT topic is stored in IotExt.topic and used by the IoT layer", "source": "…/h6079/pact/Model.java"}
+  ],
+  "dynamic_effects": [
+    {"name": "solid/segmented colour", "submode": "0x15", "payload": "15 01 R G B kHi kLo R2 G2 B2 m0 m1 | 15 02 B m0 m1 | 15 03 B0..Bn", "attributes": ["kelvin 2200-6500 (H16B0 1000-10000)", "segment mask 14/13/17 bits", "per-segment brightness"], "source": "…/h6079/ble/SubModeColorV2.java"},
+    {"name": "colour v1 (H6020)", "submode": "0x0D", "payload": "0D R G B kHi kLo R2 G2 B2", "attributes": ["kelvin 2200-6500"], "source": "…/h6020/ble/SubModeColor.java"},
+    {"name": "scene", "submode": "0x04", "payload": "04 <effect LE16> <musicCode LE16>", "attributes": ["effect id cloud catalog", "default 2002", "H6079 default 2099", "op sets {0,1,2,3,6}/{1,2,6}"], "source": "…/h6079/ble/SubModeScenes.java, /h6020/ble/SubModeScenes.java, pact/Support.java"},
+    {"name": "new DIY", "submode": "0x0A", "payload": "0A <diyCode LE16> <slot LE16>", "attributes": ["IC grid 54x10 (H6079), 144x30 (H607C), 48x19 (H16B0)", "multi-packet 0xA3 pixel data before select frame"], "source": "…/h6079/ble/SubModeNewDiy.java, pact/Comm.java, iot/CmdPtReal.java"},
+    {"name": "music v1", "submode": "0x13", "payload": "13 code sens autoFlag [R G B]; rhythm 13 72 sens soft autoFlag [RGB]", "attributes": ["sensitivity 0..99", "legacy codes 0/6/7/8/51/114"], "source": "…/h6079/ble/SubModeMusic.java"},
+    {"name": "music v2/v3", "submode": "0x13", "payload": "13 <code> <sensitivity>", "attributes": ["codes 115/114/51/79/81/116/80/131/132/133/8/130/134/135/137", "sensitivity 0..99"], "source": "…/h6079/ble/SubModeMusicV2.java, SubModeMusicV3.java, newdetail/h6079/music/H6079NewMusicMode.java"},
+    {"name": "custom music/light code", "submode": "0x13 + multi", "payload": "base64 custom light code multi frames", "attributes": ["cloud effect per music"], "source": "…/h6079/h607c/music/H607CMusicCustomEffect.java, newdetail/music/*MusicProxy.java"},
+    {"name": "gradual / part colour", "submode": "0xA3", "payload": "A3 00|01", "attributes": ["one flag", "sequence: 05/15 colour packets + AA/A5 read + A3 end"], "source": "…/h6079/ble/Gradual4BleWifiController.java, iot/CmdPtReal.isOtherMode2ColorModePtWithBrightness"},
+    {"name": "preset multi-scene (H6020)", "submode": "0x04/0x58", "payload": "cloud scene param minus first byte, multi-packet", "attributes": ["scene id", "H6020 and 0x40/0x41 params use 0x58, else 0x04"], "source": "…/h6020/adjust/controller/MultiPresetScenesController.java"},
+    {"name": "white noise (H6020)", "submode": "0x71/0x7A", "payload": "online-sound player commands", "attributes": ["volume 0x79", "player state", "available across H6020 family per online-sound config"], "source": "…/h6020/iot/CmdStatusV0.java, …/h6020/adjust/v1/BleIotInfoH6020.java"}
+  ],
+  "notes": "Effect/scene catalog (ids, names, directions, speeds, custom music light codes) is runtime cloud data; only defaults 2002/2099 and op-set masks are static. H6020 SubModeColorV2 declares 8 segments but writes 7 mask bytes (bytes 11..16 always zero). H6079 H16B0 music version gate is runtime. GATT strip: read copies 2..18 (17 bytes), write copies 3..18 (16 bytes)."
+}

@@ -1,0 +1,66 @@
+{
+  "split": "split_pact_h6092",
+  "families": ["H6092", "H6093", "H7070", "H6095", "H6094", "H609D", "H7073", "H7071", "R1810", "H6091", "H1811", "H3860", "H1880"],
+  "skus": [
+    {"sku": "H6092", "family": "RGBIC light", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 167, 14 pieces, applyOpSet 0/1/2/3/5/11"},
+    {"sku": "H6093", "family": "RGBIC light", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 271, preset scenes + music code"},
+    {"sku": "H7070", "family": "RGBIC light", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 283, conditional effect change"},
+    {"sku": "H6095", "family": "RGBIC light", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 323, 7 pieces"},
+    {"sku": "H6094", "family": "RGBIC light", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 322, 1 piece"},
+    {"sku": "H609D", "family": "RGBIC light", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 331, operate mode 0x43"},
+    {"sku": "H7073", "family": "RGBIC light", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 333, supportEffectChange always"},
+    {"sku": "H7071", "family": "RGBIC light", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 334, layered DIY"},
+    {"sku": "R1810", "family": "RGBIC light", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 340, 3 segments"},
+    {"sku": "H6091", "family": "RGBIC light", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 101, music sub-mode 0x0F"},
+    {"sku": "H1811", "family": "RGBIC light", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 399, flow direction"},
+    {"sku": "H3860", "family": "RGBIC light", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 401"},
+    {"sku": "H1880", "family": "RGBIC light", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 402, on/off memory"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; single write 0x33, read 0xAA, multi V1/V2 0xA3",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "[0]=0|1", "layout": "[0] on/off", "response": "0xAA/0x01 -> [0]!=0", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/scenes/BleSwitchCmdBuilderV1.java"},
+      {"name": "heartbeat", "op": "0xAA/0x01", "payload": "none", "layout": "read only, no event", "response": "[0]!=0", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/BleComm.java"},
+      {"name": "brightness", "op": "0x33/0x04", "payload": "[0]=0..100", "layout": "[0] brightness", "response": "0xAA/0x04", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/pact/Comm.java"},
+      {"name": "mode", "op": "0x33/0x05", "payload": "<sub-mode block>", "layout": "[0]=sub-mode id: 0x04 scenes, 0x0A DIY, 0x20/0x0C operate", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/Mode.java"},
+      {"name": "diy_multi", "op": "0xA3/0x56", "payload": "[0]=diyCode [1..]=DIY bytes; first byte 33 rewritten to 11", "layout": "multi-packet V1", "response": "EventMultipleOperateDiy", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/controller/MultipleOperateController.java"},
+      {"name": "diy_multi_h6093", "op": "0xA3/0x58", "payload": "multi-packet V1", "layout": "H6093 DIY", "response": "EventMultipleOperateDiy", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/controller/MultipleOperateControllerH6093.java"},
+      {"name": "h609d_operate", "op": "0x33|0xAA/0x43", "payload": "H609DSubModeOperate bytes", "layout": "binary operate blob", "response": "H609DSubModeOperate parse", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/controller/H609dOperateModeController.java"},
+      {"name": "auto_off_read", "op": "0xAA/0x24", "payload": "none", "layout": "read only", "response": "AutoOffInfo", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/AutoOffNotifyParse.java"}
+    ],
+    "notifications": [
+      {"name": "wifi_connect", "op": "0xEE/0x11", "layout": "[0]==0 connected", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/WifiNotifyParse.java"},
+      {"name": "brightness", "op": "0xEE/0x20", "layout": "[0] brightness", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/BrightnessNotifyParse.java"},
+      {"name": "auto_off", "op": "0xEE/0x24", "layout": "AutoOffInfo.parse", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/AutoOffNotifyParse.java"},
+      {"name": "child_switch", "op": "0xEE/0x30", "layout": "[0] seq/type, [1]==1 switch", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/DeviceStatusNotifyParse.java"},
+      {"name": "music_info", "op": "0xEE/0x31", "layout": "base MusicNotifyParse", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/BleNotifyComm.java"},
+      {"name": "sleep_info", "op": "0xEE/0x32", "layout": "sleep state", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/BleProtocol.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite, type 1 write, origin 32; switch builder parses IotMsgProType V2 and matches transaction",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "response": "status", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/iot/CmdTurn.java"},
+      {"cmd": "brightness", "data": {"val": "int 0-100"}, "response": "status", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/iot/CmdBrightness.java"},
+      {"cmd": "colorwc", "data": {"color": {"red": "int", "green": "int", "blue": "int"}, "colorTemInKelvin": "int"}, "response": "status", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/iot/CmdColorWc.java"},
+      {"cmd": "ptReal", "data": {"command": ["base64(20-byte frame)"]}, "response": "status with op bytes", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/iot/CmdPtReal.java"},
+      {"cmd": "pt", "data": {"command": "raw passthrough"}, "response": "status", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/iot/Cmd.java"}
+    ],
+    "status": {"fields": {"state": "on/off and result for non-ptReal commands", "op": "ResultPt frame bytes for ptReal", "childSwitch": "0x30 notify byte[1]==1"}, "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/iot/Cmd.java"}
+  },
+  "other_protocols": [
+    {"name": "wifi", "details": "cloud MQTT via device topic in IoT ext; no LAN/UDP/Matter in this split", "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/pact/BleIotExt.java"}
+  ],
+  "dynamic_effects": [
+    {"name": "scenes", "submode": "0x04", "payload": "04 <effect LE16> <musicCode LE16>", "attributes": ["effect id", "music code (0 when off)", "preset scene via MultiPresetScenesController cmdType 5/6"], "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/SubModeScenes.java, pact/Comm.java"},
+    {"name": "new_diy", "submode": "0x0A", "payload": "0A <diy LE16> <secondCode LE16>", "attributes": ["diy code", "high-color/second code"], "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/SubModeNewDiy.java"},
+    {"name": "operate", "submode": "0x20 / 0x0C", "payload": "operate type 1/2 + params", "attributes": ["SubModeOperate"], "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/Mode.java"},
+    {"name": "music", "submode": "0x0F", "payload": "music sub-mode payload", "attributes": ["effect ids energy 0, impact 6, jet 7, jump 8, joy 51, rhythm 114; rhythm dynamic 0 / soft 1"], "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/BleProtocol.java"},
+    {"name": "preset_scene", "submode": "0x05/0x06 command type", "payload": "sceneParam base64 minus 3 bytes", "attributes": ["cmdType 6 when param[1]==0x7B", "timeout 100ms"], "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/controller/MultiPresetScenesController.java"},
+    {"name": "layered_diy_h7071", "submode": "0x0A", "payload": "layer/effect serialised by Pro4H7071Diy", "attributes": ["layers", "fixed/loop/random image", "water ripple"], "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/newDetail/h7071/diy/*"},
+    {"name": "r1810_segment", "submode": "0x15", "payload": "per-segment colour", "attributes": ["3 segments", "stack/advanced effects"], "source": "jadx-splits/split_pact_h6092/sources/com/govee/h6092/newDetail/r1810/*"}
+  ],
+  "notes": "Gaps: no standalone BLE colour controller (Comm returns null); scene params are server blobs; H609D operate blob undecoded; music codes come from LocalSoundM at runtime."
+}

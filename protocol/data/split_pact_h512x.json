@@ -1,0 +1,425 @@
+{
+  "split": "split_pact_h512x",
+  "families": [
+    "H5121",
+    "H5122",
+    "H5123",
+    "H5124",
+    "H5125",
+    "H5126",
+    "H5127",
+    "H5129",
+    "H5130"
+  ],
+  "skus": [
+    {
+      "sku": "H5121",
+      "family": "motion sensor (PIR)",
+      "transports": [
+        "ble",
+        "ble-broadcast"
+      ],
+      "pact": {
+        "type": 2,
+        "code": 1
+      },
+      "notes": "goodsType 130; 1xCR2450; 3 distance levels 45/20/custom; interval; push events. Events arrive via cloud push, not an IoT command channel."
+    },
+    {
+      "sku": "H5122",
+      "family": "button sensor",
+      "transports": [
+        "ble",
+        "ble-broadcast"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "goodsType 131; 1xCR2032; push events. Events arrive via cloud push, not an IoT command channel. Protocol registration not present in SupportConfig (only 130/206/238 are)."
+    },
+    {
+      "sku": "H5123",
+      "family": "door and window sensor",
+      "transports": [
+        "ble",
+        "ble-broadcast"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "goodsType 132; 1xCR1632; open/close push. Events arrive via cloud push, not an IoT command channel. Protocol registration not present in SupportConfig (only 130/206/238 are)."
+    },
+    {
+      "sku": "H5124",
+      "family": "vibration sensor",
+      "transports": [
+        "ble",
+        "ble-broadcast"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "goodsType 139; 1xCR2032; vibration push. Events arrive via cloud push, not an IoT command channel. Protocol registration not present in SupportConfig (only 130/206/238 are)."
+    },
+    {
+      "sku": "H5125",
+      "family": "button remote",
+      "transports": [
+        "ble",
+        "ble-broadcast"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "goodsType 144; 1xCR2032. Events arrive via cloud push, not an IoT command channel. Protocol registration not present in SupportConfig (only 130/206/238 are)."
+    },
+    {
+      "sku": "H5126",
+      "family": "button switch",
+      "transports": [
+        "ble",
+        "ble-broadcast"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "goodsType 145; 1xCR2032. Events arrive via cloud push, not an IoT command channel. Protocol registration not present in SupportConfig (only 130/206/238 are)."
+    },
+    {
+      "sku": "H5129",
+      "family": "outdoor motion sensor (PIR)",
+      "transports": [
+        "ble",
+        "ble-broadcast"
+      ],
+      "pact": {
+        "type": 2,
+        "code": 1
+      },
+      "notes": "goodsType 206; 2xCR123A; distance levels 80/40/20; Li-Sen switch. Events arrive via cloud push, not an IoT command channel."
+    },
+    {
+      "sku": "H5130",
+      "family": "pressure sensor / pressure mat",
+      "transports": [
+        "ble",
+        "ble-broadcast"
+      ],
+      "pact": {
+        "type": 2,
+        "code": 1
+      },
+      "notes": "goodsType 238; 1xCR2450; threshold 1-10, has/no-pressure times, LED display. Events arrive via cloud push, not an IoT command channel."
+    },
+    {
+      "sku": "H5127",
+      "family": "mmWave presence sensor",
+      "transports": [
+        "ble",
+        "ble-broadcast",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 183; supports beProtocol(1,1) and (2,1); dynamic SKU H5127_<suffix> from GVH5127 advert; config over BLE, status over IoT op frames."
+    }
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write 0x33, read 0xAA; H5121 V1 alt characteristic ...2b10",
+    "commands": [
+      {
+        "name": "distance level (H5121)",
+        "op": "0x33/0x01",
+        "payload": "threshold pulse window level",
+        "layout": "level0=45,1,1,0; level1=20,1,1,1; other=20,1,1,level",
+        "response": "0xAA/0x01 4 bytes",
+        "source": "h5121/ble/commV1/CommandDistanceLevel.java"
+      },
+      {
+        "name": "distance level (H5129)",
+        "op": "0x33/0x01",
+        "payload": "threshold pulse window level",
+        "layout": "level0=80,1,0,0; level1=40,1,0,1; level2=20,1,0,2; other=20,1,0,level",
+        "response": "0xAA/0x01",
+        "source": "CommandDistanceLevel4H5129.java"
+      },
+      {
+        "name": "check interval",
+        "op": "0x33/0x02",
+        "payload": "seconds",
+        "layout": "default 60",
+        "response": "0xAA/0x02 -> [0]",
+        "source": "CommandIntervalTime.java"
+      },
+      {
+        "name": "Li-Sen switch (H5129)",
+        "op": "0x33/0x03",
+        "payload": "on",
+        "layout": "0/1",
+        "response": "0xAA/0x03 -> [0]",
+        "source": "Command4H5129LiSenSwitch.java"
+      },
+      {
+        "name": "current pressure (H5130)",
+        "op": "0xAA/0x02",
+        "payload": "",
+        "layout": "raw level",
+        "response": "[0] level; notify 0x05",
+        "source": "h5121/ble/other/Controller4CurPressure.java"
+      },
+      {
+        "name": "pressure threshold (H5130)",
+        "op": "0x33/0x03",
+        "payload": "level",
+        "layout": "1-10",
+        "response": "0xAA/0x03 -> [0]",
+        "source": "Controller4PressureThreshold.java"
+      },
+      {
+        "name": "has-pressure time (H5130)",
+        "op": "0x33/0x04",
+        "payload": "secBE16",
+        "layout": "seconds",
+        "response": "0xAA/0x04 -> BE16",
+        "source": "Controller4HasPressureTime.java"
+      },
+      {
+        "name": "no-pressure time (H5130)",
+        "op": "0x33/0x05",
+        "payload": "secBE16",
+        "layout": "seconds",
+        "response": "0xAA/0x05 -> BE16",
+        "source": "Controller4NoPressureTime.java"
+      },
+      {
+        "name": "light display (H5130)",
+        "op": "0x33/0x06",
+        "payload": "on",
+        "layout": "0/1",
+        "response": "0xAA/0x06 -> [0]",
+        "source": "Controller4LightIsDisplay.java"
+      },
+      {
+        "name": "H5127 heartbeat read",
+        "op": "0xAA/0x01",
+        "payload": "",
+        "layout": "[0] status,[1..2] distance BE16,[6..9] duration BE32",
+        "response": "0xAA/0x01 / notify 0x01",
+        "source": "h5127/ble/controller/function/Controller4Header.java; H5127ParseUtils.d"
+      },
+      {
+        "name": "H5127 check mode read",
+        "op": "0xAA/0x05",
+        "payload": "00",
+        "layout": "[0]=0",
+        "response": "0xAA/0x05",
+        "source": "Controller4CheckMode.java"
+      },
+      {
+        "name": "H5127 check mode write",
+        "op": "0x33/0x05",
+        "payload": "00 03",
+        "layout": "enable",
+        "response": "ack",
+        "source": "Controller4CheckMode.java"
+      },
+      {
+        "name": "H5127 config params read",
+        "op": "0xAA/0x05",
+        "payload": "01",
+        "layout": "[0]=1",
+        "response": "0xAA/0x05",
+        "source": "Controller4ConfigParams.java"
+      },
+      {
+        "name": "H5127 config params write",
+        "op": "0x33/0x05",
+        "payload": "01 distBE16 nhBE16 hhBE16",
+        "layout": "check distance + judge times",
+        "response": "ack",
+        "source": "Controller4ConfigParams.java"
+      },
+      {
+        "name": "H5127 te range read",
+        "op": "0xAA/0x05",
+        "payload": "03",
+        "layout": "[0]=3",
+        "response": "0xAA/0x05",
+        "source": "Controller4TeRange.java"
+      },
+      {
+        "name": "H5127 te range write",
+        "op": "0x33/0x05",
+        "payload": "03 00 valid startBE16 endBE16",
+        "layout": "target-exclusion range",
+        "response": "ack",
+        "source": "Controller4TeRange.java"
+      },
+      {
+        "name": "H5127 radar sensitivity read",
+        "op": "0xAA/0x1A",
+        "payload": "04",
+        "layout": "[0]=4",
+        "response": "0xAA/0x1A",
+        "source": "Controller4RadarSensitivity.java"
+      },
+      {
+        "name": "H5127 radar sensitivity write",
+        "op": "0x33/0x1A",
+        "payload": "04 level",
+        "layout": "level",
+        "response": "ack",
+        "source": "Controller4RadarSensitivity.java"
+      },
+      {
+        "name": "H5127 only-idf-human read",
+        "op": "0xAA/0x1F",
+        "payload": "",
+        "layout": "",
+        "response": "[0] 0/1",
+        "source": "Controller4OnlyIdfHuman.java"
+      },
+      {
+        "name": "H5127 only-idf-human write",
+        "op": "0x33/0x1F",
+        "payload": "01 on",
+        "layout": "0/1",
+        "response": "ack",
+        "source": "Controller4OnlyIdfHuman.java"
+      },
+      {
+        "name": "H5127 sync time",
+        "op": "0x33/0xB5",
+        "payload": "ts32BE 01 tzH tzM",
+        "layout": "Unix seconds",
+        "response": "ack",
+        "source": "Controller4SyncTime.java"
+      },
+      {
+        "name": "H5127 ext block",
+        "op": "0xAA/0x07",
+        "payload": "02|03|0A|0B",
+        "layout": "device id / ble hard / mcu soft / mcu hard",
+        "response": "16-byte block",
+        "source": "Controller4SomeExt.java"
+      },
+      {
+        "name": "H5127 wifi mac",
+        "op": "0xAA/0x10",
+        "payload": "",
+        "layout": "6-byte MAC",
+        "response": "0xAA/0x10",
+        "source": "Controller4WifiMac.java"
+      },
+      {
+        "name": "H5127 wifi soft/hard",
+        "op": "0xAA/0x21 | 0xAA/0x20",
+        "payload": "",
+        "layout": "version block",
+        "response": "0xAA/0x21|0x20",
+        "source": "Controller4WifiSv.java; Controller4WifiHv.java"
+      }
+    ],
+    "notifications": [
+      {
+        "name": "H5127 heartbeat",
+        "op": "0xEE/0x01",
+        "layout": "[0] check status,[1..2] distance BE16,[6..9] duration BE32",
+        "source": "h5127/ble/notify/NotifyParse4BleHeart.java; H5127ParseUtils.d"
+      },
+      {
+        "name": "H5127 te range",
+        "op": "0xEE/0x24",
+        "layout": "[0]=1,[3..4] start BE16,[5..6] end BE16",
+        "source": "h5127/ble/notify/NotifyParse4TeRange.java"
+      },
+      {
+        "name": "H5130 current pressure",
+        "op": "0xEE/0x05",
+        "layout": "[0] pressure level",
+        "source": "h5121/ble/other/NotifyParse4CurPressure.java"
+      },
+      {
+        "name": "H5127 wifi set result",
+        "op": "0xEE/0x??",
+        "layout": "onboarding result",
+        "source": "h5127/ble/notify/NotifyParse4WifiSetResult.java"
+      }
+    ]
+  },
+  "iot": {
+    "envelope": "H5127: IotMsgV2 status + op frames (base64 20-byte); H5121-H5130: push only, no control IoT",
+    "commands": [
+      {
+        "cmd": "status",
+        "data": {},
+        "example": "{\"cmd\":\"status\"}",
+        "response": "op frames",
+        "source": "h5127/pact/Model.java"
+      },
+      {
+        "cmd": "online",
+        "data": {},
+        "example": "{\"cmd\":\"online\"}",
+        "response": "presence",
+        "source": "h5127/pact/Model.java"
+      },
+      {
+        "cmd": "op",
+        "data": {
+          "command": [
+            "<base64 20-byte frame>"
+          ]
+        },
+        "example": "{\"cmd\":\"op\",\"data\":{\"command\":[\"...\"]}}",
+        "response": "config/report frames",
+        "source": "h5127/pact/Model.java; H5127ParseUtils.e"
+      }
+    ],
+    "status": {
+      "fields": {
+        "checkStatus": "enum/int presence state",
+        "distance": "BE16",
+        "statusDuration": "BE32 seconds",
+        "installWay": "0/1/2/3",
+        "checkDistance": "config",
+        "nhJudgeTime": "seconds BE16",
+        "hhJudgeTime": "seconds BE16",
+        "teStart": "target-exclusion start",
+        "teEnd": "target-exclusion end",
+        "radarSensitivity": "level",
+        "onlyIdfHuman": "bool",
+        "bleSv/bleHv/wifiSv/wifiHv/wifiMac": "version strings"
+      },
+      "source": "h5127/pact/itemmodel/H5127LastDeviceData.java; H5127ParseUtils.java"
+    }
+  },
+  "other_protocols": [
+    {
+      "name": "ble-broadcast",
+      "details": "H5121-H5130 pairing advert decoded at fixed hex offsets (name 10..30, bdType 38..40, device 42..58, hard 58..60, soft 60..62). H5127 advert starts 0201050c09, version 1, protocol 3, name GVH5127<suffix>.",
+      "source": "h512x/add/SkuItemClickEvent.java; h5127/pact/BleBroadcast4H5127.java"
+    },
+    {
+      "name": "push",
+      "details": "Sensor events arrive as push; LastData caches logType/logTime/online/bind. H5127IotPush for presence sensor.",
+      "source": "h512x/push/SensorPush.java; h5127/push/H5127IotPush.java"
+    },
+    {
+      "name": "rest",
+      "details": "Bind only for H5121-H5130; H5127 adds install-way selection (INet4H5127 / Request4SelectedInstallWay).",
+      "source": "h5127/net/INet4H5127.java"
+    }
+  ],
+  "dynamic_effects": [],
+  "notes": "Assignment guessed heater/thermostat; these are sensors. Distance levels are firmware thresholds, not documented cm (H5121 45/20, H5129 80/40/20). H5121-H5130 event payloads are not in the split; only LastData.logType is available. H5127 checkStatus semantics and frame byte [24] are not fully named. H5127 uses dynamic SKU H5127_<suffix> from advert. H5129 Li-Sen is a single boolean with firmware-defined detection."
+}

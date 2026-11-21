@@ -1,0 +1,69 @@
+{
+  "split": "split_pact_h6061",
+  "families": ["H6061", "H6066", "H606A", "H6063", "H6069", "H6067", "H6065"],
+  "skus": [
+    {"sku": "H6061", "family": "Glide Hexa", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 51; 23 segments; scene speed default 45"},
+    {"sku": "H6066", "family": "Glide Hexa Pro", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 96; 25 segments; scene speed default 10"},
+    {"sku": "H606A", "family": "Glide Hexa Ultra", "transports": ["ble", "iot", "matter"], "pact": {"type": null, "code": null}, "notes": "goodsType 163; 21 segments; music V4 117-123; matter soft>=1.00.15/WiFi 3.04.01/hard>=1.01.17/DSP 1.04.01"},
+    {"sku": "H6063", "family": "Gaming Wall Light (hex)", "transports": ["ble", "iot", "matter"], "pact": {"type": null, "code": null}, "notes": "goodsType 228; 20 segments; focus DIY; matter soft>=1.00.01/WiFi 3.04.01/hard>=1.01.17/DSP 1.04.01"},
+    {"sku": "H6069", "family": "Gaming Wall Light (panel)", "transports": ["ble", "iot", "matter"], "pact": {"type": null, "code": null}, "notes": "goodsType 284; 140 segments; point direction/panel; matter soft>=1.00.03/WiFi 3.06.01/hard>=1.03.01/DSP 1.04.02"},
+    {"sku": "H6067", "family": "Glide Tri", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 97; 40 declared segments but 24-bit write mask; scene speed default 71; music stub"},
+    {"sku": "H6065", "family": "Glide Y Lights", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 121; 40 declared segments, 24-bit write mask; focus point DIY"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write 0x33, read 0xAA",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "01 on | 00 off", "layout": "[0]", "response": "0xAA/0x01 valid[0]", "source": "cubelight/scenes/BleSwitchCmdBuilderV1.java, h6067 equivalent -> Comm.makeSwitchControler4BleComm -> SwitchController"},
+      {"name": "brightness", "op": "0x33/0x04", "payload": "<1..100>", "layout": "[0]", "response": "0xAA/0x04 valid[0]", "source": "…/cubelight/scenes/BleBrightnessBuilderV1.java, BrightnessController"},
+      {"name": "mode container", "op": "0x33/0x05", "payload": "sub-mode block", "layout": "[0]=0x04/0x0A/0x13/0x15", "response": "0xAA/0x05 payload {01}", "source": "cubelight/ble/ModeController.java, AbsModeController"},
+      {"name": "colour", "op": "0x33/0x05 sub 0x15", "payload": "v1: 15 01 R G B [kHi kLo] m0..m4 | v2: 15 02 B m0..m4 | v3: 15 03 group B0..B13 | v4: 15 04 group RGB x4", "layout": "mask LSB=segment; 40 declared bits; 14 brightness or 4 colours per packet", "response": "parseColorStripByOnePacketBytes / parsePosColor", "source": "cubelight/ble/SubModeColor.java"},
+      {"name": "colour (H6067)", "op": "0x33/0x05 sub 0x15", "payload": "15 01 R G B [k] m0 m1 m2 | 15 02 B m0 m1 m2", "layout": "3 mask bytes (24 bits) in write path", "response": "h6067 parsePosColor (2 masks/16 bits)", "source": "h6067/ble/SubModeColor.java"},
+      {"name": "scene", "op": "0x33/0x05 sub 0x04", "payload": "04 <effect LE16> <dir> <speed> | point: 04 <eff> <dir> <x LE16> <y LE16> <speed> | focus: 04 <eff> <dir> <focus4> <speed>", "layout": "defaults 2229/2560, speed 10/45/71", "response": "SubModeScenes.parse (byte0/1 effect, byte2 dir, 3..6 x/y, byte7 speed)", "source": "cubelight/ble/SubModeScenes.java, h6067/ble/SubModeScenes.java"},
+      {"name": "new DIY", "op": "0x33/0x05 sub 0x0A", "payload": "0A <diyCode LE16>", "layout": "pixel blob via 0xA3 multi frames", "response": "SubModeNewDiy.parse", "source": "cubelight/ble/SubModeNewDiy.java, h6067 equivalent"},
+      {"name": "music legacy", "op": "0x33/0x05 sub 0x13", "payload": "13 <code> 00", "layout": "codes 51/53/56/57/58/59", "response": "SubModeMusic.parse", "source": "cubelight/ble/SubModeMusic.java"},
+      {"name": "music V3", "op": "0x33/0x05 sub 0x13", "payload": "13 <code> <sens> [<!autoColor> <!dynamic> 00 00 00 [RGB]]", "layout": "codes 3/4/5/6/56, sens 0..99", "response": "SubModeMusicV3.parse", "source": "cubelight/ble/SubModeMusicV3.java"},
+      {"name": "music V4 (H606A)", "op": "0x33/0x05 sub 0x13", "payload": "13 00 00 placeholder", "layout": "effects 117..123; direction/traversal tables; real frames from MultipleController4Music", "response": "SubModeMusicV4.parse", "source": "cubelight/ble/SubModeMusicV4.java"},
+      {"name": "shape/panel layout", "op": "0x33/0x31", "payload": "[count][type][x LE16][y LE16][angle LE16]... + ext | H606A: [angle+rot LE16][count][x LE16][y LE16]... + mainPower/ext + in/out", "layout": "panel topology", "response": "0xAA/0x31 read", "source": "cubelight/ble/MultiDeviceController.java, MultiDeviceControllerH606A.java"},
+      {"name": "device self/protocol", "op": "0xAA/0x02", "payload": "{00}", "layout": "multi-reply read", "response": "raw bytes", "source": "cubelight/ble/DeviceSelfController.java"},
+      {"name": "calibration panel", "op": "0x33/0x44", "payload": "[icIndex][rgbIndex] | H6065 [g][f...]", "layout": "per-panel", "response": "write result only", "source": "cubelight/ble/CalibrationController.java, h6067/ble/CalibrationControllerH6065.java"},
+      {"name": "install / recognise", "op": "0x33/0x45", "payload": "00 installed | FF not", "layout": "[0]", "response": "write result only", "source": "cubelight/ble/InstallController.java"},
+      {"name": "calibrate all", "op": "0x33/0x52", "payload": "04 <count> <icIndex+6*i>...", "layout": "multi-packet", "response": "write result only", "source": "cubelight/ble/CalibrationAllController.java"},
+      {"name": "H6069 recognition", "op": "0x33/0x50", "payload": "raw bytes", "layout": "device recognition", "response": "—", "source": "cubelight/ble/SetDeviceRecognitionController.java, newdetails/diy/h6069/H6069DiyParse.java"}
+    ],
+    "notifications": [
+      {"name": "wifi/ble state", "op": "notify cmdType 0x11", "layout": "[0]==0 connected", "source": "cubelight/ble/WifiNotifyParse.java, h6067/ble/WifiNotifyParse.java"},
+      {"name": "brightness", "op": "notify cmdType 0x20", "layout": "[0]", "source": "cubelight/ble/BrightnessNotifyParse.java, h6067 equivalent"},
+      {"name": "device status", "op": "notify cmdType 0x40", "layout": "10-byte block", "source": "base2light/ble/DeviceStatusNotifyParse.java"},
+      {"name": "movie feast", "op": "notify cmdType 0x60", "layout": "[0]==1 [1]==1", "source": "base2light/ble/controller/MovieFeastOnOffNotifyParse.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite type=1 origin=32 cmdVersion=0; scene builders use IotMsgProType.V2; status responses State/ResultPt",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{msg:{type:1,origin:32,cmdVersion:0,cmd:\"turn\",data:{val:1}}}", "response": "status", "source": "cubelight/iot/CmdTurn.java, h6067/iot/CmdTurn.java"},
+      {"cmd": "brightness", "data": {"val": "1..100"}, "example": null, "response": "state.brightness", "source": "cubelight/iot/CmdBrightness.java"},
+      {"cmd": "colorwc", "data": {"color": {"r": "0..255", "g": "0..255", "b": "0..255"}, "colorTemInKelvin": "0|K"}, "example": null, "response": "state.color", "source": "cubelight/iot/CmdColorWc.java"},
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte frame>"]}, "example": null, "response": "op.command[] decoded to frames", "source": "cubelight/iot/CmdPtReal.java, h6067/iot/CmdPtReal.java"},
+      {"cmd": "status (read)", "data": {}, "example": null, "response": "State + ResultPt lists", "source": "pact/Model.java V()"}
+    ],
+    "status": {"fields": {"onOff": "int", "brightness": "int 1..100", "mode": "int", "color": "object", "wifiHardVersion": "string", "wifiSoftVersion": "string", "modeValue": "string[] base64", "gradualValue": "string[] base64"}, "source": "base2light/pact/newdetail/iot/State.java, base2light/iot/common/ResultPt.java"}
+  },
+  "other_protocols": [
+    {"name": "matter", "details": "163/228/284; MatterInterceptor via H6063MatterHelper; version gates as listed per SKU", "source": "cubelight/adjust/h6063/H6063MatterHelper.java, cubelight/pact/Support.java"}
+  ],
+  "dynamic_effects": [
+    {"name": "solid/segmented colour", "submode": "0x15", "payload": "15 01 R G B [k] m0..m4 | 15 02 B m0..m4", "attributes": ["segments 23/25/21/20/140/40", "mask per 8 segments", "kelvin"], "source": "cubelight/ble/SubModeColor.java"},
+    {"name": "all brightness", "submode": "0x15/03", "payload": "15 03 group B0..B13", "attributes": ["max 14 values per packet"], "source": "cubelight/ble/SubModeColor.java"},
+    {"name": "all colour", "submode": "0x15/04", "payload": "15 04 group R0G0B0..R3G3B3", "attributes": ["max 4 colours per packet"], "source": "cubelight/ble/SubModeColor.java"},
+    {"name": "scene", "submode": "0x04", "payload": "04 <eff LE16> <dir> [x/y or focus4] <speed>", "attributes": ["effect id cloud catalog", "defaults 2229/2560", "direction codes", "speed 0..100"], "source": "cubelight/ble/SubModeScenes.java, h6067/ble/SubModeScenes.java, cubelight/adjust/ui/ScenesV0/V1"},
+    {"name": "new DIY", "submode": "0x0A", "payload": "0A <diyCode LE16> + multi-pixel 0xA3", "attributes": ["grid 23/25/21/20/140/40"], "source": "cubelight/ble/SubModeNewDiy.java, iot/CmdPtReal.java"},
+    {"name": "music legacy", "submode": "0x13", "payload": "13 code 00", "attributes": ["codes 51/53/56/57/58/59"], "source": "cubelight/ble/SubModeMusic.java"},
+    {"name": "music V3", "submode": "0x13", "payload": "13 code sens [flags RGB]", "attributes": ["codes 3/4/5/6/56", "sens 0..99"], "source": "cubelight/ble/SubModeMusicV3.java"},
+    {"name": "music V4 (H606A)", "submode": "0x13", "payload": "placeholder 13 00 00; multi frames carry effect", "attributes": ["effects 117..123", "direction -16..13", "traversal 0..5"], "source": "cubelight/ble/SubModeMusicV4.java, newdetails/music/H606ACubeMusicMode"},
+    {"name": "shape/panel map", "submode": "0x31", "payload": "[count][type][x LE16][y LE16][angle LE16]...", "attributes": ["panel type", "position", "angle", "ext/mainPower/io for H606A"], "source": "cubelight/ble/MultiDeviceController.java, MultiDeviceControllerH606A.java"},
+    {"name": "calibration", "submode": "0x44/0x52", "payload": "[ic][rgb] / [04][count][ic+6i]", "attributes": ["per-panel or all"], "source": "cubelight/ble/CalibrationController.java, CalibrationAllController.java"}
+  ],
+  "notes": "H6067/H6065 write only 3 mask bytes (24 segments) though 40 are declared; parsePosColor only decodes 16. H6067 music sub-mode is an empty stub. H606A music V4 write is a placeholder; real effect is multi-frame. H6069 declares 140 pixels but SubModeColor is a fixed 40-bit mask; full per-pixel effects must use panel/multi controllers. Scene catalogs/directions/speeds are runtime cloud data. Matter cluster mapping is in the closed matter library."
+}

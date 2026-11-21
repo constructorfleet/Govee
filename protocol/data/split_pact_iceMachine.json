@@ -1,0 +1,432 @@
+{
+ "split": "split_pact_iceMachine",
+ "families": [
+  "H8120",
+  "H8121",
+  "H8122",
+  "H8131",
+  "H8150"
+ ],
+ "skus": [
+  {
+   "sku": "H8121",
+   "family": "bullet ice maker (small/medium/max)",
+   "transports": [
+    "ble",
+    "iot",
+    "matter"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 306; protocols (1,1),(2,1); MatterInterceptor gate."
+  },
+  {
+   "sku": "H8120",
+   "family": "bullet ice maker with light/clean/descaling",
+   "transports": [
+    "ble",
+    "iot",
+    "matter"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 317; protocols (1,1),(1,2),(2,1),(2,2); MatterInterceptor gate."
+  },
+  {
+   "sku": "H8131",
+   "family": "ice maker thin/medium/thick/extra-thick",
+   "transports": [
+    "ble",
+    "iot",
+    "matter"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 321; protocols (1,1),(1,2); MatterInterceptor gate."
+  },
+  {
+   "sku": "H8122",
+   "family": "ice maker small/medium/large",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 372; protocol (1,1)."
+  },
+  {
+   "sku": "H8150",
+   "family": "keep-ice / demold / melt / reservation ice maker",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 397; protocol (1,1); reservation opcode 0x23."
+  }
+ ],
+ "ble": {
+  "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+  "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+  "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; VMs send raw payload via GMessageSingleReadWrite",
+  "commands": [
+   {
+    "name": "power / run control",
+    "op": "0x3A/0x01",
+    "payload": "00 00 cancel | 01 00 start ice | 01 01 start clean | 01 02 start melt | 01 03 start demold/drain | 00 cancel",
+    "layout": "[0]=action, [1]=subaction",
+    "response": "ack (frame[2]==0)",
+    "source": "h8121/h8122/h8131/h8150 vm"
+   },
+   {
+    "name": "mode",
+    "op": "0x3A/0x05",
+    "payload": "H8121 01 mode | H8122 mode | H8131 mode degree",
+    "layout": "1=Small/Thin, 2=Medium, 3=Max/Large/Thick; H8131 degree 0/1/2",
+    "response": "ack",
+    "source": "H8121Mode/H8122Mode/H8131Mode/H8131Degree"
+   },
+   {
+    "name": "timer write",
+    "op": "0x3A/0x13",
+    "payload": "group enableSwitch hour min repeat mode iceSize lightSwitch preCoolSwitch sceneLE16",
+    "layout": "[0] group, [1] enable/switch, [2] hour, [3] min, [4] repeat, [5] mode, [6] iceSize, [7] light, [8] preCool, [9..10] scene LE16",
+    "response": "ack",
+    "source": "h8120/8121/8131 TimerInfo beans"
+   },
+   {
+    "name": "do not disturb",
+    "op": "0x3A/0x16",
+    "payload": "DoNotDisturbInfo bytes",
+    "layout": "[enable, startH, startM, endH, endM] (repeat/forever encoded in enable)",
+    "response": "ack",
+    "source": "h8150/bean/DoNotDisturbInfo.java"
+   },
+   {
+    "name": "light switch",
+    "op": "0x3A/0x1B",
+    "payload": "01 01 00|01",
+    "layout": "[0..1] light sub-command, [2] state",
+    "response": "ack",
+    "source": "H8150/H8131/H8121 SharedViewModel"
+   },
+   {
+    "name": "brightness",
+    "op": "0x3A/0x1B",
+    "payload": "01 02 gear",
+    "layout": "[0..1] sub-command, [2] gear",
+    "response": "ack",
+    "source": "same"
+   },
+   {
+    "name": "light color",
+    "op": "0x3A/0x1B",
+    "payload": "05 0D R G B",
+    "layout": "[0..1]=05 0D, [2..4]=RGB",
+    "response": "ack",
+    "source": "same"
+   },
+   {
+    "name": "light scene",
+    "op": "0x3A/0x1B",
+    "payload": "05 13 sceneCode",
+    "layout": "[0..1]=05 13, [2]=scene code",
+    "response": "ack",
+    "source": "same"
+   },
+   {
+    "name": "settings",
+    "op": "0x3A/0x1F",
+    "payload": "02 v | 08 v | 16 v | 17 v | 01 keepIceLong",
+    "layout": "[0] setting id, [1] value",
+    "response": "ack",
+    "source": "H8121/H8122/H8150 SharedViewModel"
+   },
+   {
+    "name": "remind masks",
+    "op": "0x3A/0x25",
+    "payload": "N bitmask bytes",
+    "layout": "LE packed booleans; per-family order listed in md 3.1",
+    "response": "0xAA/0x25 or op 0x25",
+    "source": "H8150/H8131/H8120/H8121/H8122 Remind beans"
+   },
+   {
+    "name": "wash/clean reminder",
+    "op": "0x3A/0x27",
+    "payload": "00 off | 02 reset | on hour",
+    "layout": "[0] mode, [1] hours",
+    "response": "ack",
+    "source": "H8121/H8122 SharedViewModel"
+   },
+   {
+    "name": "buzzer mask",
+    "op": "0x3A/0x28",
+    "payload": "bitmask byte(s) [, gear]",
+    "layout": "per-family boolean list",
+    "response": "ack",
+    "source": "H81*BuzzerSwitchBean"
+   },
+   {
+    "name": "buzzer gear",
+    "op": "0x3A/0x29",
+    "payload": "gear",
+    "layout": "[0] gear",
+    "response": "0xAA/0x29 or op 0x29",
+    "source": "H8131/H8150 SharedViewModel"
+   },
+   {
+    "name": "chart switch",
+    "op": "0x3A/0xC1",
+    "payload": "30 01 | 01 b",
+    "layout": "[0] sub-command, [1] state",
+    "response": "ack",
+    "source": "H81*ChartViewModel"
+   },
+   {
+    "name": "light group (H8150/H8131)",
+    "op": "0x3A/0xB6",
+    "payload": "FD close | FB flags | F4/FC runState [mode] [sceneLE16] | F6 0A 0000 | F6 04 sceneLE16 | 15 FE/FC runState RGB",
+    "layout": "sub-command byte first",
+    "response": "ack",
+    "source": "H8150/H8131 SharedViewModel"
+   },
+   {
+    "name": "reservation (H8150)",
+    "op": "0x3A/0x23",
+    "payload": "01 hour min dayOrdinal | 00",
+    "layout": "[0] enable, [1] hour, [2] min, [3] day ordinal",
+    "response": "ack",
+    "source": "H8150CommandTypeCons.c; H8150SharedViewModel"
+   },
+   {
+    "name": "read abnormal",
+    "op": "0xAA/0x17",
+    "payload": "",
+    "layout": "read only",
+    "response": "[2] state code/bitmask, [3] flags",
+    "source": "H81*Model.k0"
+   },
+   {
+    "name": "read run state",
+    "op": "0xAA/0x19",
+    "payload": "",
+    "layout": "read only",
+    "response": "[2] run state, [3] sub-state, [4..] countdowns",
+    "source": "H81*Model.k0"
+   },
+   {
+    "name": "read DND",
+    "op": "0xAA/0x16",
+    "payload": "",
+    "layout": "read only",
+    "response": "[2] enable, [3] active",
+    "source": "H81*Model.k0"
+   },
+   {
+    "name": "read reminder",
+    "op": "0xAA/0x25",
+    "payload": "",
+    "layout": "read only",
+    "response": "bitmask bytes",
+    "source": "H81*Model.k0"
+   }
+  ],
+  "notifications": [
+   {
+    "name": "op frame batch",
+    "op": "cloud op or GATT notify",
+    "layout": "each 20-byte frame: [1]=0x17 abnormal, 0x19 state, 0x16 DND, 0x25 remind, 0x1B light, 0x29 buzzer gear",
+    "source": "H8120/H8121/H8122/H8131/H8150 Model.k0"
+   }
+  ]
+ },
+ "iot": {
+  "envelope": "Write/AbsCmdWrite V2 (IotMsgV2); BLE frames base64 in ptReal/op",
+  "commands": [
+   {
+    "cmd": "online",
+    "data": {},
+    "example": "{\"cmd\":\"online\"}",
+    "response": "subscription",
+    "source": "H81*Model.V()"
+   },
+   {
+    "cmd": "ptReal",
+    "data": {
+     "command": [
+      "<base64 20-byte frame>"
+     ]
+    },
+    "example": "{\"cmd\":\"ptReal\",\"data\":{\"command\":[\"...\"]}}",
+    "response": "op",
+    "source": "IceApplicationImp CmdBuilder; GMessageSingleReadWrite"
+   },
+   {
+    "cmd": "op",
+    "data": {
+     "command": [
+      "<base64 20-byte frame>"
+     ]
+    },
+    "example": "{\"cmd\":\"op\",\"data\":{\"command\":[\"...\"]}}",
+    "response": "H81*Model.k0 parses frames",
+    "source": "H81*Model.k0"
+   },
+   {
+    "cmd": "status",
+    "data": {},
+    "example": "{\"cmd\":\"status\"}",
+    "response": "{\"status\":...}",
+    "source": "IceApplicationImp CmdBuilder parseMsg"
+   },
+   {
+    "cmd": "turn",
+    "data": {
+     "val": "0|1"
+    },
+    "example": "{\"cmd\":\"turn\",\"data\":{\"val\":1}}",
+    "response": "status",
+    "source": "base CmdTurn"
+   },
+   {
+    "cmd": "multiSync",
+    "data": {
+     "command": [
+      "<base64>"
+     ]
+    },
+    "example": "{\"cmd\":\"multiSync\",\"data\":{\"command\":[\"...\"]}}",
+    "response": "status",
+    "source": "IceApplicationImp (CmdMultiSync)"
+   }
+  ],
+  "status": {
+   "fields": {
+    "status": "scene/switch result marker",
+    "op.command[]": "20-byte frames decoded as in ble.notifications"
+   },
+   "source": "H81*Model.k0; IceApplicationImp"
+  }
+ },
+ "other_protocols": [
+  {
+   "name": "matter",
+   "details": "MatterInterceptor accepts goods 306/317/321; uses com.govee.matter.pact.BleComm with standard Govee service/characteristic. No cluster map in split.",
+   "source": "IceApplicationImp.java; base com/govee/matter/pact/BleComm.java"
+  },
+  {
+   "name": "ble-broadcast",
+   "details": "Pairing via GoodsType.parseBleBroadcastPactInfo; no telemetry in advert.",
+   "source": "Support.java"
+  },
+  {
+   "name": "ptIot",
+   "details": "When OtaPactConfig.d(goodsType,pactType,pactCode) is true the same frames are sent as ptIot instead of ptReal.",
+   "source": "H8150SharedViewModel.java line ~412"
+  },
+  {
+   "name": "ota",
+   "details": "base ble/ota + OtaPactConfig.",
+   "source": "base2light ota"
+  }
+ ],
+ "dynamic_effects": [
+  {
+   "name": "light switch",
+   "submode": "0x1B/0x01/0x01",
+   "payload": "<0|1>",
+   "attributes": [
+    "on/off"
+   ],
+   "source": "H8150SharedViewModel"
+  },
+  {
+   "name": "brightness",
+   "submode": "0x1B/0x01/0x02",
+   "payload": "<gear>",
+   "attributes": [
+    "brightness 1-100"
+   ],
+   "source": "same"
+  },
+  {
+   "name": "light color",
+   "submode": "0x1B/0x05/0x0D",
+   "payload": "<R><G><B>",
+   "attributes": [
+    "RGB"
+   ],
+   "source": "same"
+  },
+  {
+   "name": "light scene",
+   "submode": "0x1B/0x05/0x13",
+   "payload": "<sceneCode>",
+   "attributes": [
+    "catalog scene id"
+   ],
+   "source": "same"
+  },
+  {
+   "name": "light group preview",
+   "submode": "0xB6",
+   "payload": "F4/FC <runState> <mode> <sceneLE16> | 15 FE/FC <runState> RGB | F6 04 <sceneLE16>",
+   "attributes": [
+    "run state",
+    "scene id",
+    "RGB"
+   ],
+   "source": "H8150/H8131 SharedViewModel"
+  }
+ ],
+ "notes": "No ble/ package and no CmdBuilder; commands are inline 20-byte frames sent by GMessageSingleReadWrite (local GATT or ptReal). All five SKUs are ble+iot; 306/317/321 add Matter commissioning. State is written by opcodes 0x17/0x19/0x16/0x25 rather than JSON fields. Exact chart byte offsets and SharedKey bit packing are in base classes / obfuscated code (see md gaps).",
+ "status_properties": [
+  {
+   "property": "waterLack",
+   "kind": "status",
+   "meaning": "Water-shortage state flag.",
+   "carrier": "H8131DeviceListStatus bytes[2]&0x01; H8150 run-state frame 0x19 [5]&0x10; H8120 state code 3 / H8121 state code 6 in 0x17",
+   "source": ".../h8131/bean/H8131DeviceListStatus.java; .../h8150/bean/H8150RunStateInfo.java; .../h8120/bean/H8120DeviceState.java; .../h8121/bean/H8121DeviceState.java"
+  },
+  {
+   "property": "outerTankLow",
+   "kind": "status",
+   "meaning": "Outer/lower tank water level low.",
+   "carrier": "H8131DeviceListStatus bytes[1]&0x40",
+   "source": ".../h8131/bean/H8131DeviceListStatus.java"
+  },
+  {
+   "property": "iceFull",
+   "kind": "status",
+   "meaning": "Ice basket full.",
+   "carrier": "H8131DeviceListStatus bytes[1]&0x80; H8120 state code 2; H8121 state code 4",
+   "source": ".../h8131/bean/H8131DeviceListStatus.java; .../h8120/bean/H8120DeviceState.java; .../h8121/bean/H8121DeviceState.java"
+  },
+  {
+   "property": "doorNotClosed / isLidOpen",
+   "kind": "status",
+   "meaning": "Lid/door open.",
+   "carrier": "H8131DeviceListStatus bytes[2]&0x02; H8150 run-state frame 0x19 [5] bit 7",
+   "source": ".../h8131/bean/H8131DeviceListStatus.java; .../h8150/bean/H8150RunStateInfo.java"
+  },
+  {
+   "property": "waterShortageOnOff",
+   "kind": "setting",
+   "meaning": "Push-notification enable, not the water-shortage state.",
+   "carrier": "pact/Ext + bind ext",
+   "source": ".../h8120/pact/H8120BindExt.java; .../h8121/pact/H8121BindExt.java; .../h8131/pact/H8131BindExt.java; .../h8150/pact/H8150BindExt.java"
+  }
+ ]
+}

@@ -1,0 +1,1098 @@
+{
+ "split": "split_pact_h6099",
+ "families": [
+  "H605B",
+  "H605D",
+  "H605C",
+  "H6601",
+  "H6602",
+  "H6603",
+  "H6604",
+  "H8604",
+  "H6608",
+  "H2A40",
+  "H6099",
+  "H6690",
+  "H6098",
+  "H8098",
+  "H605A",
+  "H6097",
+  "H66A0",
+  "H66A1"
+ ],
+ "skus": [
+  {
+   "sku": "H605B",
+   "family": "HDMI sync box (DreamView T1 Pro)",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 82; camera calibration"
+  },
+  {
+   "sku": "H605D",
+   "family": "HDMI sync box (DreamView T1S Pro)",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 82 alias"
+  },
+  {
+   "sku": "H605C",
+   "family": "HDMI sync box",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 120; also (1,2); 14 segments; HTTP user-cali"
+  },
+  {
+   "sku": "H6601",
+   "family": "HDMI sync box (AI Gaming)",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 138; 3 HDMI ports; 24 segments"
+  },
+  {
+   "sku": "H6602",
+   "family": "HDMI sync box (AI Gaming)",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 142; also (2,1); 14 segments"
+  },
+  {
+   "sku": "H6603",
+   "family": "HDMI sync box kit",
+   "transports": [
+    "ble",
+    "iot",
+    "matter"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 192; also (2,1),(3,1); 4 ports; 24 segments"
+  },
+  {
+   "sku": "H6604",
+   "family": "HDMI sync box strip",
+   "transports": [
+    "ble",
+    "iot",
+    "matter"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 243; also (2,1),(3,1); 4 ports; 14 segments"
+  },
+  {
+   "sku": "H8604",
+   "family": "HDMI sync box strip",
+   "transports": [
+    "ble",
+    "iot",
+    "matter"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 243 alias"
+  },
+  {
+   "sku": "H6608",
+   "family": "TV vertical strip",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 172; 30 segments"
+  },
+  {
+   "sku": "H2A40",
+   "family": "HDMI 2.1 sync box",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 360; newer box"
+  },
+  {
+   "sku": "H6099",
+   "family": "TV backlight",
+   "transports": [
+    "ble",
+    "iot",
+    "matter"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 191; also (2,1); 24 segments at IC 24"
+  },
+  {
+   "sku": "H6690",
+   "family": "TV backlight",
+   "transports": [
+    "ble",
+    "iot",
+    "matter"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 191 alias"
+  },
+  {
+   "sku": "H6098",
+   "family": "TV backlight",
+   "transports": [
+    "ble",
+    "iot",
+    "matter"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 336"
+  },
+  {
+   "sku": "H8098",
+   "family": "TV backlight",
+   "transports": [
+    "ble",
+    "iot",
+    "matter"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 336 alias"
+  },
+  {
+   "sku": "H605A",
+   "family": "TV backlight",
+   "transports": [
+    "ble",
+    "iot",
+    "matter"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 203; also (2,1),(3,1); 14 segments"
+  },
+  {
+   "sku": "H6097",
+   "family": "TV backlight",
+   "transports": [
+    "ble",
+    "iot",
+    "matter"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 253; also (2,1); 24 segments; 3-image calibration"
+  },
+  {
+   "sku": "H66A0",
+   "family": "TV backlight",
+   "transports": [
+    "ble",
+    "iot",
+    "matter"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 273; also (2,1); 14 segments"
+  },
+  {
+   "sku": "H66A1",
+   "family": "TV backlight",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 327; also (2,1); 14 segments"
+  }
+ ],
+ "ble": {
+  "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+  "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+  "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; 0x33 write, 0xAA read, 0xA3 multi",
+  "commands": [
+   {
+    "name": "power",
+    "op": "0x33/0x01",
+    "payload": "01|00",
+    "layout": "[0] state",
+    "response": "0xAA/0x01",
+    "source": "base2light/ble/controller/SwitchController.java, */ble/controller/compose/ControllerSwitch.java"
+   },
+   {
+    "name": "brightness",
+    "op": "0x33/0x04",
+    "payload": "0..100",
+    "layout": "[0]",
+    "response": "0xAA/0x04",
+    "source": "base2light/ble/controller/BrightnessController.java"
+   },
+   {
+    "name": "mode",
+    "op": "0x33/0x05",
+    "payload": "sub-mode",
+    "layout": "0x15 colour, 0x04 scene, 0x0A DIY, 0x13 music, 0x00 video",
+    "response": "0xAA/0x05",
+    "source": "pact_h605b/ble/Mode.java, pact_h6099/ble/Mode.java"
+   },
+   {
+    "name": "icNumber",
+    "op": "0xAA/0x40",
+    "payload": "",
+    "layout": "read IC / segment count",
+    "response": "0xEE/0x40",
+    "source": "*/ble/controller/compose/ControllerIcNum.java"
+   },
+   {
+    "name": "direction",
+    "op": "0x33/0x30",
+    "payload": "dir",
+    "layout": "[0] direction",
+    "response": "0xAA/0x30",
+    "source": "*/ble/controller/compose/DirectionController.java, LightDirectionController.java"
+   },
+   {
+    "name": "calibration",
+    "op": "0x33/0x44",
+    "payload": "02 01 into / 02 00 exit",
+    "layout": "[0]=2 [1]=1|0",
+    "response": "0xAA/0x44",
+    "source": "InstallCaliController.java, compose/CalibrationController.java"
+   },
+   {
+    "name": "swapLight",
+    "op": "0x33/0x34",
+    "payload": "",
+    "layout": "value_swap_light_pos=52",
+    "response": "0xEE/0x34",
+    "source": "SwapLightController.java"
+   },
+   {
+    "name": "startTime",
+    "op": "0xAA/0x35",
+    "payload": "",
+    "layout": "MSG_TYPE_READ_START_TIME=53",
+    "response": "0xEE/0x35",
+    "source": "StartTimeController.java"
+   },
+   {
+    "name": "onOffMemory",
+    "op": "0x33/0x41",
+    "payload": "02 mode",
+    "layout": "[0]=2 [1]=memory mode",
+    "response": "0xAA/0x41",
+    "source": "Controller4OnOffMemory.java"
+   },
+   {
+    "name": "gradual",
+    "op": "0x33/0xA3",
+    "payload": "01|00",
+    "layout": "fade on/off",
+    "response": "0xEE/0xA3",
+    "source": "GradualController.java, Gradual4BleWifiController.java"
+   },
+   {
+    "name": "composeLightSwitch",
+    "op": "0x33/0x36",
+    "payload": "val",
+    "layout": "multi-light switch",
+    "response": "0xEE/0x36",
+    "source": "ComposeLightSwitchController.java, ComposeLightController.java"
+   },
+   {
+    "name": "timer",
+    "op": "0x33/0x23",
+    "payload": "group enableType hour min repeat",
+    "layout": "read all = 23 FF",
+    "response": "0xEE/0x23",
+    "source": "pact_h6099/ble/controller/compose/TimerController.java"
+   },
+   {
+    "name": "syncTime",
+    "op": "0x33/0x09",
+    "payload": "time bytes",
+    "layout": "—",
+    "response": "none",
+    "source": "pact_h6099/ble/controller/compose/SyncTimeController.java"
+   },
+   {
+    "name": "softVersion",
+    "op": "0x33/0x06",
+    "payload": "",
+    "layout": "read only",
+    "response": "0xEE/0x06",
+    "source": "SoftVersionController.java"
+   },
+   {
+    "name": "hardVersion",
+    "op": "0x33/0x07",
+    "payload": "",
+    "layout": "read only",
+    "response": "0xEE/0x07",
+    "source": "HardVersionController.java, DspVersionController.java"
+   },
+   {
+    "name": "sleep",
+    "op": "0x33/0x11",
+    "payload": "enable startBri closeTime curTime [defaultLight rgbR rgbG rgbB kLo kHi voiceOpen voiceVolume voiceLo voiceHi]",
+    "layout": "4 bytes V1; 14 bytes V2",
+    "response": "0xAA/0x11",
+    "source": "base2light/ble/controller/SleepController{,V2}.java, pact_h6099/pact/Comm.java"
+   },
+   {
+    "name": "whiteBalance",
+    "op": "0x33/0xA9",
+    "payload": "06 01 value",
+    "layout": "[0]=6 [1]=1 [2]=value",
+    "response": "0xAA/0xA9",
+    "source": "Controller4WhiteBalance.java"
+   },
+   {
+    "name": "blackBorderRemove",
+    "op": "0x33/0xA9",
+    "payload": "0B 01 flag",
+    "layout": "[0]=0x0B [1]=1 [2]=flag",
+    "response": "0xAA/0xA9",
+    "source": "BlackBorderRemoveController1.java"
+   },
+   {
+    "name": "blackScreen",
+    "op": "0x33/0xA9",
+    "payload": "0A 06 enable mode startLo startHi endLo endHi",
+    "layout": "[0]=0x0A [1]=6 [2]=enable [3]=mode 1|2 [4..5]=start LE16 [6..7]=end LE16; read 0A",
+    "response": "0xAA/0xA9 0A",
+    "source": "pact_h6099/ble/controller/compose/BlackScreenController.java; base2light/balckscreen/controller/BlackScreenController.java"
+   },
+   {
+    "name": "hdmiPort",
+    "op": "0x33/0xA9",
+    "payload": "03 01 port",
+    "layout": "[0]=3 [1]=1 [2]=port",
+    "response": "0xAA/0xA9 03",
+    "source": "pact_h605b/ble/controller/compose/Controller4Hdmi.java"
+   },
+   {
+    "name": "checkCamera",
+    "op": "0xAA/0x32",
+    "payload": "",
+    "layout": "H605B only",
+    "response": "0xEE/0x32",
+    "source": "CheckCameraController.java"
+   },
+   {
+    "name": "checkLightInstall",
+    "op": "0xAA/0xAA",
+    "payload": "",
+    "layout": "H605B only",
+    "response": "0xEE/0xAA",
+    "source": "CheckLightController.java"
+   },
+   {
+    "name": "exitCheckLightInstall",
+    "op": "0x33/0xAF",
+    "payload": "",
+    "layout": "H605B only",
+    "response": "0xEE/0xAF",
+    "source": "ExitCheckLightController.java"
+   },
+   {
+    "name": "cameraPosition",
+    "op": "0x33/0x31",
+    "payload": "opaque",
+    "layout": "H605B only",
+    "response": "0xAA/0x31",
+    "source": "CameraPosController.java"
+   },
+   {
+    "name": "usbCheck",
+    "op": "0x33/0x38",
+    "payload": "val",
+    "layout": "H605B only",
+    "response": "0xEE/0x38",
+    "source": "UsbCheckController.java"
+   },
+   {
+    "name": "usbCheckState",
+    "op": "0x33/0x37",
+    "payload": "val",
+    "layout": "H605B only",
+    "response": "0xEE/0x37",
+    "source": "UsbCheckStateController.java"
+   },
+   {
+    "name": "boxEffect",
+    "op": "0x33/0xB6",
+    "payload": "on effectIdx dynamic speed",
+    "layout": "[0] on [1] effect [2] dynamic [3] speed",
+    "response": "0xEE/0xB6",
+    "source": "ControllerBoxEffect.java"
+   },
+   {
+    "name": "audioFrom",
+    "op": "0x33/0xB7",
+    "payload": "src",
+    "layout": "audio source",
+    "response": "0xEE/0xB7",
+    "source": "Controller4AudioFrom.java"
+   },
+   {
+    "name": "multiMusic",
+    "op": "0x33/0x41",
+    "payload": "layer block",
+    "layout": "H605B",
+    "response": "0xEE/0x41",
+    "source": "MultiMusicController.java, MultiMusicControllerV3.java"
+   },
+   {
+    "name": "whiteBalanceClassic",
+    "op": "0x33/0xA9",
+    "payload": "00 03 auto R B",
+    "layout": "[0]=0 [1]=3 [2]=auto?0:1 [3]=R [4]=B; read 00 -> valid[2]=defaultAuto valid[3]=defaultR valid[4]=defaultB valid[5]=auto valid[6]=R valid[7]=B",
+    "response": "0xAA/0xA9 00",
+    "source": "base2light/videomode/newdetail/funtion/WhiteBalanceVmInterface.java"
+   },
+   {
+    "name": "whiteBalanceAdvanced",
+    "op": "0x33/0xA9",
+    "payload": "0F 03 R G B",
+    "layout": "[0]=0x0F [1]=3 [2..4]=R,G,B; read 0F -> valid[2..5]=R,G,B,type",
+    "response": "0xAA/0xA9 0F",
+    "source": "base2light/videomode/newdetail/funtion/WhiteBalanceVmInterface.java"
+   },
+   {
+    "name": "autoWhiteBalance",
+    "op": "0x33/0xA9",
+    "payload": "12",
+    "layout": "trigger auto white balance (old path)",
+    "response": "ack",
+    "source": "base2light/videomode/newdetail/controller/VideoAutoWbController.java"
+   },
+   {
+    "name": "checkWhiteBalanceCali",
+    "op": "0xAA/0xA9",
+    "payload": "13",
+    "layout": "read; valid[2]==1 means calibrated",
+    "response": "0xAA/0xA9 13",
+    "source": "base2light/videomode/newdetail/controller/VideoCheckWbCaliController.java"
+   },
+   {
+    "name": "exitWhiteBalanceCali",
+    "op": "0x33/0xA9",
+    "payload": "14",
+    "layout": "exit calibration",
+    "response": "ack",
+    "source": "base2light/videomode/newdetail/controller/VideoAutoWbController.java"
+   },
+   {
+    "name": "sensitivity",
+    "op": "0x33/0xA9",
+    "payload": "01 01 value",
+    "layout": "[0]=1 [1]=1 [2]=value; read 01 -> valid[2]",
+    "response": "0xAA/0xA9 01",
+    "source": "base2light/videomode/newdetail/controller/VideoSensitivityController.java"
+   },
+   {
+    "name": "videoBrightness",
+    "op": "0x33/0xA9",
+    "payload": "02 01 value",
+    "layout": "[0]=2 [1]=1 [2]=whole-RL brightness; read 02",
+    "response": "0xAA/0xA9 02",
+    "source": "base2light/videomode/newdetail/funtion/WholeRLBrightnessVmInterface.java"
+   },
+   {
+    "name": "aiAction",
+    "op": "0x33/0xA9",
+    "payload": "04 01 value",
+    "layout": "[0]=4 [1]=1 [2]=AI action id; read 04",
+    "response": "0xAA/0xA9 04",
+    "source": "pact_h605b/ble/controller/compose/AiActionController.java"
+   },
+   {
+    "name": "colorCalibration",
+    "op": "0x33/0xA9",
+    "payload": "05 03 R G B | 05 04 R G B extra",
+    "layout": "[0]=5 [1]=3|4 [2..]=RGB[+extra]; read 05 -> valid[2..5]",
+    "response": "0xAA/0xA9 05",
+    "source": "base2light/videomode/newdetail/controller/ColorCaliController.java; pact_h6099/ble/controller/compose/Controller4ColorCalibration.java"
+   },
+   {
+    "name": "hdmiBlackScreen",
+    "op": "0x33/0xA9",
+    "payload": "0C 03 enable durLo durHi",
+    "layout": "[0]=0x0C [1]=3 [2]=enable [3..4]=duration seconds LE16 (15..300, default 30); read 0C",
+    "response": "0xAA/0xA9 0C",
+    "source": "base2light/balckscreen/hdmi/controller/BlackScreenHdmiController.java"
+   },
+   {
+    "name": "hdrCalibration",
+    "op": "0x33/0xA9",
+    "payload": "0D",
+    "layout": "write triggers HDR calibration; read 0D polls result",
+    "response": "0xAA/0xA9 0D",
+    "source": "base2light/videomode/newdetail/controller/HDRCaliController.java"
+   },
+   {
+    "name": "saturation",
+    "op": "0x33/0xA9",
+    "payload": "0E 01 value",
+    "layout": "[0]=0x0E [1]=1 [2]=value; read 0E -> valid[2]",
+    "response": "0xAA/0xA9 0E",
+    "source": "base2light/videomode/newdetail/controller/VideoSaturationController.java"
+   },
+   {
+    "name": "aiFilter",
+    "op": "0x33/0xA9",
+    "payload": "10 0F enable R G B saturation codeLo codeHi autoCloseLo autoCloseHi timeLo timeHi tz0 tz1 tz2 tz3",
+    "layout": "[2]=enable [3]=R [4]=G [5]=B [6]=saturation [7..8]=filter code LE16 [9..10]=auto-close minutes LE16 [11..12]=expiry time-of-day LE16 [13..16]=timezone; read 10 -> valid[2..16]",
+    "response": "0xAA/0xA9 10",
+    "source": "base2light/videomode/newdetail/controller/AiFilterController.java"
+   },
+   {
+    "name": "hdrEffect",
+    "op": "0x33/0xA9",
+    "payload": "11 02 enable level",
+    "layout": "[0]=0x11 [1]=2 [2]=enable [3]=level; read 11 -> valid[2]==1,valid[3]",
+    "response": "0xAA/0xA9 11",
+    "source": "base2light/videomode/newdetail/controller/VideoHdrEffectController.java"
+   },
+   {
+    "name": "aiUpdateStatus",
+    "op": "0xAA/0xA9",
+    "payload": "09",
+    "layout": "read AI update status",
+    "response": "0xAA/0xA9 09",
+    "source": "pact_h605b/ble/controller/compose/AiUpdateStatusController.java"
+   },
+   {
+    "name": "soundEffectMic",
+    "op": "0x33/0xAC",
+    "payload": "micIndex",
+    "layout": "[0]=selected mic index",
+    "response": "ack",
+    "source": "base2light/videomode/newdetail/funtion/SoundEffectVmInterface.java"
+   },
+   {
+    "name": "relativeBrightness",
+    "op": "0x33/0xAE",
+    "payload": "01 04|06 v0 v1 v2 v3 [v4 v5]",
+    "layout": "[0]=1 [1]=segment count (4|6) then segment levels; read AE 01",
+    "response": "0xAA/0xAE 01",
+    "source": "base2light/relativebrightness/controller/RelativeBrightnessController.java"
+   }
+  ],
+  "notifications": [
+   {
+    "name": "wifi",
+    "op": "0x11",
+    "layout": "[0]==0 connected",
+    "source": "pact_h605b/ble/WifiNotifyParse.java, pact_h6099/ble/WifiNotifyParse.java"
+   },
+   {
+    "name": "usbOvertime",
+    "op": "0x50",
+    "layout": "USB check timeout",
+    "source": "pact_h605b/ble/UsbCheckOvertimeParse.java"
+   },
+   {
+    "name": "deviceStatus",
+    "op": "0x40",
+    "layout": "first 10 bytes",
+    "source": "base2light/ble/DeviceStatusNotifyParse.java"
+   },
+   {
+    "name": "lightInstall",
+    "op": "0x23",
+    "layout": "[0] installed, [1] variant",
+    "source": "pact_h605b/ble/LightInstallNotifyParse.java"
+   },
+   {
+    "name": "caliLightOvertime",
+    "op": "0x25",
+    "layout": "calibration light timeout",
+    "source": "pact_h605b/ble/CaliLightParse.java"
+   },
+   {
+    "name": "lightAndHdmi",
+    "op": "0x30",
+    "layout": "[0]=1 light-bar bits; [0]=3 HDMI port+bits; [0]=8 AI model LE16; [0]=9 other",
+    "source": "pact_h605b/ble/LightAndHdmiNotifyParse.java, pact_h6099/ble/LightAndHdmiNotifyParse.java"
+   },
+   {
+    "name": "soundSource",
+    "op": "0x32",
+    "layout": "[0]==1 HDMI else DEVICE",
+    "source": "pact_h605b/ble/SoundSourceNotifyParse.java"
+   },
+   {
+    "name": "movieFeast",
+    "op": "0x60",
+    "layout": "[0]==1, [1] on/off",
+    "source": "base2light/ble/controller/MovieFeastOnOffNotifyParse.java"
+   }
+  ]
+ },
+ "iot": {
+  "envelope": "Write/AbsCmdWrite, IotMsgProType.V1/V2; read replies keys state + op",
+  "commands": [
+   {
+    "cmd": "turn",
+    "data": {
+     "val": "0|1"
+    },
+    "example": "{\"msg\":{\"type\":1,\"cmd\":\"turn\",\"data\":{\"val\":1}}}",
+    "response": "state.onOff",
+    "source": "pact_h605b/iot/CmdTurn.java, pact_h6099/iot/CmdTurn.java"
+   },
+   {
+    "cmd": "brightness",
+    "data": {
+     "val": "0..100"
+    },
+    "example": "{\"msg\":{\"type\":1,\"cmd\":\"brightness\",\"data\":{\"val\":50}}}",
+    "response": "state.brightness",
+    "source": "pact_h6099/iot/CmdBrightness.java"
+   },
+   {
+    "cmd": "colorwc",
+    "data": {
+     "color": {
+      "r": "0..255",
+      "g": "0..255",
+      "b": "0..255"
+     },
+     "colorTemInKelvin": "int"
+    },
+    "example": "{\"msg\":{\"type\":1,\"cmd\":\"colorwc\",\"data\":{\"color\":{\"r\":255,\"g\":0,\"b\":0},\"colorTemInKelvin\":0}}}",
+    "response": "state",
+    "source": "pact_h6099/iot/CmdColorWc.java"
+   },
+   {
+    "cmd": "ptReal",
+    "data": {
+     "command": [
+      "<base64 20-byte frame>"
+     ]
+    },
+    "example": "{\"msg\":{\"type\":1,\"cmd\":\"ptReal\",\"data\":{\"command\":[\"...\"]}}}",
+    "response": "op.pt[]",
+    "source": "pact_h6099/iot/CmdPtReal.java, pact_h605b/iot/CmdPtReal.java"
+   },
+   {
+    "cmd": "status",
+    "data": {},
+    "example": "{\"msg\":{\"type\":0,\"cmd\":\"status\"}}",
+    "response": "state + op",
+    "source": "pact_h6099/iot/CmdStatus.java"
+   },
+   {
+    "cmd": "online",
+    "data": {},
+    "example": "{}",
+    "response": "online",
+    "source": "*/iot/Cmd.java"
+   },
+   {
+    "cmd": "color",
+    "data": {
+     "r": "int",
+     "g": "int",
+     "b": "int"
+    },
+    "example": "{}",
+    "response": "state",
+    "source": "pact_h605b/iot/Cmd.java"
+   },
+   {
+    "cmd": "colorTem",
+    "data": {
+     "colorTemInKelvin": "int",
+     "color": {
+      "r": "int",
+      "g": "int",
+      "b": "int"
+     }
+    },
+    "example": "{}",
+    "response": "state",
+    "source": "pact_h605b/iot/Cmd.java"
+   },
+   {
+    "cmd": "snapshot",
+    "data": {},
+    "example": "{}",
+    "response": "camera snapshot",
+    "source": "pact_h605b/iot/ResultSnapShot.java, pact_h6099/add/cameraCali3Img/ReadSnapShotCmd.java"
+   },
+   {
+    "cmd": "dewarpsnapshot",
+    "data": {},
+    "example": "{}",
+    "response": "de-warped snapshot",
+    "source": "pact_h6099/iot/Cmd.java"
+   },
+   {
+    "cmd": "points",
+    "data": {
+     "points": [
+      "..."
+     ]
+    },
+    "example": "{}",
+    "response": "calibration points",
+    "source": "pact_h605b/iot/CmdCalibrationPoints.java"
+   },
+   {
+    "cmd": "camera",
+    "data": {},
+    "example": "{}",
+    "response": "camera on/off",
+    "source": "*/iot/Cmd.java"
+   },
+   {
+    "cmd": "swap",
+    "data": {},
+    "example": "{}",
+    "response": "swap light position",
+    "source": "*/iot/Cmd.java"
+   },
+   {
+    "cmd": "ptIot",
+    "data": {},
+    "example": "{}",
+    "response": "IoT-channel passthrough",
+    "source": "*/iot/Cmd.java"
+   },
+   {
+    "cmd": "iniUrl",
+    "data": {},
+    "example": "{}",
+    "response": "H605C calibration URL",
+    "source": "pact_h605b/iot/Cmd.java"
+   },
+   {
+    "cmd": "iniRoi",
+    "data": {},
+    "example": "{}",
+    "response": "H605C calibration ROI",
+    "source": "pact_h605b/iot/Cmd.java"
+   },
+   {
+    "cmd": "IoTConnected",
+    "data": {},
+    "example": "{}",
+    "response": "link state",
+    "source": "*/iot/Cmd.java"
+   }
+  ],
+  "status": {
+   "fields": {
+    "state.onOff": "int 0|1",
+    "state.brightness": "int 0..100",
+    "state.wifiSoftVersion": "string",
+    "state.wifiHardVersion": "string",
+    "op.pt": "array of base64 20-byte BLE frames",
+    "op.snapshot": "camera calibration image payload"
+   },
+   "source": "pact_h6099/iot/State.java, pact_h605b/iot/ResultPt.java, pact_h6099/iot/ResultPt.java"
+  }
+ },
+ "other_protocols": [
+  {
+   "name": "http-calibration",
+   "details": "POST /bff-app/v1/axin/user-cali (H605C); GET /bff-app/v1/device-guide/configs?sku= (HDMI resolutions); GET/POST appco/v1/calibration/point; POST device/rest/devices/v1/appDeviceTopic.",
+   "source": "pact_h605b/add/net/NetApi.java, add/net/hdmi/HdmiApi.java, pact_h6099/add/net/NetApi.java"
+  },
+  {
+   "name": "matter",
+   "details": "H6603 (192) and H6604 (243) via pact_h605b MatterSupport; H6099/H6690 (191), H6098 (336), H605A (203), H6097 (253), H66A0 (273) via pact_h6099 MatterSupport.",
+   "source": "pact_h605b/pact/MatterSupport.java, pact_h6099/pact/MatterSupport.java"
+  },
+  {
+   "name": "camera-pipeline",
+   "details": "Camera calibration activities and point upload are HTTP + local image processing, outside BLE.",
+   "source": "pact_h605b/add/*Calibration*.java, pact_h6099/add/cameraCali3Img/**"
+  },
+  {
+   "name": "hdmi-metadata",
+   "details": "Supported resolutions: GET /bff-app/v1/device-guide/configs?sku= -> HdmiResolutionResponse{resolutions:[{resolution,rate}]}. Port icons: GET/POST /bff-app/v1/hdmi-port/icons (Response4HdmiIconList{hdmiPortIconId,portIcons:[{port,iconId}]}; Request4UpdateHdmiIconList{hdmiPortIconId,sku,device,portIcons}).",
+   "source": "pact_h605b/add/net/hdmi/HdmiApi.java; com/govee/kt/HdmiIconVM.java; com/govee/kt/net/INet.java"
+  },
+  {
+   "name": "movie-feast-rest",
+   "details": "Movie/Music/Scenes feast CRUD + snapshots: POST/DELETE /appsku/v1/moment/feasts; PUT /appsku/v1/moment/feasts/names; GET /bff-app/v1/moment/feasts/details|main-devices|sub-devices; POST /appsku/v1/moment/feasts/region {gId,deviceAreaConfigs[{sku,device,areaConfigs,switchConfigs,extStr}]}; GET /bff-app/v1/scene/music-feast; POST /bff-app/v1/scene/music-feast/effect; PUT /bff-app/v1/music-feast/voice[/btn]; POST /bff-app/v1/scene-feast[/iot-control]; POST /bff-app/v1/feast/mute; POST /bff-app/v1/feast/snapshot/cmd-refactor (feastId,feastType,mainSku,mainDevice,mainVersionHard,mainGoodsType,mainPactType,mainPactCode,newSubDevices,oldSubDevices).",
+   "source": "base com/govee/home/main/device/moment/net/IMomentNet.java; net/request/Feast*Request.java; com/govee/home/compose/feast/SnapshotCmdService.java"
+  }
+ ],
+ "dynamic_effects": [
+  {
+   "name": "colorH605B",
+   "submode": "0x15",
+   "payload": "15 01 R G B kLo kHi R2 G2 B2 mask* | 15 02 idx mask*",
+   "attributes": [
+    "24-segment mask 3 bytes",
+    "kelvin",
+    "temperature RGB"
+   ],
+   "source": "pact_h605b/ble/SubModeColor.java"
+  },
+  {
+   "name": "colorH605C",
+   "submode": "0x15",
+   "payload": "15 01 R G B kLo kHi R2 G2 B2 mask2 | 15 02 idx mask2",
+   "attributes": [
+    "14 segments",
+    "2-byte mask"
+   ],
+   "source": "pact_h605b/ble/v2/SubModeColorV2.java"
+  },
+  {
+   "name": "colorH6601H6603",
+   "submode": "0x15",
+   "payload": "15 01 R G B kLo kHi R2 G2 B2 mask3 | 15 02 idx mask3",
+   "attributes": [
+    "24 segments",
+    "3-byte mask"
+   ],
+   "source": "pact_h605b/ble/v3/SubModeColorV3.java"
+  },
+  {
+   "name": "colorH6602H6604",
+   "submode": "0x15",
+   "payload": "15 02 bri mask2 | 15 01 R G B kLo kHi 0 0 0 mask2 | 15 00 | 15 03 group bri… | 15 04 group rgb…",
+   "attributes": [
+    "opType 0..7",
+    "14 segments"
+   ],
+   "source": "pact_h605b/ble/v4/Sub4Color.java"
+  },
+  {
+   "name": "colorH6608",
+   "submode": "0x15",
+   "payload": "15 01 R G B kLo kHi R2 G2 B2 mask3",
+   "attributes": [
+    "30 segments",
+    "3-byte mask"
+   ],
+   "source": "pact_h605b/ble/h6608/SubModeColor4H6608.java"
+  },
+  {
+   "name": "colorH6099",
+   "submode": "0x15",
+   "payload": "15 01 R G B kLo kHi 0 0 0 mask* | 15 02 bri mask* | 15 03 group bri… | 15 04 group rgb…",
+   "attributes": [
+    "opType 0..7",
+    "14 segments default, 24 for H6097",
+    "2/3-byte mask"
+   ],
+   "source": "pact_h6099/ble/v1/SubModeColorV1.java"
+  },
+  {
+   "name": "scene",
+   "submode": "0x04",
+   "payload": "04 effectLo effectHi",
+   "attributes": [
+    "16-bit LE effect id",
+    "0xA3 multi-layer blob"
+   ],
+   "source": "pact_h605b/ble/SubModeScenes.java, pact_h605b/ble/v2|v3/SubModeScenesV2|V3.java, pact_h605b/ble/v4/Sub4Scenes.java, pact_h6099/ble/v1/SubModeScenesV1.java"
+  },
+  {
+   "name": "diy",
+   "submode": "0x0A",
+   "payload": "0A codeLo codeHi",
+   "attributes": [
+    "16-bit LE DIY code",
+    "templates via CmdPtReal.getDiyCmdPt*"
+   ],
+   "source": "pact_h605b/ble/SubModeNewDiy.java, pact_h6099/ble/Sub4Diy.java"
+  },
+  {
+   "name": "musicH605B",
+   "submode": "0x13",
+   "payload": "13 code sens [flags]",
+   "attributes": [
+    "codes 64,65,66,67,72,80,82,83",
+    "sensitivity 0..99"
+   ],
+   "source": "pact_h605b/ble/SubModeMusic.java"
+  },
+  {
+   "name": "musicH605C",
+   "submode": "0x13",
+   "payload": "13 code sens dyn auto R G B",
+   "attributes": [
+    "8 bytes",
+    "auto/dynamic flags"
+   ],
+   "source": "pact_h605b/ble/v2/SubModeMusicV2.java"
+  },
+  {
+   "name": "musicH6601H6603",
+   "submode": "0x13",
+   "payload": "13 code sens [flags]",
+   "attributes": [
+    "5 bytes"
+   ],
+   "source": "pact_h605b/ble/v3/SubModeMusicV3.java"
+  },
+  {
+   "name": "musicH6602H6604",
+   "submode": "0x13",
+   "payload": "13 code sens dyn 00 auto R G B",
+   "attributes": [
+    "9 bytes"
+   ],
+   "source": "pact_h605b/ble/v4/Sub4Music.java"
+  },
+  {
+   "name": "musicH6099",
+   "submode": "0x13",
+   "payload": "13 code sens | 13 code sens dyn auto 00 00 R G B",
+   "attributes": [
+    "codes 64..83 + new 48..55"
+   ],
+   "source": "pact_h6099/ble/v1/SubModeMusicV1.java"
+  },
+  {
+   "name": "video",
+   "submode": "0x00",
+   "payload": "00 drama part vividness voiceOpen 02 voice",
+   "attributes": [
+    "drama flag",
+    "part",
+    "vividness 0..100",
+    "voice code"
+   ],
+   "source": "pact_h605b/ble/SubModeVideo.java, v2/v3/v4/SubModeVideo*, pact_h6099/ble/v1/SubModeVideoV1.java"
+  },
+  {
+   "name": "micH6099",
+   "submode": "0x05",
+   "payload": "05 01",
+   "attributes": [
+    "enter mic mode"
+   ],
+   "source": "pact_h6099/ble/BleProtocol.java"
+  },
+  {
+   "name": "video (H6099)",
+   "submode": "0x00",
+   "payload": "00 drama part(8/9) vivid voiceOn 02 voice",
+   "attributes": [
+    "part 8/9",
+    "drama 0 movie/1 game",
+    "vivid 1..100",
+    "voiceOn 0/1",
+    "voice"
+   ],
+   "source": "pact_h6099/detail/mode/VideoVm.java"
+  },
+  {
+   "name": "video (H66A0)",
+   "submode": "0x00",
+   "payload": "00 drama part vivid voiceOn 02 voice",
+   "attributes": [
+    "H66A0 order"
+   ],
+   "source": "pact_h6099/detail/mode/VideoVm.java (O)"
+  },
+  {
+   "name": "video (H605B/H605D)",
+   "submode": "0x00",
+   "payload": "00 voiceOn vivid part drama voice softness",
+   "attributes": [
+    "different byte order"
+   ],
+   "source": "pact_h605b/newdetail/viewmodel/VideoVm.java (O)"
+  },
+  {
+   "name": "video (H605C/default)",
+   "submode": "0x00",
+   "payload": "00 screenState drama vivid voiceOn voice 00 seg1 seg2 seg3 seg4 00",
+   "attributes": [
+    "12 bytes",
+    "4-segment relative brightness"
+   ],
+   "source": "pact_h605b/newdetail/viewmodel/VideoVm.java (P)"
+  },
+  {
+   "name": "video (H2A40)",
+   "submode": "0x00",
+   "payload": "00 drama part vivid voiceOn 02 voice",
+   "attributes": [
+    "H2A40 order"
+   ],
+   "source": "pact_h605b/newdetail/viewmodel/VideoVm.java (N)"
+  },
+  {
+   "name": "video (H605A)",
+   "submode": "0x00",
+   "payload": "00 drama part vivid voiceOn softness voice",
+   "attributes": [
+    "H605A order"
+   ],
+   "source": "pact_h6099/adjust/newdetail/viewmodel/VideoVmH605A.java"
+  }
+ ],
+ "notes": "Two pact families share the standard GATT pair and envelope. pact_h605b is HDMI-sync/camera-calibration oriented (0xA9 extension namespace, USB/HDMI/sound-source commands); pact_h6099 is TV-backlight oriented (op-type colour model, sleep/timer/white balance). Scene/DIY blobs are cloud assets. H8604/H8098 are goodsType aliases. Matter subsets listed per family."
+}

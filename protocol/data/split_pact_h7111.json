@@ -1,0 +1,79 @@
+{
+  "split": "split_pact_h7111",
+  "families": ["H7111", "H7101", "H7102", "H7100", "H7106", "H7105", "H7107", "H7103", "H7112"],
+  "skus": [
+    {"sku": "H7111", "family": "space heater", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 86; GEAR/CUSTOM/AUTO/SLEEP/NATURAL/STORM; shake 0x1D; 3-zone custom"},
+    {"sku": "H7101", "family": "space heater", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 93; shares H7111 protocol; only lock controller in split"},
+    {"sku": "H7102", "family": "space heater", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 93 alias"},
+    {"sku": "H7100", "family": "space heater", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 129; old/new protocol mode bytes; common switch read 0x1F"},
+    {"sku": "H7106", "family": "space heater", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 200; H7100 rules + H7106 heart controller/report parser"},
+    {"sku": "H7105", "family": "heater with oscillation", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 201; GEAR/CUSTOM/AUTO/SLEEP/NATURAL; shake and light subcommands"},
+    {"sku": "H7107", "family": "heater", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 297; H7105 protocol + H7107 heart/temp config"},
+    {"sku": "H7103", "family": "heater", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 251; H7105 protocol + H7103 heart/lock"},
+    {"sku": "H7112", "family": "smart fan / air circulator", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 236; GEAR/AUTO/SLEEP/NATURAL; thermometer bind 0x08, sensor 0x10, cali 0x1E, timer 0x13, delay-off 0x26; shared H71xx GMessage"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write 0x33 (mode/delay controllers may use 0x3A), read 0xAA",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "[on][mode][params]", "layout": "on 1/0 then mode record", "response": "0xAA/0x01 valid[0]", "source": "h7111/ble/controller/ModeController.java, h7100, h7105"},
+      {"name": "mode", "op": "0x33/0x05 sub 0x00", "payload": "GEAR [01][gear]; AUTO [03 or 02][startGear][startTemp*100 LE16][endGear][endTemp*100 LE16]; CUSTOM [02/05][nibbles][children]; SLEEP [05/03][level]; NATURAL [06/04][level]; STORM [07]", "layout": "mode bytes differ for old/new protocol and by family", "response": "0xAA/0x05 -> mode record", "source": "h7111/adjust/ModeInfo.java, h7100/adjust/ModeInfo.java, h7105/adjust/ModeInfo.java"},
+      {"name": "gear", "op": "0x33/0x05 sub 0x08", "payload": "[08][gear]", "layout": "gear level", "response": "read [08] -> [1]", "source": "h7111/ble/controller/ModeGearController.java"},
+      {"name": "auto ramp", "op": "0x33/0x05 sub 0x03", "payload": "[autoMode][startGear][startTemp*100 LE16][endGear][endTemp*100 LE16]", "layout": "7 bytes", "response": "read [03]", "source": "h7111/adjust/ModeAuto.java, h7112/bean/ModeAuto.java"},
+      {"name": "custom/DIY table", "op": "0x33/0x05 sub 0x02/0x05 (H7105: 0xA3 multi)", "payload": "[customMode][(cur<<4)|set] + children", "layout": "H7111/H7100 child [type][curTemp LE16][targetTemp LE16] (5B); H7105 child 7B + optional centerAngle*10 LE16 + symmetry", "response": "read [02]/[05]", "source": "h7111/adjust/ModeCustom.java, h7105/adjust/ModeCustom.java, h7105/ble/controller/DiyModeMultipleControl.java"},
+      {"name": "read mode", "op": "0xAA/0x05", "payload": "[00] or [mode]", "layout": "current mode record", "response": "mode + params", "source": "h7111/ble/controller/ModeCurController.java, h7100 H7100ModeController, h7105 H7105ModeController"},
+      {"name": "shake/oscillation (H7105)", "op": "0x33/0x1D", "payload": "on [01][speed 1..3][angle 30..180][center*10 LE16][symmetry]; off [00][direction]", "layout": "angle min 30; center 0..180; speed 1..3", "response": "read", "source": "h7105/ble/controller/H7105ShakeController.java, ShakeBean"},
+      {"name": "shake/oscillation (H7111)", "op": "0x33/0x1F sub 0x01", "payload": "on [01][speed][angle][center LE16][symmetry]; off [00][direction]", "layout": "same ranges; sub-id 1 under setting command 0x1F", "response": "read 0x1F payload [01]", "source": "h7111/ble/controller/ModeShakeController.java"},
+      {"name": "beep", "op": "0x33/0x1F", "payload": "[06][00/01]", "layout": "sub-id 6", "response": "read [06]", "source": "h7111/ble/controller/BeepSwitchController.java, h7105"},
+      {"name": "light sub-command (H7105)", "op": "0x33/0x1B", "payload": "LightSubCmd brightness/mode payload", "layout": "sub-command byte selects brightness or mode", "response": "notify 0x1B", "source": "h7105/ble/DevCommReportParse.java, base_h71xx/light71xx"},
+      {"name": "abnormal info", "op": "0x33/0x17", "payload": "01 request", "layout": "[flag][code] response", "response": "0xAA/0x17", "source": "h7111/ble/controller/AbnormalInfoController.java, h7100, h7105"},
+      {"name": "common switch read", "op": "0xAA/0x1F", "payload": "none", "layout": "[0]/[1]/[7] flags", "response": "beep/display/child-lock flags", "source": "h7100/ble/controller/CommonSwitchController.java, h7105 equivalent"},
+      {"name": "delay start", "op": "0x33/0x23", "payload": "[on][setMin LE16][timestamp LE32]", "layout": "7 payload bytes", "response": "read 0x23", "source": "h7105/ble/controller/DefiniteTimeController.java"},
+      {"name": "keep warm", "op": "0x33/0x22", "payload": "[on][min LE16][min LE16]", "layout": "writer duplicates minutes", "response": "read 0x22", "source": "h7105/ble/controller/KeepWarmController.java"},
+      {"name": "real-time temp", "op": "0xAA/0x10", "payload": "none", "layout": "[1..2] signed BE16", "response": "temperature", "source": "h7111/ble/controller/RealTimeTemController.java"},
+      {"name": "timer", "op": "0x33/0x13", "payload": "8-byte timer record", "layout": "group/enable/hour/min/repeat/mode/modeValue/comfort", "response": "read 0x13", "source": "h7112/vm/H7112SharedViewModel.java, base_h71xx NewTimerV1Controller"},
+      {"name": "thermometer read (H7112)", "op": "0xAA/0x10", "payload": "none", "layout": "[flag][temp int24 BE][type]", "response": "connected + temp + type", "source": "base_h71xx/sku_base/ble/controller/GetThermometerController.java"},
+      {"name": "bind thermometer (H7112)", "op": "0x33/0x08", "payload": "reversed MAC 6 bytes", "layout": "MAC", "response": "same 6 bytes", "source": "base_h71xx/sku_base/ble/controller/BindTemperatureController.java, h7112/vm/H7112SharedViewModel.java"},
+      {"name": "unbind thermometer (H7112)", "op": "0x33/0x09", "payload": "none", "layout": "—", "response": "—", "source": "h7112/vm/H7112SharedViewModel.java W0"},
+      {"name": "humidity cali (H7112)", "op": "0x33/0x1E", "payload": "[02][02 save|01 read][value LE16]", "layout": "sub 2 = humidity", "response": "read [02]", "source": "h7112/vm/H7112SharedViewModel.java writeHumCaliCmd"},
+      {"name": "temp cali (H7112)", "op": "0x33/0x1E", "payload": "[01][02 save|01 read][value LE16]", "layout": "sub 1 = temperature", "response": "read [01]", "source": "h7112/vm/H7112SharedViewModel.java writeTemCaliCmd"},
+      {"name": "temp/sensor unit", "op": "0x33/0x1F", "payload": "[08][00/01]", "layout": "sub-id 8", "response": "read [08]", "source": "base_h71xx/sku_base/ble/controller/SensorTempUnitController.java, h7112 TempUnitSwitchController"},
+      {"name": "delay-off (H7112)", "op": "0x33/0x26", "payload": "[on][min LE16]", "layout": "3 bytes", "response": "read 0x26", "source": "base_h71xx/sku_base/ble/controller/DelayOffControllerV1.java"},
+      {"name": "not-disturb", "op": "0x33/0x16", "payload": "[enable][forever][startH][startM][endH][endM] or 2 bytes when forever", "layout": "forever flag expands", "response": "read 0x16", "source": "base_h71xx/sku_base/ble/controller/NotDisturbController.java"},
+      {"name": "heart/state", "op": "0xAA/0x01", "payload": "none", "layout": "h7111 [0] on [1] flag [2..4] int24 temp [5][6] ints [7] flag; h7100 [0] on [1] mode [8] autoOff [9] value; h7105 [5] autoOff [6] mode [8] value", "response": "state", "source": "h7111/ble/HeartControllerV1.java, h7100, h7105"}
+    ],
+    "notifications": [
+      {"name": "wifi/ble state", "op": "notify 0x11", "layout": "[0]==0 connected", "source": "all ble/WifiNotifyParse.java"},
+      {"name": "device report", "op": "header 0xEE, subcmd byte1", "layout": "0x05 mode / 0x1F switches / 0x16 not-disturb / 0x26 delay-off / 0x17 abnormal / 0x1B light / 0x1D shake", "source": "h7100/ble/BleNotifyComm.java, h7105/ble/DevCommReportParse.java"},
+      {"name": "heart", "op": "read 0x01", "layout": "see command table", "source": "h7111/h7100/h7105/HeartController*.java"},
+      {"name": "beep/temp unit", "op": "0x1F notify", "layout": "[id][0/1]", "source": "h7111/iot/CmdStatusParseV1.java, h7105/iot/CmdStatusParseV1.java"},
+      {"name": "light subcommand", "op": "0x1B", "layout": "brightness/mode", "source": "h7105/ble/DevCommReportParse.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite type=1 origin=32 cmdVersion=0; state/op/online/turn/status/ptReal/multiSync; frames tunneled as ptReal",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{msg:{type:1,origin:32,cmdVersion:0,cmd:\"turn\",data:{val:1}}}", "response": "status", "source": "base_h71xx/sku_base/iot/CmdTurn.java"},
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte frame>"]}, "example": null, "response": "op.command[] parsed by CmdStatusParseV1/V2", "source": "base_h71xx/sku_base/iot/CmdPtReal.java"},
+      {"cmd": "multiSync", "data": {"command": ["<base64 20-byte frame>"]}, "example": null, "response": "op", "source": "base_h71xx/sku_base/iot/CmdMultiSync.java"},
+      {"cmd": "status (read)", "data": {}, "example": null, "response": "state {onOff,result} + op.command[]", "source": "base_h71xx/sku_base/iot/CmdStatus.java, h7111/iot/CmdStatusParseV2.java"}
+    ],
+    "status": {"fields": {"onOff": "int 0|1", "result": "int", "op.command": "string[] base64 frames", "mode": "0x05 frame", "temp": "0x10 frame", "equipment": "0x19", "shake": "0x1D", "sensor": "H7112 0x10 int24 temp + type", "timer": "0x13", "delayOff": "0x26", "notDisturb": "0x16"}, "source": "h7111/iot/CmdStatusParseV1/V2, h7100/iot/CmdStatusParseV1, h7105/iot/CmdStatusParseV1, h7112 shared H71xx CmdStatusParse"}
+  },
+  "other_protocols": [
+    {"name": "wifi/cloud", "details": "No LAN/UDP control; H7112 also uses REST API H7112ApiService for support/push, but device control is IoT ptReal", "source": "h7112/net/H7112ApiService.java, h7112/pact/Model.java"},
+    {"name": "shared H71xx GMessage", "details": "H7112 speaks 20-byte frames through GMessageSingleWrite/Read/ReadWrite and GMessageMultiRead, same UUIDs as local families", "source": "com/govee/ctlchannel/message/*.java"}
+  ],
+  "dynamic_effects": [
+    {"name": "mode", "submode": "0x00", "payload": "mode byte + params", "attributes": ["H7111/H7100: GEAR/CUSTOM/AUTO/SLEEP/NATURAL/STORM", "H7105: GEAR/CUSTOM/AUTO/SLEEP/NATURAL", "H7112: GEAR/AUTO/SLEEP/NATURAL"], "source": "h7111/adjust/Mode.java, h7100/adjust/Mode.java, h7105/adjust/Mode.java, h7112/bean/Mode.java"},
+    {"name": "auto ramp", "submode": "0x03/0x02", "payload": "[autoMode][startGear][startTemp*100 LE16][endGear][endTemp*100 LE16]", "attributes": ["start/end gear", "start/end temp x100"], "source": "h7111/adjust/ModeAuto.java, h7105/adjust/ModeAuto.java, h7112/bean/ModeAuto.java"},
+    {"name": "custom recipe", "submode": "0x02/0x05", "payload": "[mode][nibbles][child x3]", "attributes": ["child 5B (H7111/H7100) or 7B+ (H7105)", "temps x100", "type/current/target/angle/symmetry"], "source": "h7111/adjust/ModeCustom.java, h7105/adjust/ModeCustom.java"},
+    {"name": "shake/oscillation (H7105)", "submode": "0x1D", "payload": "on [01][speed][angle][center*10 LE16][symmetry]; off [00][direction]", "attributes": ["speed 1..3", "angle 30..180", "center 0..180", "direction"], "source": "h7105/ble/controller/H7105ShakeController.java, ShakeBean"},
+    {"name": "shake/oscillation (H7111)", "submode": "0x1F/01", "payload": "on [01][speed][angle][center LE16][symmetry]; off [00][direction]", "attributes": ["same ranges", "sub-id 1"], "source": "h7111/ble/controller/ModeShakeController.java"},
+    {"name": "light sub-command (H7105)", "submode": "0x1B", "payload": "LightSubCmd brightness/mode", "attributes": ["brightness", "light mode"], "source": "h7105/ble/DevCommReportParse.java"},
+    {"name": "timer / delay", "submode": "0x13/0x23/0x26", "payload": "timer record / on+minutes / on+minutes", "attributes": ["one-shot or weekly"], "source": "base_h71xx timer and delay controllers, H7112SharedViewModel"},
+    {"name": "thermometer sensor", "submode": "0x10/0x08/0x09/0x1E", "payload": "read / MAC / none / calibration", "attributes": ["int24 temperature", "type", "calibration offset"], "source": "base_h71xx GetThermometerController, BindTemperatureController, TemperatureCaliController"}
+  ],
+  "notes": "H7106 is partial in this split (maker/heart/report only) and follows H7100. H7101/H7102 and H7103/H7107 are thin SKUs with only lock/heart/temp config in split. H7111 heart fields 1/6/7 and H7100 field 9 are unnamed placeholders. H7105 custom child field names are obfuscated; layout inferred. H7112 has no local BLE package: opcodes from H7112SharedViewModel (m1=0x09,i1=0x1E,P=0x10,d0=0x05,A=0x08,l1=0x13,P0=0x02,Q0=0x02,S0=0x01,R0=0x01). H7112 AUTO value 02 is overloaded as auto ramp selector."
+}

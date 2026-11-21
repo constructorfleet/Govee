@@ -1,0 +1,50 @@
+{
+  "split": "split_pact_h6660",
+  "families": ["H6660", "H3810"],
+  "skus": [
+    {"sku": "H6660", "family": "laser engraver", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 380, main laser SKU, MTU-based image transfer"},
+    {"sku": "H3810", "family": "laser engraver", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 380, sibling SKU with separate detail config"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write 0x33, read 0xAA, multi 0xA3/0xA4",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "[0]=0|1", "layout": "[0] on/off", "response": "0xAA/0x01, switch notify", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/scenes/BleSwitchCmdBuilder.java"},
+      {"name": "brightness", "op": "0x33/0x04", "payload": "[0]=0..100", "layout": "[0] brightness", "response": "notify 0x20", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/LaserDetailViewModel.java"},
+      {"name": "music_mode", "op": "0x33/0x05", "payload": "[0]=0x13 [1]=subMusicMode [2]=sensitivity", "layout": "sub-mode 0x13; multi-packet MultipleController4Music for full effect", "response": "event", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/MusicModeH3810.java"},
+      {"name": "indicator_light", "op": "0x33/0x30", "payload": "[0]=enable [1]=!forever?1:0 [2]=startHour [3]=startMin [4]=endHour [5]=endMin", "layout": "6-byte schedule", "response": "write result / parser 0x30", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/ble/controller/IndicatorLightController.java"},
+      {"name": "wifi_upgrade", "op": "0x33/0x25", "payload": "{4} read | {3,flag} | {2} read | {1} init", "layout": "[0] sub-command", "response": "[0]==1,[1]==1,[2]=state,[3..5]=soft x.y.z,[6..8]=hard x.y.z", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/ble/controller/WIFIUpgradesController.java"},
+      {"name": "laser_param", "op": "0x33/0x43", "payload": "[0]=param1 [1]=param2", "layout": "2-byte slider value pair", "response": "write callback", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/LaserDetailViewModel.java"},
+      {"name": "base_info_single_read", "op": "0xAA/0x25", "payload": "{0x25,0x80,0x42,0x44,0x7F} or {0x25,0x30,0x80,0x42,0x43,0x44}", "layout": "multi-read command list", "response": "multi callbacks", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/LaserDetailViewModel.java"},
+      {"name": "diy_apply", "op": "multi + 0x0A", "payload": "effect frames + 0A <diy LE16>", "layout": "multi-packet", "response": "event", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/diy/LaserDiyParser.java"}
+    ],
+    "notifications": [
+      {"name": "device_status", "op": "0xEE/0x80", "layout": "byte[0] bit1..7 flags: child lock, overheat, high temp, human, electric", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/entity/DeviceStatusInfo.java"},
+      {"name": "battery", "op": "0xEE/0x42", "layout": "bit8 charging, bits5..3 battery level, bits4/3/2/1 flags", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/entity/BatteryInfo.java"},
+      {"name": "brightness", "op": "0xEE/0x20", "layout": "[0] 0..100", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/LaserDetailViewModel.java"},
+      {"name": "wifi", "op": "0xEE/0x11", "layout": "connected bool", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/LaserDetailViewModel.java"},
+      {"name": "laser_def", "op": "0xEE/0x7F", "layout": "raw bytes", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/LaserDefParser.java"},
+      {"name": "laser_def_2", "op": "0xEE/0x81", "layout": "raw bytes", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/LaserDefParser.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "IotMsgProType V2; status.op is ResultPt with base64 20-byte frames",
+    "commands": [
+      {"cmd": "status", "data": {"op": ["base64 20-byte frame"]}, "response": "on/off, battery, device status", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/pact/Model.java"},
+      {"cmd": "ptUrl", "data": {"header": "0x58 0x00 0x61", "payload": "base64 laser effect/drawing"}, "response": "status", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/diy/LaserDiyParser.java"}
+    ],
+    "status": {"fields": {"op": "20-byte frames; [1]==0x80 -> DeviceStatusInfo([2]); [1]==0x42 -> BatteryInfo([2])", "on": "switch state"}, "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/pact/Model.java"}
+  },
+  "other_protocols": [
+    {"name": "ptUrl", "details": "createPtUrlV4(EffectOtherInfo, {0x58,0x00,0x61}, base64(payload)); long-time upload via getLongTimePtUrlLink", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/diy/LaserDiyParser.java, detail/LaserDetailViewModel.java"},
+    {"name": "ble_mtu", "details": "MTU negotiated on connect and cached per SKU (MtuConfig); used for image/laser frame uploads", "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/ble/Ble.java"}
+  ],
+  "dynamic_effects": [
+    {"name": "laser_ilda", "submode": null, "payload": "ILDA frame formats 0/1/2/4/5: header(32B) + points/colour palette", "attributes": ["frame/colour-palette name", "company", "point count", "frame number", "total frames"], "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/entity/Ilda*.java"},
+    {"name": "diy_effect_order", "submode": "0x0A", "payload": "ordered effect list", "attributes": ["bright 25", "color 24", "move 26", "scale 27", "rotate 28", "track 29", "mirror 30", "distort 31", "carousel 36"], "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/entity/DiyEffectInfo.java"},
+    {"name": "music", "submode": "0x13", "payload": "13 <subMusicMode> <sensitivity>", "attributes": ["ids 160..178: mist, collision, ... yanhua"], "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/MusicModeH3810.java"},
+    {"name": "transforms", "submode": null, "payload": "per-frame transform application", "attributes": ["scale", "color", "mirror", "erase", "distort", "move", "rotate", "point limit"], "source": "jadx-splits/split_pact_h6660/sources/com/govee/h6660/util/trans/*"}
+  ],
+  "notes": "Gaps: 0x43/0x44 param semantics not named; DeviceStatusInfo/BatteryInfo bit meanings partly inferred; WiFi upgrade state codes undocumented; effect blob encoding proprietary."
+}

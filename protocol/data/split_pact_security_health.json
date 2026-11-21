@@ -1,0 +1,83 @@
+{
+  "split": "split_pact_security_health",
+  "families": ["H5026", "H7212", "H7214", "H5010", "H5020"],
+  "skus": [
+    {"sku": "H5026", "family": "AI motion/security sensor with alarm", "transports": ["iot"], "pact": {"type": null, "code": null}, "notes": "needBle=false; REST arm/disarm, warning list, settings; GATT pairing classes exist (494E...4857/2011)."},
+    {"sku": "H7212", "family": "baby monitor / doorbell camera", "transports": ["iot"], "pact": {"type": null, "code": null}, "notes": "needBle=false; IoT V1 topic commands (turn, brightness, lullaby, listen/speak, socket); temp/hum sensor status."},
+    {"sku": "H7214", "family": "baby monitor / doorbell camera", "transports": ["iot"], "pact": {"type": null, "code": null}, "notes": "needBle=false; same command set as H7212."},
+    {"sku": "H5010", "family": "body-fat scale", "transports": ["ble"], "pact": {"type": null, "code": null}, "notes": "Qingniu (QN) BLE SDK; weight/body composition via QNScaleData; no Govee 20-byte frames."},
+    {"sku": "H5020", "family": "smart jump rope", "transports": ["ble"], "pact": {"type": null, "code": null}, "notes": "Native Govee BLE scan/connect; name H5020_<mac>; sessions uploaded to REST (not IoT cmd)."}
+  ],
+  "ble": {
+    "service_uuid": "494E5445-4C4C-495F-524F-434B535F4857",
+    "characteristic_uuid": "494E5445-4C4C-495F-524F-434B535F2011",
+    "frame": "H5026 pairing only: 20-byte Govee frame. H5010 uses QN SDK (unknown UUIDs). H5020 uses native com.govee.ble.BleController (unknown UUIDs).",
+    "commands": [
+      {"name": "H5026 pair notify", "op": "WifiNotifyParse", "payload": "none", "layout": "pairing only", "response": "wifi notify", "source": "h5026/add/{Ble,BleComm,BleNotifyComm}.java"},
+      {"name": "H5020 scan", "op": "native", "payload": "ScanEventV1.SkipDevice", "layout": "{name,type,subType,communicationType,macAddr,services,rssi}; name H5020_<mac10..12><mac[-2:]>", "response": "scan event", "source": "skipv1/sku/H5020BleProcessor.java; SkipBleDeviceModel.java"},
+      {"name": "H5020 session", "op": "native", "payload": "unknown", "layout": "app model Skip/SkipData: skipNum, spendTime, skipType, tripRope, averageFrequency, fastestFrequency, maxJumps, ripRopes[], calories, time", "response": "history records", "source": "skipv1/db/Skip.java; adjust/history/SkipData.java"},
+      {"name": "H5010 weight", "op": "QN SDK", "payload": "unknown", "layout": "QNScaleData / QNScaleStoreData", "response": "weight + body composition", "source": "scalev1/manager/ScaleApi.java"}
+    ],
+    "notifications": [
+      {"name": "H5026 wifi notify", "op": "pairing", "layout": "WifiNotifyParse", "source": "h5026/add/BleNotifyComm.java"},
+      {"name": "H5010 scale data", "op": "QN callback", "layout": "QNScaleDataListener", "source": "scalev1/manager/ScaleApi.java"},
+      {"name": "H5020 jump data", "op": "native callback", "layout": "SkipData fields", "source": "skipv1/adjust/DetailAc.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "H5026 REST; H7212/H7214 IoT V1 (IotMsgV1); H5020 REST history upload",
+    "commands": [
+      {"cmd": "armingState", "data": {"sku": "string", "device": "string", "armingState": "0|1"}, "example": "REST RequestDefend", "response": "{armingState, defendingRemainTime}", "source": "h5026/detail/RequestDefend.java"},
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{\"cmd\":\"turn\",\"data\":{\"val\":1}}", "response": "ResultStatus", "source": "doorbell/h721214/communication/Cmd.java"},
+      {"cmd": "brightness", "data": {"val": "1-100"}, "example": "{}", "response": "ResultNightLight", "source": "CmdCommon(Cmd.brightness, v)"},
+      {"cmd": "nightLight", "data": {"val": "0|1"}, "example": "{}", "response": "ResultNightLight", "source": "CmdCommon"},
+      {"cmd": "volume", "data": {"val": "1-100"}, "example": "{}", "response": "ResultStatus.spvol", "source": "CmdCommon"},
+      {"cmd": "speakVol", "data": {"val": "int"}, "example": "{}", "response": "ResultListen.spvol", "source": "CmdCommon(Cmd.speakVol,v)"},
+      {"cmd": "delayClose", "data": {"val": "minutes"}, "example": "{}", "response": "ResultLullaby.dly", "source": "CmdCommon"},
+      {"cmd": "loop", "data": {"val": "0-2"}, "example": "{}", "response": "ResultLullaby.loop", "source": "CmdCommon"},
+      {"cmd": "play", "data": {"val": "0|1", "songId": "int"}, "example": "{}", "response": "ResultLullaby", "source": "CmdPlay"},
+      {"cmd": "lullaby", "data": {}, "example": "{}", "response": "ResultLullaby", "source": "CmdRead(Cmd.lullaby)"},
+      {"cmd": "listen", "data": {"sku": "string", "device": "string", "cmd": "listen", "clientID": "string", "status": "0|1", "time": "epoch"}, "example": "{}", "response": "ResultListen", "source": "CmdListenSpeak"},
+      {"cmd": "speak", "data": {"sku": "string", "device": "string", "cmd": "speak", "clientID": "string", "time": "epoch"}, "example": "{}", "response": "ResultListen", "source": "CmdListenSpeak"},
+      {"cmd": "socket", "data": {"callId": "string", "ip": "string", "port": "int"}, "example": "{}", "response": "call endpoint", "source": "CmdWebsocket"},
+      {"cmd": "sensitivity", "data": {"val": "0-2"}, "example": "{}", "response": "ResultSetting.stv", "source": "CmdCommon"},
+      {"cmd": "moveStv", "data": {"val": "0-2"}, "example": "{}", "response": "ResultSetting.mstv", "source": "CmdCommon"},
+      {"cmd": "tmpAlert", "data": {"minT": "int", "maxT": "int"}, "example": "{}", "response": "ResultSetting", "source": "CmdTemAlert"},
+      {"cmd": "humAlert", "data": {"minH": "int", "maxH": "int"}, "example": "{}", "response": "ResultSetting", "source": "CmdHumAlert"},
+      {"cmd": "status", "data": {}, "example": "{}", "response": "ResultStatus", "source": "CmdRead(Cmd.status)"},
+      {"cmd": "wifiMac", "data": {}, "example": "{}", "response": "ResultWifiMac", "source": "CmdRead(Cmd.wifiMac)"},
+      {"cmd": "online", "data": {}, "example": "{}", "response": "ResultOnline", "source": "IotManager"}
+    ],
+    "status": {
+      "fields": {
+        "bat": "int 1-100",
+        "bri": "int 1-100",
+        "hum": "int %RH",
+        "lig": "int 0|1",
+        "sta": "int 0|1",
+        "tmp": "int degC",
+        "cnt": "int sensor connected",
+        "spvol": "int 1-100",
+        "minT/maxT": "int degC",
+        "minH/maxH": "int %RH",
+        "sensitivity/stv": "0-2",
+        "moveSensitivity/mstv": "0-2"
+      },
+      "source": "doorbell/h721214/communication/ResultStatus.java; ResultSetting.java; ResultLullaby.java"
+    }
+  },
+  "other_protocols": [
+    {"name": "rest", "details": "H5026 arm/disarm + warning list + settings; H5020 history upload; H5010 weight history; H7212/H7214 detail/lullaby list.", "source": "h5026/net; skipv1/net; scalev1/net; doorbell/net"},
+    {"name": "push", "details": "H5026 warning/online push; H7212/H7214 alarm/SensorOffline push.", "source": "h5026/push; doorbell/push"},
+    {"name": "websocket-rtc", "details": "H7212/H7214 two-way audio via socket command + listen/speak.", "source": "doorbell/h721214/listen; CmdWebsocket"},
+    {"name": "qn-sdk", "details": "H5010 uses Qingniu QNBleApi closed-source SDK for BLE scale data.", "source": "scalev1/manager/QNBleApiCreator.java; ScaleApi.java"},
+    {"name": "native-ble", "details": "H5020 jump rope uses com.govee.ble.BleController and ScanEventV1.SkipDevice; no Java UUID/frame.", "source": "skipv1/sku/H5020BleProcessor.java"}
+  ],
+  "dynamic_effects": [
+    {"name": "lullaby play", "submode": "play", "payload": "{val, songId}", "attributes": ["song id", "play/pause"], "source": "CmdPlay"},
+    {"name": "lullaby loop/delay/volume", "submode": "loop/delayClose/volume", "payload": "{val}", "attributes": ["loop 0-2", "delay min", "volume 1-100"], "source": "CmdCommon"},
+    {"name": "night light", "submode": "nightLight/brightness", "payload": "{val}", "attributes": ["on/off", "1-100"], "source": "CmdCommon"},
+    {"name": "arm/disarm", "submode": "REST armingState", "payload": "{sku,device,0|1}", "attributes": ["armed state"], "source": "h5026 RequestDefend"}
+  ],
+  "notes": "Bundle of 5 unrelated families. Only H5026 has a Govee GATT definition, and only for pairing; runtime is REST. H7212/H7214 use IoT V1 JSON. H5010 is a Qingniu SDK scale. H5020 is a native Govee BLE jump rope with app-side Skip/SkipData models. Goods types for H5026/H7212/H7214 are not in the split. QN/native BLE UUIDs, advertisements and frame opcodes are not recoverable."
+}

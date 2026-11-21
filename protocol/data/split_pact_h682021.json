@@ -1,0 +1,50 @@
+{
+  "split": "split_pact_h682021",
+  "families": ["H6820", "H6821"],
+  "skus": [
+    {"sku": "H6820", "family": "curtain lights", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 279, 20 colour pieces"},
+    {"sku": "H6821", "family": "curtain lights", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 280, 20 colour pieces"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write 0x33, read 0xAA, effect multi 0xA3 with commByte 0x5B and 97-byte chunks",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "[0]=0|1", "layout": "[0] on/off", "response": "0xAA/0x01", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/pact/Comm.java"},
+      {"name": "brightness", "op": "0x33/0x04", "payload": "[0]=0..100", "layout": "[0] brightness", "response": "notify 0x20", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/iot/OpColorCommDialog4BleIot.java"},
+      {"name": "mode", "op": "0x33/0x05", "payload": "<sub-mode block>", "layout": "0x15 color, 0x04 scenes, 0x0A DIY, 0x13 music", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/ble/Mode.java"},
+      {"name": "diy_multi", "op": "0xA3/0x5B", "payload": "makeSendBytesV3(0xA3,0x5B,diyBytes,97) + final 0A <diy LE16>", "layout": "multi-packet 97-byte chunks", "response": "multi result", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/pact/Comm.java"},
+      {"name": "scene_multi", "op": "0xA3/0x5B", "payload": "makeSendBytesV3(0xA3,0x5B,sceneBytes,97) + final 04 <effect LE16>", "layout": "multi-packet 97-byte chunks", "response": "multi result", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/pact/Comm.java"},
+      {"name": "heartbeat", "op": "0xAA/0x01", "payload": "none", "layout": "read only, no event", "response": "-", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/pact/Comm.java"}
+    ],
+    "notifications": [
+      {"name": "brightness", "op": "0xEE/0x20", "layout": "[0] 0..100", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/ble/BleProtocol.java"},
+      {"name": "device_status", "op": "0xEE/0x80 or 0xEE/0x81", "layout": "status frames", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/ble/GattCallbackImp.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "AbsOpCommDialog4BleIot/V2; colour/brightness/switch as native cmd or ptReal frames",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "response": "status", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/iot/OpColorCommDialog4BleIot.java"},
+      {"cmd": "brightness", "data": {"val": "0..100"}, "response": "status", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/iot/OpColorCommDialog4BleIot.java"},
+      {"cmd": "colorwc", "data": {"color": {"red": "int", "green": "int", "blue": "int"}, "colorTemInKelvin": "int"}, "response": "status", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/iot/OpColorCommDialog4BleIot.java"},
+      {"cmd": "ptReal", "data": {"command": ["base64(20-byte frame)"]}, "response": "status", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/pact/Comm.java"},
+      {"cmd": "online/status", "data": {"state": "on/off", "op": "frames"}, "response": "online state", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/pact/Model.java"}
+    ],
+    "status": {"fields": {"on": "bool", "op": "20-byte frames"}, "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/pact/Model.java"}
+  },
+  "other_protocols": [
+    {"name": "matter", "details": "Ble.r() returns com.govee.matter.pact.BleComm (shared comm wrapper, standard UUIDs); no cluster mapping found", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/ble/Ble.java"},
+    {"name": "image_recognition", "details": "network/ApiService uploads a photo, returns RecognitionPointInfo/LightPointInfo/PointListInfo to build planar mapping", "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/network/ApiService.java, vm/VM4H682X.java"}
+  ],
+  "dynamic_effects": [
+    {"name": "color", "submode": "0x15", "payload": "15 R G B <kelvin LE16> R2 G2 B2", "attributes": ["RGB", "kelvin 1000-10000K", "second/background RGB"], "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/ble/SubModeColor.java"},
+    {"name": "scenes", "submode": "0x04", "payload": "04 <effect LE16> <musicCode>", "attributes": ["effect id", "music code", "channels 0/1/5"], "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/ble/SubModeScenes.java"},
+    {"name": "new_diy", "submode": "0x0A", "payload": "0A <diy LE16>", "attributes": ["diy code"], "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/ble/SubModeNewDiy.java"},
+    {"name": "music", "submode": "0x13", "payload": "13 <musicCode> <sensitivity 0-99>", "attributes": ["music code", "sensitivity"], "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/ble/SubModeMusic.java"},
+    {"name": "diy_page", "submode": "0x0A", "payload": "type(1 linear,2 face) lenLE16 pageCount rule {page lenLE16 ...}; BLE blob prefixed 0x4B", "attributes": ["linear/planar pages", "rule 0..4", "per-page effects"], "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/diy/Pro4H682xDiy.java"},
+    {"name": "linear_effect", "submode": "0x0A", "payload": "lenLE16 type [subtype] colorType [d] e f g h i j k colorCount {RGB} m n[2] o p [q [r] s]", "attributes": ["solid vs multi colour", "direction/mirror", "sub-effect bytes"], "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/diy/H682xPageDiyLinearEffect.java"},
+    {"name": "planar_direction", "submode": "0x0A", "payload": "13 direction codes 0..13", "attributes": ["UP_DOWN", "UP_DOWN_JL_KS", "14 direction mappings"], "source": "jadx-splits/split_pact_h682021/sources/com/govee/h682021/diy/H682xPlanarDirectionConfig.java"}
+  ],
+  "notes": "Gaps: 97-byte chunk reassembly depends on base MultipleControllerCommV1/MTU; page field names obfuscated; Matter has no cluster mapping; image recognition schema server-side."
+}

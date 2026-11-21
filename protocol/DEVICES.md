@@ -1,0 +1,845 @@
+# Device / SKU master table
+
+One row per SKU, extracted from each split module's `Sku`/`SubLib`/`Support` registration. `transports` is the union of transports the split declares for that SKU (`ble`, `iot`, `matter`, `wifi/mqtt`, `ble-broadcast`). `pact_type`/`pact_code` identify the device protocol tuple where the code declares it; blank means the mapping is runtime (server product DB).
+
+## split_pact_bbqnew
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H5181** | BBQ thermometer, 2 probe, screen | ble, iot | 1/1 |  | goodsType 28; 2xAAA. |
+| **H5183** | BBQ thermometer, 1 probe, no screen | ble, iot | 1/1 |  | goodsType 29; 1xAAA. |
+| **H5182** | BBQ thermometer, 2 probe, 4-point UI | ble, iot | 1/1 |  | goodsType 33. |
+| **H5184** | BBQ thermometer, 4 probe, 4-point UI | ble, iot | 1/1 |  | goodsType 34. |
+| **H5185** | BBQ thermometer, 4 probe | ble, iot | 1/1 |  | goodsType 48; protocols (1,1),(2,1),(2,2). |
+| **H5186** | BBQ thermometer, 4 probe | ble, iot | 1/1 |  | goodsType 47; protocols (1,1),(2,1),(2,2). |
+| **H5191** | BBQ thermometer, 6 probe | ble, iot | 1/1 |  | goodsType 314; advert prefix 0201060303519117ff. |
+| **H5192** | BBQ thermometer, 6 probe | ble, iot | 1/1 |  | goodsType 281; advert prefix 0201060303519217ff. |
+| **H5194** | BBQ thermometer, 6 probe | ble, iot | 1/1 |  | goodsType 282; advert prefix 0201060303519417ff. |
+| **H5196** | BBQ thermometer, 6 probe, H5199 hardware | ble, iot | 1/1 |  | goodsType 169; advert prefix 0201060303519617ff; dual BLE stack (pact_h5199 + pact_bbqnew). |
+| **H5198** | BBQ thermometer, 2 probe | ble, iot | 1/1 |  | goodsType 85; advert prefix 0201060303519817ff. |
+| **H5199** | BBQ thermometer, 6 probe | ble, iot | 1/1 |  | goodsType 155; advert prefix 0201060303519917ff; own H5199Ble/H5199Heart stack, char 2b10. |
+| **H5610** | BBQ thermometer, dual probe | ble, iot | 1/1 |  | goodsType 344; advert prefix 0201050303561017ff. |
+| **H5055** | BBQ thermometer, legacy 2 probe | ble, iot |  |  | Legacy path identified by BLE name ihoment_H5055_*; goodsType not in Support.c; advert prefix 0201050303505517ff. |
+
+## split_pact_bulblightstringv1
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H7002** | bulblightstringv1 | ble | 1/1 |  | goodsType 3; V1BleSkuItem; 80-bulb ctlLight mask, 14-byte colour payload |
+| **H7005** | bulblightstringv1 | ble, iot | 1/1 |  | goodsType 5; V1BleIotSkuItem; IoT via bulb/pt/status |
+| **H7022** | h7022 | ble, iot |  |  | 24 bulbs in 6 groups of 4; IotMsg V0; bulb/pt/timer/status |
+| **H6003** | bulblightv1 | iot | 1/1 |  | goodsType 9; pure IoT (AbsIotItem); SoftAP pairing 192.168.1.1:7200 SSID Govee_bulb_ |
+| **H6004** | bulblightv1 | iot | 1/1 |  | goodsType 10; pure IoT; same command set as H6003 |
+| **H6001** | h6001 | ble | 1/1 |  | classic BLE bulb; old fw colour sub-mode 0x02, updated fw (H6005 feature set) 0x0D; goodsType 0 in Support4OldH6001, re-mapped to 20 when H6005 features are present |
+| **H6005** | bulblightv2 | ble | 1/1 |  | goodsType 20; scenes 0x04, DIY 0xA1/0x02, mic 0x05 |
+| **H7010** | bulblightstringv2 | ble, iot | 1/1 |  | goodsType 35 (BLE) / 49 or 91 (BLE+IoT) depending on pact; generic colour via base 0x15 |
+| **H7011** | bulblightstringv2 | ble, iot | 1/1 |  | goodsType 35/49/91 |
+| **H7006** | bulblightstringv2 | ble, iot | 1/1 |  | goodsType 35/49/91 |
+| **H7007** | bulblightstringv2 | ble, iot | 1/1 |  | goodsType 35/49/91 |
+| **H7008** | bulblightstringv2 | ble, iot | 1/1 |  | goodsType 35/49/91 |
+| **H7012** | bulblightstringv2 | ble, iot | 1/1 |  | goodsType 35/49/91 |
+| **H7013** | bulblightstringv2 | ble, iot | 1/1 |  | goodsType 35/49/91 |
+| **H7031** | bulblightstringv2 | ble, iot | 1/1 |  | goodsType 35/49/91; newAdjust/h7031 detail |
+| **H7032** | bulblightstringv2 | ble, iot | 1/1 |  | goodsType 35/49/91 |
+| **H7019** | bulblightstringv2 | ble | 1/1 |  | goodsType 148; BleMakerH7019; OTA v3 |
+| **H6002** | bulblightv3 | ble, iot | 1/1 |  | goodsType 31; pact v1; IoT capable |
+| **H601A** | bulblightv3 | ble, iot | 1/1 |  | goodsType 64/111; scene ids 2657-2720; Matter via H6011 path |
+| **H601B** | bulblightv3 | ble, iot | 1/1 |  | goodsType 64/111; H601A succession |
+| **H601C** | bulblightv3 | ble, iot | 1/1 |  | goodsType 64/111; H601A succession |
+| **H601D** | bulblightv3 | ble, iot | 1/1 |  | goodsType 64/111; H601A succession |
+| **H801C** | bulblightv3 | ble, iot | 1/1 |  | goodsType 64/111; H601A succession |
+| **H601E** | bulblightv3 | ble, iot | 1/1 |  | goodsType 311; H601EF; advanced DIY 0xA3/0x58, segment colour 0xA3/0x6E |
+| **H601F** | bulblightv3 | ble, iot | 1/1 |  | goodsType 311; H601EF |
+| **H801A** | bulblightv3 | ble, iot | 1/1 |  | goodsType 64/111; H601A succession |
+| **H801D** | bulblightv3 | ble, iot | 1/1 |  | goodsType 64/111; H601A succession |
+| **R1501** | bulblightv3 | ble, iot | 1/1 |  | goodsType 64/111; H601A succession |
+| **H1501** | bulblightv3 | ble, iot | 1/1 |  | declared in Support.f; not in H601ASuccession list |
+| **H8015** | bulblightv3 | ble, iot, matter | 1/1 |  | goodsType 328; Matter interceptor registered in BulbLightApplication |
+| **H14C0** | bulblightv3 | ble, iot | 1/1 |  | goodsType 342; advanced mix DIY; colour piece 0 |
+| **R14C0** | bulblightv3 | ble, iot | 1/1 |  | goodsType 342 |
+| **H14C1** | bulblightv3 | ble, iot | 1/1 |  | goodsType 342 |
+| **H14A1** | bulblightv3 | ble, iot | 1/1 |  | goodsType 342 |
+| **H1401** | bulblightv3 | ble, iot | 1/1 |  | goodsType 348; advanced mix DIY |
+| **R1401** | bulblightv3 | ble, iot | 1/1 |  | goodsType 348 |
+| **R14A1** | bulblightv3 | ble, iot | 1/1 |  | goodsType 348 |
+| **H14B1** | bulblightv3 | ble, iot | 1/1 |  | goodsType 408; DiyConfig4H14B1 |
+| **R14B1** | bulblightv3 | ble, iot | 1/1 |  | goodsType 408 |
+| **R14C1** | bulblightv3 | ble, iot | 1/1 |  | goodsType 408 |
+| **H3210** | bulblightv3-solar | ble | 1/1 |  | goodsType 420; solar battery + light sense; DIY 984 |
+| **H3520** | bulblightv3-solar | ble | 1/1 |  | goodsType 419; solar battery + light sense; DIY 985 |
+
+## split_pact_fanlight
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H1310** | ceiling fan + RGBIC light ring | ble, iot |  | 359 | 6 fan gears, 9 light segments, main + back light, remote, optional TH sensor; scene groups 0,1,2,3,5; capability pairs {1,1}..{1,4}. |
+| **H1370** | ceiling fan + RGBIC light ring | ble, iot |  | 368 | 12 fan gears, 14 light segments, wind modes direct/sleep/natural/auto, shake head, auto temperature program, optional TH sensor; scene groups 0,1,2,3,6,5; capability pairs {1,1}..{1,3}. |
+
+## split_pact_floorlamp
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H6071** | CCT floor lamp | ble, iot |  | 57 | Brightness + color temp + scenes only, no RGB. Kelvin 2200-6500. Scene group {0}. Secret-key pairing command 0xB2/0xB1. |
+| **H6075** | CCT floor lamp | ble, iot |  | 67 | Same protocol as H6071; different theme/asset and factor version (21 vs 16). |
+| **H60B0** | 9-segment RGBIC floor lamp with zone lights | ble, iot, matter |  | 301 | 0x0D color, scenes/music/DIY, operate mode 0x2C (8 top + 1 bottom piece), interaction 0x14. Matter commissioning via base module. |
+| **H60B3** | RGBIC floor lamp (H60B3 DIY set) | ble, iot, matter |  | 301 | Same goods type/protocol as H60B0; DIY blob has upper (types 1-7), lower (1-3), ceiling (1-13) effect programs. |
+| **R60B3** | RGBIC floor lamp variant | ble, iot, matter |  | 301 | Same goods type/protocol; market variant. |
+| **H60B1** | RGBICWW floor lamp | ble, iot, matter, wifi/mqtt |  | 300 | 0x15 color with 32-bit segment mask and 3 declared color pieces; scenes with 32-bit music code; DIY two 16-bit codes; local MQTT only for large ptUrl DIY payloads. |
+
+## split_pact_h1161
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H1161** | Govee Sync light controller / pickup box, up to 5 sub-devices | ble | 1/1 |  | goodsType 32; supports (1,1),(1,2),(2,2); BLE-only (supportWifi=false, no IoT room op); per-device mark 0..4, color/music/brightness. |
+
+## split_pact_h3a5x
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H3A51** | RGBIC branch light string | ble, iot |  |  | goodsType 386, 32 lights default |
+| **R3A51** | RGBIC branch light string | ble, iot |  |  | goodsType 386, 32 lights default |
+| **H3A52** | RGBIC branch light string | ble, iot |  |  | goodsType 386, 63 lights |
+| **H3A53** | RGBIC branch light string | ble, iot |  |  | goodsType 386, 84 lights |
+
+## split_pact_h512x
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H5121** | motion sensor (PIR) | ble, ble-broadcast | 2/1 |  | goodsType 130; 1xCR2450; 3 distance levels 45/20/custom; interval; push events. Events arrive via cloud push, not an IoT command channel. |
+| **H5122** | button sensor | ble, ble-broadcast |  |  | goodsType 131; 1xCR2032; push events. Events arrive via cloud push, not an IoT command channel. Protocol registration not present in SupportConfig (only 130/206/238 are). |
+| **H5123** | door and window sensor | ble, ble-broadcast |  |  | goodsType 132; 1xCR1632; open/close push. Events arrive via cloud push, not an IoT command channel. Protocol registration not present in SupportConfig (only 130/206/238 are). |
+| **H5124** | vibration sensor | ble, ble-broadcast |  |  | goodsType 139; 1xCR2032; vibration push. Events arrive via cloud push, not an IoT command channel. Protocol registration not present in SupportConfig (only 130/206/238 are). |
+| **H5125** | button remote | ble, ble-broadcast |  |  | goodsType 144; 1xCR2032. Events arrive via cloud push, not an IoT command channel. Protocol registration not present in SupportConfig (only 130/206/238 are). |
+| **H5126** | button switch | ble, ble-broadcast |  |  | goodsType 145; 1xCR2032. Events arrive via cloud push, not an IoT command channel. Protocol registration not present in SupportConfig (only 130/206/238 are). |
+| **H5129** | outdoor motion sensor (PIR) | ble, ble-broadcast | 2/1 |  | goodsType 206; 2xCR123A; distance levels 80/40/20; Li-Sen switch. Events arrive via cloud push, not an IoT command channel. |
+| **H5130** | pressure sensor / pressure mat | ble, ble-broadcast | 2/1 |  | goodsType 238; 1xCR2450; threshold 1-10, has/no-pressure times, LED display. Events arrive via cloud push, not an IoT command channel. |
+| **H5127** | mmWave presence sensor | ble, ble-broadcast, iot | 1/1 |  | goodsType 183; supports beProtocol(1,1) and (2,1); dynamic SKU H5127_<suffix> from GVH5127 advert; config over BLE, status over IoT op frames. |
+
+## split_pact_h5901
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H5901** | water timer / irrigation gateway | ble, iot |  |  | goodsType 363, gateway for sub-device water timers, Telink UUIDs, OTA via OtaManager4TeLinkV2 |
+
+## split_pact_h6047
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H6047** | RGBIC TV light bars | ble, iot |  |  | goodsType 119, 10 color pieces, 2200-6500K |
+| **H6043** | RGBIC TV light bars | ble, iot |  |  | goodsType 196, 10 (or 5 duplicated) pieces, 2000-9000K, on/off memory |
+| **H6042** | RGBIC TV washer light bar | ble, iot |  |  | goodsType 197, 5 pieces, 2000-9000K, on/off memory |
+| **H6039** | RGBIC light string | ble, iot |  |  | goodsType 277, 12 pieces, 2700-6500K, online music config goodsType 277 |
+| **H6038** | RGBIC light string | ble, iot |  |  | goodsType 288, 24 pieces, 2700-6500K, new DIY config |
+| **H6048** | RGBIC TV light bar (compose light) | ble, iot |  |  | goodsType 298, 22 pieces, 2000-9000K, left/right bars |
+| **H8048** | RGBIC TV light bar (compose light) | ble, iot |  |  | maps to goodsType 298 via Support.getGoodsType4ColorSegment |
+
+## split_pact_h604a
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H604A** | RGBIC bulb string | ble, iot | 1/1 |  | goodsType 95; 24 bulbs; scene op set {1,6}; RGBIC-v2 DIY + camera calibration |
+| **H604C** | RGBIC bulb string | ble, iot | 1/1 |  | goodsType 122; 24 bulbs; scene op set {1,6} |
+| **H604B** | RGBIC bulb string | ble, iot | 1/1 |  | goodsType 109; 14 bulbs; scene op set {0,1,2,3}; V2 pact; template DIY |
+| **H604D** | RGBIC bulb string | ble, iot | 1/1 |  | goodsType 133; 14 bulbs; scene op set {0,1,2,3}; V2 pact |
+
+## split_pact_h6061
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H6061** | Glide Hexa | ble, iot |  |  | goodsType 51; 23 segments; scene speed default 45 |
+| **H6066** | Glide Hexa Pro | ble, iot |  |  | goodsType 96; 25 segments; scene speed default 10 |
+| **H606A** | Glide Hexa Ultra | ble, iot, matter |  |  | goodsType 163; 21 segments; music V4 117-123; matter soft>=1.00.15/WiFi 3.04.01/hard>=1.01.17/DSP 1.04.01 |
+| **H6063** | Gaming Wall Light (hex) | ble, iot, matter |  |  | goodsType 228; 20 segments; focus DIY; matter soft>=1.00.01/WiFi 3.04.01/hard>=1.01.17/DSP 1.04.01 |
+| **H6069** | Gaming Wall Light (panel) | ble, iot, matter |  |  | goodsType 284; 140 segments; point direction/panel; matter soft>=1.00.03/WiFi 3.06.01/hard>=1.03.01/DSP 1.04.02 |
+| **H6067** | Glide Tri | ble, iot |  |  | goodsType 97; 40 declared segments but 24-bit write mask; scene speed default 71; music stub |
+| **H6065** | Glide Y Lights | ble, iot |  |  | goodsType 121; 40 declared segments, 24-bit write mask; focus point DIY |
+
+## split_pact_h6062
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H6062** | RGBIC strip light | ble, iot | 1/1 |  | goodsType 41; V1 colour 33 segments; pact (3,1)/(4,1) raise bulb max to 28/33; scene ops {0,1,2,3} |
+| **H606A** | RGBIC strip light | ble, iot | 1/1 |  | goodsType 41; alias of H6062 family |
+| **H610A** | RGBIC strip / Glide Music Wall Light | ble, iot | 1/1 |  | goodsType 80; V2 colour/ModeV2; scene ops {0,1,6}; default name for H610B is Glide Music Wall Light |
+| **H610B** | Light-wall / matrix strip | ble, iot | 1/1 |  | goodsType 114; V3 colour; 14 bulbs; scene ops {0,5}; DIY protocol 4, share code 41 |
+
+## split_pact_h6079
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H6079** | RGBICWW floor lamp | ble, iot, matter |  |  | goodsType 156; 14 segments; 2200-6500K; matter gated soft>=1.00.21/WiFi 3.04.01/hard>=1.01.01/DSP 1.05.02 |
+| **H607C** | floor lamp | ble, iot, matter |  |  | goodsType 209; 13 segments; 2200-6500K; custom music; matter soft>=1.00.01/WiFi 3.04.01/hard>=1.01.17/DSP 1.04.01 |
+| **H807C** | floor lamp | ble, iot, matter |  |  | goodsType 209 (shares H607C maker/rules) |
+| **H16B0** | RGBICWW floor lamp | ble, iot, matter |  |  | goodsType 376; 17 segments; 1000-10000K; music V3 when music version>=3 |
+| **H6020** | table lamp | ble, iot |  |  | goodsType 210; colour sub-mode 0x0D; preset multi-scene 0x58; battery |
+| **H6022** | table lamp | ble, iot |  |  | goodsType 249; scene op set 0..3,5,12; colour sub-mode 0x0D |
+| **H8022** | table lamp | ble, iot |  |  | goodsType 249 alias |
+| **H1741** | table lamp (battery) | ble, iot |  |  | goodsType 365; colour sub-mode 0x15; 8 segments; battery/energy-save; white noise 0x71/0x7A |
+| **R1741** | table lamp (battery) | ble, iot |  |  | goodsType 365 alias |
+
+## split_pact_h6092
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H6092** | RGBIC light | ble, iot |  |  | goodsType 167, 14 pieces, applyOpSet 0/1/2/3/5/11 |
+| **H6093** | RGBIC light | ble, iot |  |  | goodsType 271, preset scenes + music code |
+| **H7070** | RGBIC light | ble, iot |  |  | goodsType 283, conditional effect change |
+| **H6095** | RGBIC light | ble, iot |  |  | goodsType 323, 7 pieces |
+| **H6094** | RGBIC light | ble, iot |  |  | goodsType 322, 1 piece |
+| **H609D** | RGBIC light | ble, iot |  |  | goodsType 331, operate mode 0x43 |
+| **H7073** | RGBIC light | ble, iot |  |  | goodsType 333, supportEffectChange always |
+| **H7071** | RGBIC light | ble, iot |  |  | goodsType 334, layered DIY |
+| **R1810** | RGBIC light | ble, iot |  |  | goodsType 340, 3 segments |
+| **H6091** | RGBIC light | ble, iot |  |  | goodsType 101, music sub-mode 0x0F |
+| **H1811** | RGBIC light | ble, iot |  |  | goodsType 399, flow direction |
+| **H3860** | RGBIC light | ble, iot |  |  | goodsType 401 |
+| **H1880** | RGBIC light | ble, iot |  |  | goodsType 402, on/off memory |
+
+## split_pact_h6099
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H605B** | HDMI sync box (DreamView T1 Pro) | ble, iot | 1/1 |  | goodsType 82; camera calibration |
+| **H605D** | HDMI sync box (DreamView T1S Pro) | ble, iot | 1/1 |  | goodsType 82 alias |
+| **H605C** | HDMI sync box | ble, iot | 1/1 |  | goodsType 120; also (1,2); 14 segments; HTTP user-cali |
+| **H6601** | HDMI sync box (AI Gaming) | ble, iot | 1/1 |  | goodsType 138; 3 HDMI ports; 24 segments |
+| **H6602** | HDMI sync box (AI Gaming) | ble, iot | 1/1 |  | goodsType 142; also (2,1); 14 segments |
+| **H6603** | HDMI sync box kit | ble, iot, matter | 1/1 |  | goodsType 192; also (2,1),(3,1); 4 ports; 24 segments |
+| **H6604** | HDMI sync box strip | ble, iot, matter | 1/1 |  | goodsType 243; also (2,1),(3,1); 4 ports; 14 segments |
+| **H8604** | HDMI sync box strip | ble, iot, matter | 1/1 |  | goodsType 243 alias |
+| **H6608** | TV vertical strip | ble, iot | 1/1 |  | goodsType 172; 30 segments |
+| **H2A40** | HDMI 2.1 sync box | ble, iot | 1/1 |  | goodsType 360; newer box |
+| **H6099** | TV backlight | ble, iot, matter | 1/1 |  | goodsType 191; also (2,1); 24 segments at IC 24 |
+| **H6690** | TV backlight | ble, iot, matter | 1/1 |  | goodsType 191 alias |
+| **H6098** | TV backlight | ble, iot, matter | 1/1 |  | goodsType 336 |
+| **H8098** | TV backlight | ble, iot, matter | 1/1 |  | goodsType 336 alias |
+| **H605A** | TV backlight | ble, iot, matter | 1/1 |  | goodsType 203; also (2,1),(3,1); 14 segments |
+| **H6097** | TV backlight | ble, iot, matter | 1/1 |  | goodsType 253; also (2,1); 24 segments; 3-image calibration |
+| **H66A0** | TV backlight | ble, iot, matter | 1/1 |  | goodsType 273; also (2,1); 14 segments |
+| **H66A1** | TV backlight | ble, iot | 1/1 |  | goodsType 327; also (2,1); 14 segments |
+
+## split_pact_h60ax
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H60A0** | Ceiling light | ble, iot | 1/1 |  | goodsType 188; colour 0x15; colour size 13/14; 2200-6500K; scenes {0,1,2,3} |
+| **H60A1** | Ceiling light | ble, iot | 1/1 |  | goodsType 235; colour 0x15; 14; 2200-6500K; scenes {0,1,2,3} |
+| **H80A1** | Ceiling light | ble, iot | 1/1 |  | goodsType 235; theme icon shared with H60A0 |
+| **H60A4** | Ceiling light | ble, iot | 1/1 |  | goodsType 302; colour 0x15; 11; 2700-6500K; DIY 784/851 protocol 0x58 share 80 |
+| **H80A4** | Ceiling light | ble, iot | 1/1 |  | goodsType 302; theme icon shared with H60A4 |
+| **H60A6** | Ceiling / matrix light | ble, iot | 1/1 |  | goodsType 303; colour sub 0x0D; 13; 2700-6500K; scenes {0,1,2,3,5}; DIY 797/798 protocol 0x58 |
+| **H60C1** | Ceiling light | ble, iot | 1/1 |  | goodsType 324; colour 0x15; 3; 2700-6500K; scenes {0,1,2,3,5}; DIY 878/789 |
+| **H1270** | Ceiling / matrix light | ble, iot | 1/1 |  | goodsType 346; colour 0x15; 13; 2700-6500K; scenes {0,5}; DIY 897/898/983; graffiti 82; custom music |
+| **H1232** | Ceiling light | ble, iot | 1/1 |  | goodsType 356; colour 0x15; 4; 2700-6500K; scenes {0,1,2,3,5} |
+| **H1250** | Ceiling light | ble, iot | 1/1 |  | goodsType 370; colour 0x15; runtime colour size; 2200-6500K; scenes {0,1,2,3,5}; DIY 915/916/982 |
+| **H1252** | Ceiling light | ble, iot | 1/1 |  | goodsType 373; colour 0x15; 17; 2200-6500K; scenes {0,1,5}; DIY 902/981/941 |
+| **H12D0** | Ceiling light | ble, iot | 1/1 |  | goodsType 390; colour 0x15; runtime; 2200-6500K; scenes {0,5}; DIY 944/961; graffiti 0xEF |
+| **H1141** | Ceiling light | ble, iot | 1/1 |  | goodsType 410; colour 0x15; 8; 1000-10000K; scenes {0,1,2,3,5,6}; DIY 976/977; graffiti protocol 0x03 |
+
+## split_pact_h61d3
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H61D3** | Neon rope light | ble, iot | 1/1 |  | goodsType 202; recognition/points; H61DX DIY 691/625 protocol 0x58/0x03 |
+| **H61D2** | Neon rope light | ble, iot | 1/1 |  | goodsType 202; SKU constant |
+| **H61D4** | Neon rope light | ble, iot | 1/1 |  | goodsType 202 |
+| **H61D5** | Neon rope light | ble, iot | 1/1 |  | goodsType 202 |
+| **H61D6** | Neon rope light | ble, iot | 1/1 |  | goodsType 202 |
+| **H61E5** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 239 |
+| **H61E6** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 246 |
+| **H6640** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 242 |
+| **H6641** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 247 |
+| **H61B0** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 264 |
+| **H61B3** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 264 |
+| **H61B6** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 264 |
+| **H61F6** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 261; protocols (2,2),(3,1),(4,1) |
+| **H61F2** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 261 |
+| **H61F5** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 261 |
+| **H1A43** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 367; protocols (1,2),(1,3) |
+| **H1A44** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 367 |
+| **H1A45** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 375; (1,2) |
+| **H1B6A** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 384 |
+| **H1AB1** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 387; H1AB1 DIY protocol 0x22, share code 0x00, graffiti share 0x08 |
+| **H1AB2** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 388; (1,2) |
+| **H1AB3** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 389; (1,2) |
+| **H1A42** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 400; (1,2) |
+| **H1AA2** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 403; (1,2) |
+| **H1AA5** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 404; (1,2) |
+| **H703A** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 263; cut-calibration activity |
+| **H703B** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 263 |
+| **H61B8** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 299; (2,2) |
+| **H61B9** | Neon rope / wall lining | ble, iot | 1/1 |  | goodsType 299 |
+
+## split_pact_h6630
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H6630** | gaming pixel light bar with speaker | ble, iot, matter | 1/1 |  | goodsType 285; protocols (1,1),(1,2),(2,1),(2,2),(2,3); pixel display + tone + mic/music + DIY. |
+| **H8630** | gaming pixel light bar (co-brand/regional) | ble, iot, matter | 1/1 |  | goodsType 285; same maker/protocol as H6630; H6630Support.c. |
+| **H6631** | gaming pixel light bar with speaker | ble, iot, matter | 2/4 |  | goodsType 286; adds protocol (2,4); own maker/online music config. |
+
+## split_pact_h6660
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H6660** | laser engraver | ble, iot |  |  | goodsType 380, main laser SKU, MTU-based image transfer |
+| **H3810** | laser engraver | ble, iot |  |  | goodsType 380, sibling SKU with separate detail config |
+
+## split_pact_h682021
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H6820** | curtain lights | ble, iot |  |  | goodsType 279, 20 colour pieces |
+| **H6821** | curtain lights | ble, iot |  |  | goodsType 280, 20 colour pieces |
+
+## split_pact_h6840
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H6840** | hexa/glide panel | ble, iot, matter | 1/1 |  | goodsType 278; also (1,2),(2,1),(2,2) |
+| **H6841** | hexa/glide panel | ble, iot, matter | 1/1 |  | goodsType 325; also (1,2) |
+| **H6842** | hexa panel | ble, iot | 1/1 |  | goodsType 381; DIY effect codes 927-930 |
+| **H6843** | hexa panel | ble, iot | 1/1 |  | goodsType 382; DIY effect codes 931-934 |
+| **H6609** | gaming light strip | ble, iot, matter | 1/1 |  | goodsType 173; MatterSupport |
+| **H70C1** | RGBIC string light | ble, iot | 1/1 |  | goodsType 181; also (2,1) |
+| **H70C2** | RGBIC string light | ble, iot | 1/1 |  | goodsType 181 alias |
+| **H70CB** | RGBIC string light | ble, iot | 1/1 |  | goodsType 181 alias |
+| **H70C9** | RGBIC string light | ble, iot | 1/1 |  | goodsType 181 alias |
+| **H6175** | light strip | ble, iot |  |  | goodsType 187; item registered but no explicit pact.a in this split |
+| **H70C4** | RGBIC string light | ble, iot | 1/1 |  | goodsType 260; also (1,2),(2,1),(2,2) |
+| **H70C5** | RGBIC string light | ble, iot | 1/1 |  | goodsType 260 |
+| **H70C6** | RGBIC string light | ble, iot | 1/1 |  | goodsType 260 |
+| **H70C7** | RGBIC string light | ble, iot | 1/1 |  | goodsType 260 |
+| **H70C8** | RGBIC string light | ble, iot | 1/1 |  | goodsType 260 |
+| **H6870** | RGBIC string light | ble, iot | 1/1 |  | goodsType 260; isH687 special path |
+| **H6871** | RGBIC string light | ble, iot | 1/1 |  | goodsType 260; isH687 |
+| **R6871** | RGBIC string light | ble, iot | 1/1 |  | goodsType 260; isH687 |
+| **H6860** | RGBIC strip | ble, iot | 1/1 |  | goodsType 362; also (2,1) |
+| **H6861** | RGBIC strip | ble, iot | 1/1 |  | goodsType 362 |
+| **H6350** | light bar | ble, iot | 1/1 |  | goodsType 374; 1 segment |
+| **H6351** | light bar | ble, iot | 1/1 |  | goodsType 392; 1 segment |
+| **H6850** | panel light | ble, iot | 1/1 |  | goodsType 378; 4 segments |
+| **H6250** | panel light | ble, iot | 1/1 |  | goodsType 398; 11 segments; new music mode |
+
+## split_pact_h7050
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H7050** | permanent outdoor light | ble, iot | 1/1 |  | goodsType 46; 15 bulbs |
+| **H7051** | string light | ble, iot | 1/1 |  | goodsType 105; 24 bulbs |
+| **H7052** | string light | ble, iot, matter | 1/1 |  | goodsType 218; also (2,1); 15 bulbs |
+| **H7053** | string light | ble, iot, matter | 1/1 |  | goodsType 219; also (2,1); 30 bulbs; device lock |
+| **H7055** | string light | ble, iot | 1/1 |  | goodsType 116; 2 bulbs; 2200-6500K |
+| **H7057** | string light | ble, iot, matter | 1/1 |  | goodsType 274; 4 bulbs |
+| **H7058** | string light | ble, iot | 1/1 |  | goodsType 275; 6 bulbs |
+| **H7060** | string light | ble, iot | 1/1 |  | goodsType 76; 2 bulbs |
+| **H7061** | string light | ble, iot | 1/1 |  | goodsType 98; 2 bulbs; 2200-6500K |
+| **H7062** | string light | ble, iot | 1/1 |  | goodsType 107; 6 bulbs; 2200-6500K |
+| **H7063** | string light | ble, iot, matter | 1/1 |  | goodsType 227; also (2,1); 3 bulbs |
+| **H7065** | string light | ble, iot | 1/1 |  | goodsType 113; 2 bulbs |
+| **H7066** | string light | ble, iot | 1/1 |  | goodsType 171; 1 bulb; 2200-6500K |
+| **H6087** | string light | ble, iot | 1/1 |  | goodsType 77 |
+| **H6088** | RGBIC string | ble, iot | 1/1 |  | goodsType 157; also (2,1) |
+| **H7037** | curtain light | ble, iot | 1/1 |  | goodsType 221; also (2,1) |
+| **H7038** | curtain light | ble, iot | 1/1 |  | alias of H7037 |
+| **H7039** | curtain light | ble, iot | 1/1 |  | alias of H7037 |
+| **H7045** | hexa/glide panel | ble, iot, matter | 1/1 |  | goodsType 338; also (1,2),(1,3); music feast |
+| **H7046** | hexa/glide panel | ble, iot, matter | 1/1 |  | goodsType 338 |
+| **H7087** | string light | ble, iot, matter | 1/1 |  | goodsType 315; 3 bulbs |
+| **H7093** | string light | ble, iot, matter | 1/1 |  | goodsType 289; 2 bulbs |
+| **H7094** | string light | ble, iot | 1/1 |  | goodsType 290; 4 bulbs |
+| **H8066** | string light | ble, iot | 1/1 |  | goodsType 305; 3 bulbs |
+| **H8067** | string light | ble, iot | 1/1 |  | goodsType 393; 6 bulbs |
+| **H3500** | string light | ble, iot, matter | 1/1 |  | goodsType 345; 8 bulbs |
+| **H3501** | string light | ble, iot, matter | 1/1 |  | goodsType 339; 8 bulbs; install calibration op 0x39 |
+| **H3510** | string light | ble, iot, matter | 1/1 |  | goodsType 349; 1000-10000K |
+| **H3511** | string light | ble, iot, matter | 1/1 |  | goodsType 349 |
+| **H3200** | lamp | ble, iot | 1/1 |  | goodsType 353 |
+| **H1630** | cube/hexa lamp | ble, iot, matter | 1/1 |  | goodsType 364; also (1,2),(1,3); graffiti DIY |
+| **H7020** | lighting | ble, iot | 1/1 |  | goodsType 53; also (2,1); bleiot/BleIotMaker |
+| **H7021** | lighting | ble, iot | 1/1 |  | goodsType 54; bleiot/BleIotMakerV2 |
+| **H7015** | lighting | ble | 1/1 |  | goodsType 62; BLE-only AbsBleSku / BleMaker |
+| **H7016** | lighting | ble | 1/1 |  | goodsType 63; BLE-only / BleMakerV2 |
+| **H7041** | lighting | ble, iot | 1/2 |  | goodsType 100; bleiot/BleIotMakerH7041 |
+| **H7042** | lighting | ble, iot | 1/2 |  | goodsType 102; bleiot/BleIotMakerH7042 |
+| **H7029** | lighting | ble | 1/1 |  | goodsType 149; BLE-only / BleMakerH7029 |
+| **H7033** | lighting | ble, iot | 1/1 |  | goodsType 161; also (1,2); bleiot/BleIotMakerH7033 |
+| **H7030** | lighting | ble, iot | 1/1 |  | goodsType 295; bleiot/BleIotMakerH7030 |
+| **H7025** | lighting | ble, iot | 1/1 |  | goodsType 296; bleiot/BleIotMakerH7025 |
+| **H702A** | lighting | ble, iot | 1/1 |  | goodsType 316; H702A/B/C share goodsType 316 / BleIotMakerH702ABC |
+| **H702B** | lighting | ble, iot | 1/1 |  | goodsType 316; alias |
+| **H702C** | lighting | ble, iot | 1/1 |  | goodsType 316; alias |
+| **H7026** | lighting | ble, iot | 1/1 |  | goodsType 318; bleiot/BleIotMakerH7026 |
+| **H7027** | lighting | ble, iot | 1/1 |  | goodsType 337; bleiot/BleIotMakerH7027 |
+| **H3001** | lighting | ble | 1/1 |  | goodsType 361; also (1,2),(1,3),(1,4); BLE-only / BleMakerH3001 |
+| **H30D01** | lighting | ble, iot | 1/1 |  | goodsType 391; bleiot/BleIotMakerH30D0 |
+| **H3010** | lighting | ble, iot | 1/1 |  | goodsType 411; H3010/11/12/13 share goodsType 411 / BleIotMakerH3010123 |
+| **H3011** | lighting | ble, iot | 1/1 |  | goodsType 411; alias |
+| **H3012** | lighting | ble, iot | 1/1 |  | goodsType 411; alias |
+| **H3013** | lighting | ble, iot | 1/1 |  | goodsType 411; alias |
+| **R7015** | lighting | ble | 1/1 |  | goodsType 416; BLE-only / BleMakerR7015 |
+
+## split_pact_h705a
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H705A** | Ceiling light | ble, iot | 1/1 |  | goodsType 125; 2000-9000K; scene ops {0,1,2,3} |
+| **H705B** | Ceiling light | ble, iot | 1/1 |  | goodsType 125 |
+| **H706A** | Ceiling light | ble, iot | 1/1 |  | goodsType 180; 2200-6500K; segment count from SegmentIcDataConfig; code 49 uses CuiCanMusic4H706a |
+| **H706B** | Ceiling light | ble, iot | 1/1 |  | goodsType 180 |
+| **H706C** | Ceiling light | ble, iot | 1/1 |  | goodsType 180 |
+| **H806A** | Ceiling light | ble, iot | 1/1 |  | goodsType 184; 2000-9000K |
+| **H806C** | Ceiling light | ble, iot | 1/1 |  | goodsType 184 |
+| **H801B** | Ceiling light | ble, iot | 1/1 |  | goodsType 184; theme icon shared with H705B |
+| **H705D** | Ceiling / downlight | ble, iot | 1/1 |  | goodsType 240; 2700-6500K |
+| **H705E** | Ceiling / downlight | ble, iot | 1/1 |  | goodsType 240 |
+| **H705F** | Ceiling / downlight | ble, iot | 1/1 |  | goodsType 240 |
+| **H805A** | Ceiling / downlight | ble, iot | 1/1 |  | goodsType 240 |
+| **H805B** | Ceiling / downlight | ble, iot | 1/1 |  | goodsType 240 |
+| **H805C** | Ceiling / downlight | ble, iot | 1/1 |  | goodsType 240 |
+| **H805D** | Ceiling / downlight | ble, iot | 1/1 |  | goodsType 240 |
+| **H608A** | Ceiling / downlight | ble, iot, matter | 1/1 |  | goodsType 240; Matter commissioning soft>=1.00.10 |
+| **H608B** | Ceiling / downlight | ble, iot, matter | 1/1 |  | Matter, soft>=1.00.11 |
+| **H608C** | Ceiling / downlight | ble, iot, matter | 1/1 |  | Matter, soft>=1.00.11 |
+| **H608D** | Ceiling / downlight | ble, iot, matter | 1/1 |  | Matter, soft>=1.00.18 |
+| **H808A** | Ceiling / downlight | ble, iot, matter | 1/1 |  | Matter, soft>=1.00.19 |
+| **H7067** | Bulb string / light string | ble, iot | 1/1 |  | goodsType 250; 2700-6500K; sub-effects BianHuan/BinFen/Breath/CaiQiang/Fade/Glimmer/MengHuan/Mirror/Rainbow/Ripple/Sawing |
+| **H7068** | Bulb string / light string | ble, iot | 1/1 |  | goodsType 250 |
+| **H7069** | Bulb string / light string | ble, iot | 1/1 |  | goodsType 250 |
+| **H3401** | Segmented lamp | ble, iot | 1/1 |  | goodsType 394; 1000-10000K; generic DIY-new config; segment/zone effects |
+
+## split_pact_h7075
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H7075** | Smart LED downlight | ble, iot, matter | 1/1 |  | goodsType 205; colour size 3; matter commissioning gated on versions; 2700-6500K |
+| **H7078** | Floodlight / wall washer | ble, iot | 1/1 |  | goodsType 245; colour size 4; motion + splicing; 2700-6500K |
+| **H7072** | COB strip / light bar | ble, iot | 1/1 |  | goodsType 294; colour size 6; brightness sensor + auto dimming |
+| **H7076** | RGBIC wall washer / graffiti | ble, iot | 1/1 |  | goodsType 313; scene ops {0,1,2,3,5,6}; scrawl/graffiti DIY |
+| **H707A** | Segment / matrix light | ble, iot | 1/1 |  | goodsType 326; color size 4; wide-Kelvin variant 1000-10000K |
+| **H707B** | Segment / matrix light | ble, iot | 1/1 |  | goodsType 326 |
+| **H707C** | Segment / matrix light | ble, iot | 1/1 |  | goodsType 326 |
+| **R707A** | Segment / matrix light | ble, iot | 1/1 |  | goodsType 326; R-series variant |
+| **R707B** | Segment / matrix light | ble, iot | 1/1 |  | goodsType 326; R-series variant |
+| **R707C** | Segment / matrix light | ble, iot | 1/1 |  | goodsType 326; R-series variant |
+| **H3751** | Light bar / combine device | ble, iot | 1/1 |  | goodsType 354; multi-device combine; 1000-10000K |
+| **H3351** | Strip light | ble, iot | 1/1 |  | goodsType 371; gear brightness slider; 1000-10000K |
+| **H2800** | Wall light / online music | ble, iot | 1/1 |  | goodsType 396; online music studio scene; 2700-6500K |
+| **H3700** | Dual-zone light | ble, iot, matter | 1/1 |  | goodsType 383; top/bottom zones; scene ops {0,1,2,3,6}; batch matter+wifi; 1000-10000K |
+| **R3352** | Light-sense / auto-dimming light | ble, iot | 1/1 |  | goodsType 413; colour size 2; light sense 0x24 + auto dimming 0x25; 1000-10000K |
+
+## split_pact_h70b1
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H70B1** | Smart Curtain Lights | ble, iot | 1/1 |  | goodsType 134; origin family; effect codes 467/531-556 |
+| **H70B2** | Smart Curtain Lights | ble, iot | 1/1 |  | goodsType 185; origin protocol + Mtu/ptUrl helpers; no dedicated detail config |
+| **H70BC** | 400LED Curtain Lights | ble, iot | 1/1 |  | goodsType 216; origin protocol; effect codes 645/648-661 |
+| **H70B3** | Curtain Lights | ble, iot, matter | 1/1 |  | goodsType 229; spliceable; matter commissioning |
+| **H70B4** | Curtain Lights | ble, iot, matter | 1/1 |  | goodsType 230; spliceable; matter |
+| **H70B5** | Curtain Lights | ble, iot, matter | 1/1 |  | goodsType 231; spliceable; matter |
+| **H6810** | Curtain/matrix (spliceable) | ble, iot, matter | 2/1 |  | goodsType 255; effect codes 707/709/771/890 |
+| **H6811** | Curtain/matrix (spliceable) | ble, iot, matter | 2/1 |  | goodsType 256; effect codes 707/708/709/771/772 |
+| **H6800** | Matrix/curtain with interactive game mode | ble, iot, matter | 2/1 |  | goodsType 272; interactive submode 0x14; game time 300000ms |
+| **H70B6** | Curtain Lights Pro | ble, iot, matter, wifi/mqtt | 1/1 |  | goodsType 329; 30/32 segments; display, 24h, temp unit, wifi OTA |
+| **H70B8** | Lightwall | ble, iot, matter, wifi/mqtt | 1/1 |  | goodsType 341; 32x48; same commands as H70B6 |
+| **H70D1** | Icicle Lights | ble, iot, matter | 1/1 |  | goodsType 267; 10 segments; install dir {1,1}/{1,2} |
+| **H70D2** | Icicle Lights | ble, iot, matter | 1/1 |  | goodsType 268; install dir {2,1}/{2,2} |
+| **H70D3** | Icicle Lights | ble, iot, matter | 1/1 |  | goodsType 269; install dir {2,1}/{2,2} |
+| **H70C4** | Curtain Lights (matter alias) | ble, iot, matter |  |  | named only in H70B3 MatterConfig sku list |
+| **H70C5** | Curtain Lights (matter alias) | ble, iot, matter |  |  | named only in H70B3 MatterConfig sku list |
+| **H70C6** | Curtain Lights (matter alias) | ble, iot, matter |  |  | named only in H70B3 MatterConfig sku list |
+| **H70C7** | Curtain Lights (matter alias) | ble, iot, matter |  |  | named only in H70B3 MatterConfig sku list |
+| **H70C8** | Curtain Lights (matter alias) | ble, iot, matter |  |  | named only in H70B3 MatterConfig sku list |
+| **H70C9** | Curtain Lights (matter alias) | ble, iot, matter |  |  | named only in H70B3 MatterConfig sku list |
+| **H80C4** | Curtain Lights (matter alias) | ble, iot, matter |  |  | named only in H70B3 MatterConfig sku list |
+
+## split_pact_h7111
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H7111** | space heater | ble, iot |  |  | goodsType 86; GEAR/CUSTOM/AUTO/SLEEP/NATURAL/STORM; shake 0x1D; 3-zone custom |
+| **H7101** | space heater | ble, iot |  |  | goodsType 93; shares H7111 protocol; only lock controller in split |
+| **H7102** | space heater | ble, iot |  |  | goodsType 93 alias |
+| **H7100** | space heater | ble, iot |  |  | goodsType 129; old/new protocol mode bytes; common switch read 0x1F |
+| **H7106** | space heater | ble, iot |  |  | goodsType 200; H7100 rules + H7106 heart controller/report parser |
+| **H7105** | heater with oscillation | ble, iot |  |  | goodsType 201; GEAR/CUSTOM/AUTO/SLEEP/NATURAL; shake and light subcommands |
+| **H7107** | heater | ble, iot |  |  | goodsType 297; H7105 protocol + H7107 heart/temp config |
+| **H7103** | heater | ble, iot |  |  | goodsType 251; H7105 protocol + H7103 heart/lock |
+| **H7112** | smart fan / air circulator | ble, iot |  |  | goodsType 236; GEAR/AUTO/SLEEP/NATURAL; thermometer bind 0x08, sensor 0x10, cali 0x1E, timer 0x13, delay-off 0x26; shared H71xx GMessage |
+
+## split_pact_h7120
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H7120** | air purifier | ble, iot | 1/1 |  | also declares (1,2) and (2,1); goodsType 118 |
+| **H7121** | air purifier | ble, iot | 1/1 |  | also (1,2); goodsType 72; gear/child-lock/night-light/indicator |
+| **H7122** | air purifier | ble, iot | 1/1 |  | goodsType 79; custom mode + air quality + timer V3 |
+| **H7123** | air purifier | ble, iot | 1/1 |  | goodsType 110 |
+| **H7126** | air purifier | ble, iot, matter | 1/1 |  | goodsType 160 |
+| **H7127** | air purifier | ble, iot, matter | 1/1 |  | goodsType 254, shares H7126 implementation |
+| **H7129** | air purifier / PM chart sensor | ble, iot, matter | 1/1 |  | goodsTypes 223,224,225,226 |
+
+## split_pact_h7130
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H7130** | Smart heater | ble, iot | 1/1 |  | goodsType 60; V1 UI + V2 UI above soft 1.00.31; base protocol |
+| **H713A** | Smart heater | ble, iot | 1/1 |  | goodsType 164; H713A timer/pair UI |
+| **H7131** | Smart heater | ble, iot | 1/1 |  | goodsType 115 (H7131/H7132 share); mode/auto UI |
+| **H7132** | Smart heater | ble, iot | 1/1 |  | goodsType 115; mode GEAR/AUTO/FAN |
+| **H713B** | Smart heater | ble, iot | 1/1 |  | goodsType 165 |
+| **H7135** | Smart heater | ble, iot | 1/1 |  | goodsType 153; V3 settings; swing leaf |
+| **H7133** | Smart heater | ble, iot | 1/1 |  | goodsType 174; swing leaf / stove mode |
+| **H7134** | Smart heater | ble, iot | 1/1 |  | goodsType 179 (BLE/WiFi heater variant); also listed as 174 group |
+| **H713C** | Smart heater | ble, iot | 1/1 |  | goodsType 166 |
+| **H7136** | Smart heater | ble, iot | 1/1 |  | goodsType 214 |
+| **H713D** | Smart heater | ble, iot | 1/1 |  | goodsType 215 |
+| **H7137** | Smart heater | ble, iot | 1/1 |  | goodsType 222 |
+| **H713E** | Smart heater | ble, iot | 1/1 |  | goodsType 237 |
+| **H7138** | Smart heater | ble, iot | 1/1 |  | goodsType 252; temperature-unit change 0x1F |
+| **H7139** | Smart heater | ble, iot |  |  | SKU constant exists in base SkuCons; no dedicated config found in this split |
+
+## split_pact_h7170
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H7170** | smart kettle | ble, iot |  |  | goodsType 103; modes green tea/oolong/coffee/red tea/DIY/slider; 4 DIY slots; beep |
+| **H7171** | smart kettle | ble, iot |  |  | goodsType 135; modes slider/M1-M4; delay start; sensor unit switch |
+| **H717A** | smart kettle | ble, iot |  |  | goodsType 135 alias |
+| **H7173** | tea/coffee brewer | ble, iot |  |  | goodsType 177; modes DIY/boil/tea/coffee/seek; custom tea/coffee/DIY tables; water light 0x1B; timer |
+| **H7175** | smart kettle | ble, iot |  |  | goodsType 168; same mode table as H7170 plus temp-unit switch |
+
+## split_pact_h7172
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H7172** | ice maker | ble, iot |  |  | goodsType 117 |
+| **H7178** | ice maker | ble, iot |  |  | goodsType 211, extra SettingExtH7178 |
+| **H717D** | ice maker / water dispenser | ble, iot |  |  | goodsType 212, H717DDeviceState, shared settings |
+
+## split_pact_h7180
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H7180** | smart rice cooker / multi-mode cooker | ble, iot |  |  | goodsType 152, modes rice/saute/steam/slowcook/diy, keep temp/weigh/recipe making |
+
+## split_pact_hollowlamp
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H6050** | hollow/candle lamp | ble, iot |  | 27 | Kelvin 1800-3000; group factor V1; scene groups {0,1}. |
+| **H6051** | hollow lamp | ble, iot |  | 37 | Kelvin 2200-6500; group factor V2; scene groups {0,1}. |
+| **H6055** | portable hollow lamp (battery) | ble |  | 42 | BLE-only: Support.d()={42} and SubLib (BLE-only) lists only this goods type; SubLib4BleIot lists 27,37,59,58,84,395. Battery via heartbeat byte 4; group factor V3. |
+| **H6058** | hollow lamp (energy saving) | ble, iot |  | 59 | Energy saving cmd 0x16 when soft >= 1.01.05; group factor V3; kelvin 2200-6500. |
+| **H6059** | hollow lamp (auto induction) | ble, iot |  | 84 | PIR auto on/off 0xA6 + sensitivity 0xA7 (soft >= 1.00.12); music V3 effects 75/76; kelvin 2200-6500. |
+| **H6073** | hollow lamp | ble, iot |  | 58 | Kelvin 2200-6500; scene groups {0,1}. |
+| **H1771** | hollow lamp (4-color / new scenes) | ble, iot |  | 395 | Kelvin 1000-10000; new scenes groups {0,1,2,3,6,5,4}; BLE effect op but WiFi SKU. |
+| **H6057** | lamp with speaker/voice/battery | ble, iot |  | 104 | Kelvin 1000-10000; game mode, preset slots 0x24-0x29, voice/volume/night, battery, detail info 0x34. |
+| **H6072** | straight floor lamp | ble, iot |  | 30 | 8 segments; scene default 2099 (new versions); remote pair 0xA4/0xA6; gradual 0xA3. |
+| **H8072** | straight floor lamp | ble, iot |  | 30 | Same goods type/protocol as H6072; scene default 2099. |
+| **H6076** | straight floor lamp | ble, iot |  | 69 | 7 segments; scene default 2143. |
+| **H60B2** | straight floor lamp | ble, iot |  | 312 | 3 segments; part-brightness color (0x15). |
+| **H3270** | straight floor lamp (AI effects) | ble, iot |  | 409 | 8 segments; scene groups {0,1,2,3,5}; AI effect categories 29/30. |
+| **H16C0** | straight floor lamp | ble, iot |  | 377 | 7 segments; 16C0-specific pact checks. |
+| **H6052** | table lamp | ble, iot |  | 22 | 2 color pieces; scenes {0,1,4,5}; color 0x0D; music 0x0F. |
+| **H6078** | table/floor lamp RGBICWW | ble, iot |  | 128 | 1 color piece; scenes {0,1,5,9}; music 0x13 codes 105/72/85/50/84/98; indicator 0x16; AI graffiti effect. |
+
+## split_pact_humidifier
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H7140** | humidifier, gear/auto/custom | ble, iot | 1/1 |  | goodsType 151; alias H7146 constant exists in Support. Protocols (1,1),(1,2),(2,1). |
+| **H714E** | humidifier, gear/auto/custom (new MCU) | ble, iot | 1/1 |  | goodsType 259; same protocol as H7140; extra version capabilities. |
+| **H7141** | humidifier, 3-mode protocol | ble, iot | 1/1 |  | goodsType 61; own BleProtocolConstants. |
+| **H7142** | humidifier, 3-mode protocol | ble, iot | 1/1 |  | goodsType 81. |
+| **H7143** | humidifier, gear/auto | ble, iot | 2/1 |  | goodsType 126; abnormal info + common switch. |
+| **H7145** | humidifier with water tank level / dry | ble, iot | 1/1 |  | goodsType 170; read-all-info composite controller. |
+| **H7147** | humidifier with water tank level / dry | ble, iot | 1/1 |  | goodsType 232; same as H7145. |
+| **H7148** | humidifier with water tank level / dry | ble, iot | 1/1 |  | goodsType 233; same as H7145. |
+| **H7149** | humidifier, gear/auto + light scenes | ble, iot | 1/1 |  | goodsType 258; protocols (1,1),(1,2),(2,1); UI/pact glue only. |
+| **H7150** | dehumidifier + child lock + dry-clothes | ble, iot | 1/1 |  | goodsType 94; Smart Dehumidifier (source strings h7150_smart_dehumidifier); full-bucket/defrost/compressor protections. |
+| **H7151** | dehumidifier + drain/pump/off-dry + device status | ble, iot | 1/1 |  | goodsType 147; Smart Dehumidifier Max; h7151_* strings, compressor/overtime/high-temp protections. |
+| **H7152** | dehumidifier (H7151 hardware, 2-probe timer) | ble, iot | 1/1 |  | goodsType 308; H7151 dehumidifier hardware with 2-probe timer layout. |
+| **H7153** | dehumidifier (H7151 hardware) | ble, iot | 1/1 |  | goodsType 309; H7151 dehumidifier hardware. |
+| **H7160** | humidifier, gear/auto/custom + timer | ble, iot | 1/1 |  | goodsType 99; custom mode; own timer V2 UI. |
+| **H7161** | aroma diffuser (Aroma Diffuser Pro; fog + light + voice) | ble, iot | 1/1 |  | goodsType 146; h7161_device_name = Aroma Diffuser Pro; atmosphere presets/multi-edit. |
+| **H7162** | aroma diffuser (Smart Aroma Diffuser) | ble, iot | 1/1 |  | goodsType 189; h7162_device_name = Smart Aroma Diffuser; same protocol as H7161. |
+
+## split_pact_iceMachine
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H8121** | bullet ice maker (small/medium/max) | ble, iot, matter | 1/1 |  | goodsType 306; protocols (1,1),(2,1); MatterInterceptor gate. |
+| **H8120** | bullet ice maker with light/clean/descaling | ble, iot, matter | 1/1 |  | goodsType 317; protocols (1,1),(1,2),(2,1),(2,2); MatterInterceptor gate. |
+| **H8131** | ice maker thin/medium/thick/extra-thick | ble, iot, matter | 1/1 |  | goodsType 321; protocols (1,1),(1,2); MatterInterceptor gate. |
+| **H8122** | ice maker small/medium/large | ble, iot | 1/1 |  | goodsType 372; protocol (1,1). |
+| **H8150** | keep-ice / demold / melt / reservation ice maker | ble, iot | 1/1 |  | goodsType 397; protocol (1,1); reservation opcode 0x23. |
+
+## split_pact_leaknew
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H5058** | water leak / level sensor, 3 probes | iot |  |  | goodsType 159; gateway sub-device type 12; 2xAAA; water-level mode, mute, SMS. |
+| **H5059** | water leak sensor, 1 probe | iot |  |  | goodsType 292; gateway sub-device type 13; 2xAAA. |
+| **H5830** | water leak sensor, gateway-weak support | iot |  |  | goodsType 357; gateway sub-device type 13; 2xAAA; SMS. |
+
+## split_pact_outdoorlight
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H7040** | Camping lantern | ble | 1/1 |  | goodsType 36; BLE-only; SOS + mic + battery |
+| **H7056** | Pathway Lights 2 | ble, iot | 1/1 |  | goodsType 304; 8 segments; MQTT capability only via shared supportMqtt |
+| **B7080** | Outdoor ground/path light | ble | 2/1 |  | goodsType 45; 4 segments; location/check-location commands |
+| **B7081** | Outdoor ground/path light | ble | 2/1 |  | goodsType 55; 8 segments |
+| **B7082** | Outdoor ground/path light | ble | 2/1 |  | goodsType 56; 6 segments |
+| **H7085** | Outdoor light (H7085 detail config) | ble |  |  | goodsType 276; detail/DIY config only (Support.isGoodsTypeH7085); not in Pact protocol list for 45/55/56 |
+| **H7086** | Garden Lights | ble, iot | 1/1 |  | goodsType 293; 4 segments; cap calibration; effect code 761 |
+
+## split_pact_plugnew
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H5080** | smart plug, 1 socket | ble, iot |  |  | goodsType 43; V1 protocol; old-H5080 gate soft <= 10008. |
+| **H5083** | smart plug, 1 socket | ble, iot |  |  | goodsType 43; lock/indicator light requires soft >= 10003 and hard >= 40100. |
+| **H5085** | smart plug, 1 socket | ble, iot, matter |  |  | goodsType 43; Matter commissioning when soft/hard match 1.00.20/3.01.00. |
+| **H5082** | smart plug, 2 sockets | ble, iot |  |  | goodsType 50; getPlugNum=2; Plug2 UI. |
+| **H5160** | smart plug, 3 sockets | ble, iot |  |  | goodsType 90; getPlugNum=3. |
+| **H5161** | smart plug, 3 sockets | ble, iot |  |  | goodsType 90; isTripPlugV2. |
+| **H5089** | smart plug, 2 sockets + RGB night light | ble, iot, matter |  |  | goodsType 307; 3 timer groups: socket0, socket1, night light; Matter supported. |
+| **H5086** | smart plug pro with energy metering | ble, iot |  |  | goodsType 195; electric data, runtime, time monitor, power alarms, chart upload. |
+
+## split_pact_plugv1
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H5081** | WiFi smart plug, 1 socket | iot | 4/1 |  | goodsType 4; regional SKU variants 101/201/301; AP SSID Govee_plug_<sku>; no BLE. |
+| **H5001** | WiFi smart switch, 1 gang | iot | 1/1 |  | goodsType 26; nightMode support; AP SSID Govee_Switch_<sku>; no BLE. |
+| **H7014** | WiFi smart plug, 1 socket (legacy) | iot |  |  | goodsType not declared in split; AbsIotManagerV0; AP SSID Govee_plug; 192.168.1.1; single timer window. |
+
+## split_pact_rgbiclight
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H6102** | RGBIC strip (h6102) | ble |  |  | goodsType 17/18 BLE profile; below 1.01.20 uses old scene/music layout; limit opcode 0x0E |
+| **H6105** | RGBIC strip (h6105) | ble |  |  | music sub-mode 0x03; same color/scene/DIY layout as H6102; dated revision in rgbiclight/h61050729 |
+| **H6119** | RGBIC strip (h6119) | ble |  |  | color V2 sub 0x15 with 6 segments; bulb-string read 0xA5; Telink OTA gated new UI |
+| **H6125** | RGBIC strip (h612526) | ble |  |  | 15-segment color sub 0x0B; music 0x0C; gradual 0x14 |
+| **H6126** | RGBIC strip (h612526) | ble |  |  | same builder as H6125 |
+| **H6127** | RGBIC strip (h6127) | ble |  |  | music sub 0x01 and 0x03; old DIY 0x07; new DIY 0x0A |
+| **H6116** | RGBIC strip (h6127) | ble |  |  | shares h6127 builders |
+| **H6107** | RGBIC strip (h6127) | ble |  |  | old version profile; DIY version 2 |
+| **H6161** | RGBIC strip (h6127) | ble |  |  | shares h6127 builders |
+| **H6129** | RGBIC strip (h6129) | ble |  |  | music 0x03; old DIY 0x07; new DIY 0x0A |
+| **H6185** | RGBIC strip (h6185) | ble |  |  | mic sub 0x05 (set mode 1); scenes/DIY as base |
+| **H6163** | RGBIC strip (h6160) | ble, iot |  |  | goodsType 21; BLE submode 0x0B/0x0D/0x0E/0x15; IoT ptReal; scenes LE16 |
+| **H6117** | RGBIC strip (h6160) | ble, iot |  |  | same as H6163; IoT colorTem falls back to plain color |
+| **H6145** | bare light strip (barelightv1) | ble |  |  | goodsType 13; color V2 0x15, music 0x0C / new music 0x13 |
+| **H6146** | bare light strip (barelightv1) | ble |  |  | goodsType 13 |
+| **H6147** | bare light strip (barelightv1) | ble |  |  | goodsType 13 |
+| **H6171** | eaves/bare light (barelightv1) | ble |  |  | goodsType 13; mic via new order after 1.06.00 |
+| **H6184** | chassis light (chassislightv1) | ble |  |  | goodsType 11; 7-segment color V2; mic 0x05 / 0x13 |
+| **H7092** | chassis light (chassislightv1) | ble |  |  | goodsType 162; 8-segment color V2 (SubModeColorH7092) |
+| **H7090** | car/chassis RGBIC (h7090) | ble |  |  | goodsType 44; 6-segment color V2; light pos 0x31; LR switch 0x33 |
+| **H7095** | car/chassis RGBIC (h7090) | ble |  |  | goodsType 127; 8-segment color V2; light pos change supported |
+| **H6123** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant; goodsType resolved at runtime |
+| **H614C** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H611B** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H611Z** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H617A** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H617B** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H617C** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H6172** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H6173** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H6175** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H6176** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H618A** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H618B** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H618C** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H618F** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H619A** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H619B** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H619C** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H619D** | dream color strip (dreamcolorlightv1) | ble |  |  | goodsType 71 in Matter gate; BLE profile |
+| **H619E** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H619Z** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H61A0** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H61A1** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H61A2** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H61A3** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H61A5** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H61A8** | dream color strip (dreamcolorlightv1) | ble, iot |  |  | goodsType 19; Matter gate soft >=3.08.01 |
+| **H61A9** | neon/dream color (dreamcolorlightv1) | ble, iot |  |  | special high-color delegate; neon effect UI |
+| **H61B1** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H61B2** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H61B5** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H61BA** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H61BC** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H61BE** | dream color strip (dreamcolorlightv1) | ble |  |  | high-color delegate |
+| **H61C2** | RGBIC strip (rgbiclight SupportV2) | ble, iot |  |  | cut count 12; IotMsgProType.V2 |
+| **H61C3** | RGBIC strip (rgbiclight SupportV2) | ble, iot |  |  | cut count 12 if soft >=3.03.21 else 8 |
+| **H61C5** | RGBIC strip (rgbiclight SupportV2) | ble, iot |  |  | cut count 20 |
+| **H61E0** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H61E1** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H6168** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H616C** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H616D** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H616E** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H617E** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H617F** | dream color strip (dreamcolorlightv1) | ble |  |  | registered SKU constant |
+| **H612A** | RGBIC (dreamcolorlightv1) | ble |  |  | goodsType H612x family; per-segment color variants |
+| **H612B** | RGBIC (dreamcolorlightv1) | ble |  |  | goodsType H612x family |
+| **H612C** | RGBIC (dreamcolorlightv1) | ble |  |  | goodsType H612x family |
+| **H612D** | RGBIC (dreamcolorlightv1) | ble |  |  | goodsType H612x family |
+| **H612E** | RGBIC (dreamcolorlightv1) | ble |  |  | goodsType H612x family |
+| **H612F** | RGBIC (dreamcolorlightv1) | ble |  |  | goodsType H612x family |
+| **H6086** | RGBIC strip (scenes config) | ble |  |  | scenes-config SKU group with H6089 |
+| **H6089** | RGBIC strip (scenes config) | ble |  |  | scenes-config SKU group with H6086 |
+| **H6143** | dream color V2 (dreamcolorlightv2) | ble, iot |  |  | goodsType 21; IoT ptReal; 1.04.00 cut-over for new color |
+| **H6144** | dream color V2 (dreamcolorlightv2) | ble, iot |  |  | same as H6143 |
+| **H611A** | dream color V2 (dreamcolorlightv2) | ble |  |  | registered SKU constant |
+| **H70A1** | RGBIC (dreamcolorlightv1) | ble, iot, matter |  |  | goodsType 193; Matter gate soft >=1.00.11, wifi 3.05.00 |
+| **H70A2** | RGBIC (dreamcolorlightv1) | ble, iot, matter |  |  | goodsType 193; same Matter gate |
+| **H70A3** | RGBIC (dreamcolorlightv1) | ble, iot, matter |  |  | goodsType 193; Matter needs soft >=1.00.18 |
+| **H80B5** | RGBIC (dreamcolorlightv1) | ble, iot |  |  | registered SKU constant |
+| **H6671** | RGBIC neon/light (rgbiclight SupportV2) | ble, iot |  |  | goodsType 332; 44 IC cut layout; cut calibration UI in h667172 |
+| **H6672** | RGBIC neon/light (rgbiclight SupportV2) | ble, iot |  |  | goodsType 332; 56 IC cut layout |
+
+## split_pact_rgblight
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H6159** | RGB/RGBIC strip (h6159 dialect) | ble, iot |  |  | Sku.b() true; NewRgb2TL4BleIot also accepted. Brightness range 6-254 for H6159/H6110/H614A/H614B/H614E, 20-254 for H6109. |
+| **H6110** | RGB/RGBIC strip (h6159 dialect) | ble, iot |  |  | Sku.b() true; NewRgb2TL4BleIot also accepted. Brightness range 6-254 for H6159/H6110/H614A/H614B/H614E, 20-254 for H6109. |
+| **H6109** | RGB/RGBIC strip (h6159 dialect) | ble, iot |  |  | Sku.b() true; NewRgb2TL4BleIot also accepted. Brightness range 6-254 for H6159/H6110/H614A/H614B/H614E, 20-254 for H6109. |
+| **H614A** | RGB/RGBIC strip (h6159 dialect) | ble, iot |  |  | Sku.b() true; NewRgb2TL4BleIot also accepted. Brightness range 6-254 for H6159/H6110/H614A/H614B/H614E, 20-254 for H6109. |
+| **H614B** | RGB/RGBIC strip (h6159 dialect) | ble, iot |  |  | Sku.b() true; NewRgb2TL4BleIot also accepted. Brightness range 6-254 for H6159/H6110/H614A/H614B/H614E, 20-254 for H6109. |
+| **H614E** | RGB/RGBIC strip (h6159 dialect) | ble, iot |  |  | Sku.b() true; NewRgb2TL4BleIot also accepted. Brightness range 6-254 for H6159/H6110/H614A/H614B/H614E, 20-254 for H6109. |
+| **H6138** | RGB strip (h613839 dialect) | ble, iot |  |  | Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D). |
+| **H6139** | RGB strip (h613839 dialect) | ble, iot |  |  | Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D). |
+| **H613A** | RGB strip (h613839 dialect) | ble, iot |  |  | Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D). |
+| **H613B** | RGB strip (h613839 dialect) | ble, iot |  |  | Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D). |
+| **H613C** | RGB strip (h613839 dialect) | ble, iot |  |  | Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D). |
+| **H613D** | RGB strip (h613839 dialect) | ble, iot |  |  | Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D). |
+| **H613E** | RGB strip (h613839 dialect) | ble, iot |  |  | Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D). |
+| **H613F** | RGB strip (h613839 dialect) | ble, iot |  |  | Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D). |
+| **H6160** | RGBIC strip (segment mask) | ble, iot |  |  | Ble extends AbsBle4Old; 15-segment colour 0x0B; gradual change 0xA3/0x01; scenes 2-byte. Brightness 20-254. |
+| **H6165** | RGB strip / mic | ble |  |  | Brightness 20-254; no scenes; mic 0x05 00 flag. |
+| **H6166** | RGB strip / mic | ble |  |  | Brightness 20-230; no scenes; mic 0x05 00 flag. |
+| **H6181** | RGB strip | ble |  |  | 1-byte scene id; no music; mic marker 0xFF only; DIY from version 10100. |
+| **H6182** | RGB strip | ble, iot |  |  | 1-byte scene id; music 0x03; IoT direct JSON, no ptReal. |
+| **H6113** | RGB strip | ble |  |  | No scenes; music 0x03; brightness 20-254. |
+| **H6114** | RGB strip | ble |  |  | 1-byte scene id; music 0x03; brightness 20-254. |
+| **H6101** | RGB strip (video sync) | ble |  |  | Nordic FFE0/FFE1 UART. Video 0x00, music 0x01 effect 0-3, calibration 0x08. |
+| **H6104** | RGBIC strip (WiFi+BLE / TV) | ble, iot |  |  | Nordic FFE0/FFE1 UART. Versions 10102/10131/10135/10140; direction 0x13, IP 0x15, calibration via IoT. pact (unknown). |
+| **H7004** | Plant / red-blue grow light | ble |  |  | Only 0x0D red/blue proportion implemented in this split (4:1,6:1,8:1). |
+| **H7017** | Plant / red-blue grow light | ble |  |  | Protocol skeleton: only RED_BLUE_PROPORTION 0x0D. |
+| **H7310** | RGBIC strip / copper mic | ble |  |  | Mic 0x05 01; colour 8-byte; scenes 1-byte; H7317 uses ModeH7317. H7310/H7312 mic from soft 10100. |
+| **H7312** | RGBIC strip / copper mic | ble |  |  | Mic 0x05 01; colour 8-byte; scenes 1-byte; H7317 uses ModeH7317. H7310/H7312 mic from soft 10100. |
+| **H7317** | RGBIC strip / copper mic | ble |  |  | Mic 0x05 01; colour 8-byte; scenes 1-byte; H7317 uses ModeH7317. H7310/H7312 mic from soft 10100. |
+| **H7318** | RGBIC strip / mic | ble |  |  | Music 0x01 [effect,sens] with 4=soft,5=power; scenes 1-byte. |
+| **H6179** | TV light bar | ble |  |  | TV light bar. goodsType 12; protocol pair (1,1). 9-byte colour 0x0D; no scenes/music; DIY 0x0A. |
+| **H6118** | Car light / interior | ble |  |  | Car light. goodsType 6; protocol pairs (1,1),(1,2). Colour 0x0D; music 0x0E/0x13; scenes 0x04 2-byte. |
+| **H6194** | Car light / interior | ble |  |  | Car light. goodsType 6; protocol pairs (1,1),(1,2). Colour 0x0D; music 0x0E/0x13; scenes 0x04 2-byte. |
+| **H6148** | Home light / bulb | ble, iot |  |  | Home light. goodsType 16; protocol pair (1,1). Colour 0x0D; music 0x0F; scenes 1-byte; IoT V1 state/op. |
+| **H6188** | RGBIC strip (new detail) | ble, iot |  |  | Colour 0x0D; music 0x03; scenes 2-byte; IoT V1 state/op + ptReal. |
+| **H7308** | RGBIC strip / light bar (H7308 group) | ble |  |  | Scene sub-mode is 0xA1, effects 20-27 (combination/in-waves/sequential/slow-glow/chasing/slow-fade/twinkle/steady-on). |
+| **H7309** | RGBIC strip / light bar (H7308 group) | ble |  |  | Scene sub-mode is 0xA1, effects 20-27 (combination/in-waves/sequential/slow-glow/chasing/slow-fade/twinkle/steady-on). |
+| **H7311** | RGBIC strip / light bar (H7308 group) | ble |  |  | Scene sub-mode is 0xA1, effects 20-27 (combination/in-waves/sequential/slow-glow/chasing/slow-fade/twinkle/steady-on). |
+| **H7313** | RGBIC strip / light bar (H7308 group) | ble |  |  | Scene sub-mode is 0xA1, effects 20-27 (combination/in-waves/sequential/slow-glow/chasing/slow-fade/twinkle/steady-on). |
+| **H7315** | RGBIC strip / light bar (H7308 group) | ble |  |  | Scene sub-mode is 0xA1, effects 20-27 (combination/in-waves/sequential/slow-glow/chasing/slow-fade/twinkle/steady-on). |
+| **H7316** | RGBIC strip / light bar (H7308 group) | ble |  |  | Scene sub-mode is 0xA1, effects 20-27 (combination/in-waves/sequential/slow-glow/chasing/slow-fade/twinkle/steady-on). |
+| **H6085** | WiFi bulb (IoT only) | iot |  |  | No BLE (needBle()=false). SoftAP provisioning SSID Govee_bulb_<SKU> at 192.168.1.1:7200, then cloud MQTT topic. Commands color/colorTem/mode(mode 4 scene / 10 DIY). |
+| **H6086** | WiFi bulb (IoT only) | iot |  |  | No BLE (needBle()=false). SoftAP provisioning SSID Govee_bulb_<SKU> at 192.168.1.1:7200, then cloud MQTT topic. Commands color/colorTem/mode(mode 4 scene / 10 DIY). |
+| **H6089** | WiFi bulb (IoT only) | iot |  |  | No BLE (needBle()=false). SoftAP provisioning SSID Govee_bulb_<SKU> at 192.168.1.1:7200, then cloud MQTT topic. Commands color/colorTem/mode(mode 4 scene / 10 DIY). |
+| **H6141** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H6142** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H6195** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H6196** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H6197** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H6170** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H6154** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H6121** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H615A** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H615B** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H615C** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H615D** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H616B** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H6178** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H615E** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. |
+| **H6192** | RGBIC string light v2 | ble, iot |  |  | stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. H6192 uses the dedicated mic sub-mode 0x05 single byte and GroupFactorH6192. |
+
+## split_pact_security_health
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H5026** | AI motion/security sensor with alarm | iot |  |  | needBle=false; REST arm/disarm, warning list, settings; GATT pairing classes exist (494E...4857/2011). |
+| **H7212** | baby monitor / doorbell camera | iot |  |  | needBle=false; IoT V1 topic commands (turn, brightness, lullaby, listen/speak, socket); temp/hum sensor status. |
+| **H7214** | baby monitor / doorbell camera | iot |  |  | needBle=false; same command set as H7212. |
+| **H5010** | body-fat scale | ble |  |  | Qingniu (QN) BLE SDK; weight/body composition via QNScaleData; no Govee 20-byte frames. |
+| **H5020** | smart jump rope | ble |  |  | Native Govee BLE scan/connect; name H5020_<mac>; sessions uploaded to REST (not IoT cmd). |
+
+## split_pact_tcsocket
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H5770** | temperature-control socket, 2 outlets + thermo + probe | ble, iot | 1/1 |  | goodsType 405; dual socket, thermostatic/DIY modes, schedules, alarms, display, energy metering, bindable TH probe. |
+
+## split_pact_thnew
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H5100** | LCD thermo-hygrometer | ble, iot | 1/1 |  | goodsType 66; protocolsWithSecret(1,1); 1xAAA. |
+| **H5103** | WiFi thermo-hygrometer | ble, iot, wifi | 1/1 |  | goodsType 106; WIFI_TH template; 3xAA. |
+| **H5104** | thermo-hygrometer | ble, iot | 1/1 |  | goodsType 154; 2xAAA. |
+| **H5105** | thermo-hygrometer | ble, iot | 1/1 |  | goodsType 190; 1xCR2450. |
+| **H5108** | fridge thermo-hygrometer | ble, iot | 1/1 |  | goodsType 194; DeviceCategory.FRIDGE; humidity feature. |
+| **H5101** | thermo-hygrometer | ble, iot | 1/1 |  | goodsType 8; shares profile with H5102/H5174/H5177; 1xCR2450. |
+| **H5102** | thermo-hygrometer | ble, iot | 1/1 |  | goodsType 8; 1xAAA. |
+| **H5174** | thermo-hygrometer | ble, iot | 1/1 |  | goodsType 8; 3xAAA. |
+| **H5177** | thermo-hygrometer | ble, iot | 1/1 |  | goodsType 8; 3xAAA. |
+| **H5110** | thermo-hygrometer + third probe | ble, iot | 1/1 |  | goodsType 287; WITH_THIRD heart; 2xAAA. |
+| **H5111** | dual-probe thermo-hygrometer | ble, iot | 1/1 |  | goodsType 310; DUAL_PROBE heart; 2xAAA. |
+| **H5179** | WiFi thermo-hygrometer | ble, iot, wifi | 1/1 |  | goodsType 7; WIFI_TH; 3xAA. |
+| **B5178** | thermo-hygrometer | ble, iot | 1/1 |  | goodsType 14; 3xAAA. |
+| **H5171** | thermo-hygrometer with comfort range | ble, iot | 1/1 |  | goodsType 320; DUAL_PROBE heart; comfort TH command 0x34; 2xAAA. |
+| **H5210** | thermo-hygrometer | ble, iot | 1/1 |  | goodsType 407; H5220 heart; 1xCR2450. |
+| **H5106** | PM2.5 + TH air-quality monitor | ble, iot, wifi | 1/1 |  | goodsType 124; THP_PM25; parseThpValue; WiFi provisioning zone. |
+| **H5140** | CO2 + TH air-quality monitor | ble, iot | 1/1 |  | goodsType 319; CO2_TH; protocols (1,1),(1,2),secret; CO2 0-5000 ppm. |
+| **H5107** | gateway (no BLE) | iot |  |  | goodsType 220; GW_NO_BLE_TH; 2xAAA. |
+| **H5109** | gateway (no BLE) | iot |  |  | goodsType 199; GW_NO_BLE_TH. |
+| **H5310** | gateway (no BLE) | iot |  |  | goodsType 366; GW_NO_BLE_TH; long-life + check-network. |
+| **H5112** | dual-probe thermo-hygrometer | ble, iot | 1/1 |  | goodsType 330; DUAL_PROBE_TH; 3xAAA; protocolsWithSecret(1,1). |
+| **R5112** | dual-probe thermo-hygrometer (retail) | ble, iot | 1/1 |  | goodsType 330; same profile as H5112. |
+| **H5220** | gateway + self BLE thermo-hygrometer | ble, iot | 1/1 |  | goodsType 369; GW_SELF_BLE_TH; H5220 heart; weather; 30-bit packed advert. |
+| **H5151** | gateway host / sub-device parent | iot |  |  | gateway platform SKU used by H5112/H5220 sub-device binding (DeviceCapability.isH5151SubSku); goodsType not in split. |
+| **H5053** | thermo-hygrometer (legacy) | ble, iot |  |  | legacy goodsType 0; TH template; special list card. |
+| **H5051** | thermo-hygrometer (legacy) | ble |  |  | legacy goodsType 0; 3xAAA. |
+| **H5052** | thermo-hygrometer (legacy) | ble |  |  | legacy goodsType 0; 3xAAA. |
+| **H5042** | thermo-hygrometer (legacy) | ble |  |  | legacy profile. |
+| **H5043** | thermo-hygrometer (legacy) | ble |  |  | legacy profile. |
+| **H5044** | thermo-hygrometer (legacy) | ble |  |  | legacy profile. |
+| **H5071** | thermo-hygrometer (legacy) | ble |  |  | legacy goodsType 0; 3xAAA. |
+| **H5072** | thermo-hygrometer (legacy) | ble |  |  | legacy goodsType 0; 3xAAA. |
+| **H5074** | thermo-hygrometer (legacy) | ble |  |  | legacy goodsType 0; 1xCR2477. |
+| **H5075** | thermo-hygrometer (legacy) | ble |  |  | legacy goodsType 0; 2xAAA. |
+
+## split_pact_tvlightv4
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H6199** | DreamView T1 (TV backlight, camera) | ble, iot | 1/1 |  | goodsType 24; H6199/H6198 sub-family; pact_tvlightv2 |
+| **H6198** | DreamView T1S (TV backlight, camera) | ble, iot | 1/1 |  | goodsType 24; pact_tvlightv2 |
+| **H6053** | RGBIC TV Light Bars | ble | 1/1 |  | goodsType 23; BLE-only EffectOp4Ble(23); 12 segments |
+| **H6056** | RGBIC TV Light Bars | ble, iot | 2/1 |  | goodsType 52; pact registers 2/1 and 3/1; EffectOp4BleIot({52,112}) |
+| **H6046** | RGBIC TV Light Bars | ble, iot | 1/1 |  | goodsType 112; protocols 1/1, 2/1, 2/2; 10 segments (Support.getBulbStringMaxNum returns 10 for 112) |
+| **H6054** | DreamView P1 (TV backlight, camera) | ble, iot | 1/1 |  | goodsType 25; 12 segments, 2+6 layout for colour UI; H6054 old-TL mode is 2 segments |
+| **H6049** | DreamView P1S (TV backlight, camera) | ble, iot | 2/1 |  | goodsType 25; same v4 protocol; 12 segments |
+
+## split_pfdv1
+
+| SKU | Product / family | Transports | pact type/code | goodsType | Notes |
+|---|---|---|---|---|---|
+| **H7001** | multi-bulb light string, 12 bulbs | ble |  |  | AbsBleSku; goodsType not in split; 6 scenes + snow when soft >= 10100. |
+| **H7023** | multi-bulb light string, 6 bulbs | ble |  |  | AbsBleSku; same protocol as H7001; snow only on V1 soft. |
+| **H7024** | multi-bulb light string, 6 bulbs, per-bulb color | ble |  |  | AbsBleSku; 4x6 layout; RGB-first color payload; 8 scene types. |

@@ -1,0 +1,75 @@
+{
+  "split": "split_pact_h604a",
+  "families": ["H604A", "H604B", "H604C", "H604D"],
+  "skus": [
+    {"sku": "H604A", "family": "RGBIC bulb string", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 95; 24 bulbs; scene op set {1,6}; RGBIC-v2 DIY + camera calibration"},
+    {"sku": "H604C", "family": "RGBIC bulb string", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 122; 24 bulbs; scene op set {1,6}"},
+    {"sku": "H604B", "family": "RGBIC bulb string", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 109; 14 bulbs; scene op set {0,1,2,3}; V2 pact; template DIY"},
+    {"sku": "H604D", "family": "RGBIC bulb string", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 133; 14 bulbs; scene op set {0,1,2,3}; V2 pact"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType (0x33/0xAA) [1]=cmdType [2..18]=payload [19]=XOR BCC; multi-packet for bulb-string writes",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "<0|1>", "layout": "[0]", "response": "0xAA/0x01", "source": "base2light SwitchController"},
+      {"name": "brightness", "op": "0x33/0x04", "payload": "<1..100>", "layout": "[0]", "response": "0xAA/0x04", "source": "pact/Comm.makeBrightnessController4BleComm"},
+      {"name": "color-mode-1", "op": "0x33/0x05 sub 0x15", "payload": "15 01 R G B kelLo kelHi R2 G2 B2 m0 m1 m2", "layout": "17 bytes; 24-bit segment mask", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h604a/sources/com/govee/h604a/ble/SubModeColor.java"},
+      {"name": "color-mode-2", "op": "0x33/0x05 sub 0x15", "payload": "15 02 brightness m0 m1 m2", "layout": "brightness + 24-bit mask", "response": "0xAA/0x05", "source": "same"},
+      {"name": "color-mode-3-raw", "op": "0x33/0x05 sub 0x15", "payload": "15 03 b0..b11", "layout": "12 raw bytes", "response": "0xAA/0x05", "source": "same"},
+      {"name": "music", "op": "0x33/0x05 sub 0x13", "payload": "13 <code> <sens> <auto> [R G B]", "layout": "code 4 rhythm uses 8-byte form; sens 0..99", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h604a/sources/com/govee/h604a/ble/SubModeMusic.java"},
+      {"name": "scene", "op": "0x33/0x05 sub 0x04", "payload": "04 effectLo effectHi", "layout": "16-bit LE", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h604a/sources/com/govee/h604a/ble/SubModeScenes.java"},
+      {"name": "diy", "op": "0x33/0x05 sub 0x0A", "payload": "0A diyLo diyHi", "layout": "16-bit LE", "response": "0xAA/0x05", "source": "base SubModeNewDiy"},
+      {"name": "video", "op": "0x33/0x05 sub 0x00", "payload": "00 <enable> <vividness> <mode> <dynamic> <saturation> <param>", "layout": "8 bytes; vividness 1..100, saturation 0..99", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h604a/sources/com/govee/h604a/ble/SubModeVideo.java"},
+      {"name": "compose-light-switch", "op": "0x33/0x36", "payload": "<f><g><h>", "layout": "three booleans", "response": "0xAA/0x36", "source": "jadx-splits/split_pact_h604a/sources/com/govee/h604a/ble/controller/ComposeLightController.java"},
+      {"name": "compose-heart", "op": "0xAA/0x36", "payload": "", "layout": "read", "response": "[0] TV [1] left [2] right [3] feast", "source": "ComposeLightHeartController.java"},
+      {"name": "check-light", "op": "0x33/0xAA", "payload": "", "layout": "empty", "response": "notify 0x23 -> [0] light ok, [1] status", "source": "ble/controller/CheckLightController.java; ble/CheckLightParse.java"},
+      {"name": "check-pods", "op": "0x33/0xA8", "payload": "", "layout": "empty", "response": "notify 0x24 -> [0] pods ok", "source": "ble/BleProtocol.java; ble/CheckPodsParse.java"},
+      {"name": "calibrate-light-belt", "op": "0x33/0xA9", "payload": "<mode><params x5>", "layout": "[0] mode, [1..5] UI params", "response": "notify 0x25 on timeout", "source": "ble/controller/CaliLightBeltController.java; ble/CaliLightParse.java"},
+      {"name": "swap-light-position", "op": "0x33/0x34", "payload": "", "layout": "empty", "response": "write result", "source": "ble/controller/SwapLightController.java"},
+      {"name": "start-time-read", "op": "0xAA/0x35", "payload": "", "layout": "empty", "response": "[0] minutes", "source": "ble/controller/StartTimeController.java"},
+      {"name": "onoff-memory", "op": "0x33/0x41", "payload": "<0|1>", "layout": "[0]", "response": "0xAA/0x41", "source": "ble/controller/Controller4OnOffMemory.java"},
+      {"name": "ic-number", "op": "0xAA/0x40", "payload": "", "layout": "empty", "response": "IC count", "source": "ble/controller/ControllerIcNum.java"},
+      {"name": "multi-music", "op": "0x33/0x41", "payload": "<index><length><data>", "layout": "per-bulb music data", "response": "0xAA/0x41", "source": "ble/controller/MultiMusicController.java"},
+      {"name": "bulb-string-color-read", "op": "0xAA/0xA5", "payload": "<index>", "layout": "p() = {index}", "response": "BulbGroupColorV2.parseBytes -> per-bulb RGB", "source": "adjust/v1/BulbStringColorControllerV2.java; adjust/v1/BulbGroupColorV2.java"},
+      {"name": "gradual-change", "op": "0x33/0xA3", "payload": "<0|1>", "layout": "[0]", "response": "0xAA/0xA3", "source": "base Gradual4BleWifiController"}
+    ],
+    "notifications": [
+      {"name": "check-light", "op": "0x23", "layout": "[0]==1 light OK, [1]==1 status", "source": "jadx-splits/split_pact_h604a/sources/com/govee/h604a/ble/CheckLightParse.java"},
+      {"name": "check-pods", "op": "0x24", "layout": "[0]==1 pods OK", "source": "jadx-splits/split_pact_h604a/sources/com/govee/h604a/ble/CheckPodsParse.java"},
+      {"name": "calibration-timeout", "op": "0x25", "layout": "event only", "source": "jadx-splits/split_pact_h604a/sources/com/govee/h604a/ble/CaliLightParse.java"},
+      {"name": "wifi", "op": "0x11", "layout": "[0]==0 connected", "source": "ble/WifiNotifyParse.java"},
+      {"name": "device-status", "op": "0x30", "layout": "base DeviceStatusNotifyParse", "source": "ble/BleNotifyComm.java"},
+      {"name": "bulb-string-colors", "op": "0xAA/0xA5", "layout": "index + 4-bulb RGB groups", "source": "adjust/v1/BulbGroupColorV2.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "IotMsgV2",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"turn\",\"data\":{\"val\":1}}}", "response": "state", "source": "jadx-splits/split_pact_h604a/sources/com/govee/h604a/iot/CmdTurn.java"},
+      {"cmd": "brightness", "data": {"val": "1..100"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"brightness\",\"data\":{\"val\":50}}}", "response": "state", "source": "iot/CmdBrightness.java"},
+      {"cmd": "colorwc", "data": {"color": {"r": "int", "g": "int", "b": "int"}, "colorTemInKelvin": "int"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"colorwc\",\"data\":{\"color\":{\"r\":255,\"g\":0,\"b\":0},\"colorTemInKelvin\":0}}}", "response": "state", "source": "iot/CmdColorWc.java"},
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte>"]}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"ptReal\",\"data\":{\"command\":[\"M...\"]}}}", "response": "op.pt[]", "source": "jadx-splits/split_pact_h604a/sources/com/govee/h604a/iot/CmdPtReal.java"},
+      {"cmd": "ptIot", "data": {"raw": "passthrough"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"ptIot\",\"data\":{}}}", "response": "op", "source": "iot/Cmd.java"},
+      {"cmd": "snapshot", "data": {}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"snapshot\"}}", "response": "snapshotUrl", "source": "iot/ResultSnapShot.java"},
+      {"cmd": "points", "data": {"points": [{"pointX": "int", "pointY": "int"}]}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"points\",\"data\":{\"points\":[{\"pointX\":0,\"pointY\":0}]}}}", "response": "calibration result", "source": "iot/CmdCalibrationPoints.java"},
+      {"cmd": "camera", "data": {}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"camera\"}}", "response": "state", "source": "newdetail/vm/H604xVM.java"},
+      {"cmd": "swap", "data": {}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"swap\"}}", "response": "state", "source": "newdetail/vm/H604xVM.java"}
+    ],
+    "status": {"fields": {"state.onOff": "0|1", "op.pt": "base64 20-byte frames", "snapshotUrl": "string", "points": "calibration point list", "IoTConnected": "cloud connection state"}, "source": "iot/Cmd.java; iot/ResultPt.java; iot/ResultSnapShot.java"}
+  },
+  "other_protocols": [
+    {"name": "camera-calibration", "details": "phone camera captures bulb layout; upload/get points and light calibration via add/net endpoints; device calibration-light op 0xA9", "source": "jadx-splits/split_pact_h604a/sources/com/govee/h604a/add/net/*; add/Calibration*"},
+    {"name": "snapshot", "details": "snapshot command returns snapshotUrl for the camera/colour UI", "source": "iot/ResultSnapShot.java"},
+    {"name": "ble-broadcast-add", "details": "advertisement-based discovery/add flow", "source": "add/BleBroadcastProcessor.java"},
+    {"name": "http", "details": "bind/OTA/version APIs", "source": "add/net/INet.java; newdetail/Info4Detail.java"}
+  ],
+  "dynamic_effects": [
+    {"name": "color", "submode": "0x15", "payload": "15 <01|02|03> ...", "attributes": ["RGB", "Kelvin 2200-6500", "24-bit segment mask (24 bulbs) / 14-bulb groups"], "source": "ble/SubModeColor.java"},
+    {"name": "music", "submode": "0x13", "payload": "13 <code> <sens> <auto> [R G B]", "attributes": ["64 Rhythm", "65 Wind Sound", "66 Hooray", "67 Sprouting", "72 Hopping", "80 Torch", "82 Expansion", "83 Flowing Light", "sens 0..99"], "source": "ble/SubModeMusic.java"},
+    {"name": "video", "submode": "0x00", "payload": "00 <enable> <vividness> <mode> <dynamic> <saturation> <param>", "attributes": ["vividness 1..100", "saturation 0..99", "screen colour extraction"], "source": "ble/SubModeVideo.java"},
+    {"name": "scene", "submode": "0x04", "payload": "04 <effect LE16>", "attributes": ["V1 {1,6}", "V2 {0,1,2,3}"], "source": "ble/SubModeScenes.java"},
+    {"name": "diy", "submode": "0x0A", "payload": "0A <diy LE16>", "attributes": ["H604B/D codes 345-349", "H604A/C RGBIC-v2 share-code 0x00 effects and templates 3/4/5/6/7/8/9/10/11/15/16"], "source": "newdiy/DiyConfigH604A.java; newdiy/DiyConfigH604BD.java; newdiy/h604b/*"}
+  ],
+  "notes": "V1 (95/122) uses scene ops {1,6} with 24 bulbs; V2 (109/133) uses {0,1,2,3} with 14 bulbs. Colour sub-mode is 0x15 with a 24-bit mask. Bulb-string colour is read per 4-bulb group at 0xAA/0xA5. Camera calibration/snapshot are first-class features. H604B/D DIY effect codes are explicit 345-349; H604A/C uses the RGBIC-v2 share-code/template engine. No Matter/MQTT in this split."
+}

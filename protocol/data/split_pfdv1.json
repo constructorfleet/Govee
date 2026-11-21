@@ -1,0 +1,60 @@
+{
+  "split": "split_pfdv1",
+  "families": ["H7001", "H7023", "H7024"],
+  "skus": [
+    {"sku": "H7001", "family": "multi-bulb light string, 12 bulbs", "transports": ["ble"], "pact": {"type": null, "code": null}, "notes": "AbsBleSku; goodsType not in split; 6 scenes + snow when soft >= 10100."},
+    {"sku": "H7023", "family": "multi-bulb light string, 6 bulbs", "transports": ["ble"], "pact": {"type": null, "code": null}, "notes": "AbsBleSku; same protocol as H7001; snow only on V1 soft."},
+    {"sku": "H7024", "family": "multi-bulb light string, 6 bulbs, per-bulb color", "transports": ["ble"], "pact": {"type": null, "code": null}, "notes": "AbsBleSku; 4x6 layout; RGB-first color payload; 8 scene types."}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write 0x33, read 0xAA, multi 0xA5",
+    "commands": [
+      {"name": "power (H7001/H7023)", "op": "0x33/0x01", "payload": "on", "layout": "[0]=0/1", "response": "0xAA/0x01", "source": "h700123/sku/Comm.java"},
+      {"name": "brightness (H7001/H7023)", "op": "0x33/0x04", "payload": "level", "layout": "1 + (percent-1)*(42/100) => 1..40", "response": "0xAA/0x04 -> [0]", "source": "h700123/sku/Comm.java; base NumUtil.calculateProgress(40,1,percent)"},
+      {"name": "color (H7001/H7023)", "op": "0x33/0x05", "payload": "08 m0 m1 m2 R G B 00", "layout": "[0]=8, [1..3]=24-bit segment mask, [4..6]=RGB, [7]=0", "response": "0xAA/0x05 [0]=8 -> RGB", "source": "h700123/adjust/SubModeColor.java"},
+      {"name": "music select (H7001/H7023)", "op": "0x33/0x05", "payload": "05 01", "layout": "[0]=5,[1]=1", "response": "0xAA/0x05 [0]=5", "source": "h700123/adjust/SubModeMic.java"},
+      {"name": "mic dynamic/mild (H7001/H7023)", "op": "0x33/0x05", "payload": "05 03 flag", "layout": "[2]=1 dynamic, 0 mild", "response": "ack", "source": "h700123/ble/MicController.java"},
+      {"name": "scene mode (H7001/H7023)", "op": "0x33/0x05", "payload": "09 00 x15", "layout": "16 bytes; [0]=9", "response": "0xAA/0x05 [0]=9 -> type", "source": "h700123/adjust/SubModeScenes.java"},
+      {"name": "read bulb colors (H7001/H7023)", "op": "0xAA/0xA2", "payload": "group", "layout": "group 1..ceil(bulbs/4)", "response": "[group, 4xRGB]", "source": "h700123/ble/ReadBulbColorController.java"},
+      {"name": "multi-scene (H7001/H7023)", "op": "0xA5/0x01", "payload": "00 effect subEffect speed colorCount colors...", "layout": "start [0xA5,0x01,0,count,0], chunks [0xA5,0x01,index,16B], end [0xA5,0x01,0xFF]", "response": "ack", "source": "h700123/ble/ScenesModeController.java; MultipleControllerComm"},
+      {"name": "power (H7024)", "op": "0x33/0x01", "payload": "on", "layout": "[0]=0/1", "response": "0xAA/0x01", "source": "h7024/scenes/BleSwitchCmdBuilder.java"},
+      {"name": "brightness (H7024)", "op": "0x33/0x04", "payload": "level", "layout": "raw 0..100 (no 1..40 scaling)", "response": "0xAA/0x04", "source": "h7024/scenes/BleBrightnessBuilder.java"},
+      {"name": "color (H7024)", "op": "0x33/0x05", "payload": "0B R G B m0 m1 m2 00", "layout": "[0]=11, [1..3]=RGB, [4..6]=24-bit segment mask, [7]=0", "response": "0xAA/0x05 [0]=11 -> RGB", "source": "h7024/adjust/mode/H7024SubModeColor.java"},
+      {"name": "music (H7024)", "op": "0x33/0x05", "payload": "01 effect sens", "layout": "effect 4 mild, 5 dynamic; sensitivity 0..99", "response": "0xAA/0x05 [0]=1", "source": "h7024/adjust/mode/SubModeMusic.java"},
+      {"name": "scene (H7024)", "op": "0x33/0x05", "payload": "09 type+1 00 x15", "layout": "16 bytes; [0]=9,[1]=type+1", "response": "0xAA/0x05 [0]=9 -> type", "source": "h7024/adjust/mode/SubModeScenes.java"},
+      {"name": "bulb count read (H7024)", "op": "0xAA/0x0F", "payload": "", "layout": "no payload", "response": "[count]", "source": "h7024/ble/BulbNumController.java"},
+      {"name": "bulb count write (H7024)", "op": "0x33/0x0F", "payload": "count", "layout": "[0]=count", "response": "ack", "source": "h7024/ble/BulbNumController.java"},
+      {"name": "read bulb colors (H7024)", "op": "0xAA/0xA2", "payload": "group", "layout": "group 1..ceil(bulbs/4)", "response": "[group, 4xRGB]", "source": "h7024/ble/ReadBulbColorController.java"},
+      {"name": "multi-scene (H7024)", "op": "0xA5/0x01", "payload": "code effect subEffect speed colorCount colors...", "layout": "code = type+1; effect = type; default 4 colors", "response": "ack", "source": "h7024/scenes/Common.java; ScenesModeController.java"}
+    ],
+    "notifications": [
+      {"name": "wifi state (H7024)", "op": "0xEE/0x11", "layout": "[0]==0 connected", "source": "h7024/ble/WifiNotifyParse.java"},
+      {"name": "mode", "op": "0xEE/0x05", "layout": "[0] sub-mode (8 color -> RGB at [1..3]; 9 scene -> type at [1]; 5 mic)", "source": "Mode.parseSubMode"},
+      {"name": "read bulb colors", "op": "0xEE/0xA2", "layout": "[0] group, [1..12] 4xRGB", "source": "ReadBulbColorController"},
+      {"name": "brightness", "op": "0xEE/0x04", "layout": "[0] level", "source": "base BrightnessController"},
+      {"name": "switch/heart", "op": "0xEE/0x01", "layout": "base", "source": "base controllers"}
+    ]
+  },
+  "iot": {
+    "envelope": "none - no IoT package in this split",
+    "commands": [],
+    "status": {"fields": {}, "source": "n/a"}
+  },
+  "other_protocols": [
+    {"name": "ble-only", "details": "Both families are AbsDeviceMode4BleOldLib / AbsBleItem; no iot, wifi, mqtt, lan or matter code. Info4BleIotDevice is only the shared detail container.", "source": "h700123/sku/Model.java; h7024/sku/Model.java"}
+  ],
+  "dynamic_effects": [
+    {"name": "color (H7001/H7023)", "submode": "0x08", "payload": "08 m0 m1 m2 R G B 00", "attributes": ["24-bit segment mask", "RGB 0-255"], "source": "SubModeColor.java"},
+    {"name": "mic select (H7001/H7023)", "submode": "0x05", "payload": "05 01", "attributes": ["music/mic mode"], "source": "SubModeMic.java"},
+    {"name": "mic dynamic/mild (H7001/H7023)", "submode": "0x05/0x03", "payload": "05 03 01|00", "attributes": ["dynamic", "mild"], "source": "MicController.java"},
+    {"name": "scene (H7001/H7023)", "submode": "0x09", "payload": "09 00 x15", "attributes": ["scene index sent via multi-scene"], "source": "SubModeScenes.java"},
+    {"name": "multi-scene (H7001/H7023)", "submode": "0xA5/0x01", "payload": "00 effect subEffect speed colorCount colors...", "attributes": ["effect 0 illumination,1 fade,2 raindrops,3 colorful,4 marquee,5 blinking,6 snow", "speed 0-100", "RGB colors"], "source": "ScenesModeController.java"},
+    {"name": "color (H7024)", "submode": "0x0B", "payload": "0B R G B m0 m1 m2 00", "attributes": ["RGB first", "24-bit segment mask", "trailing 0"], "source": "H7024SubModeColor.java"},
+    {"name": "music (H7024)", "submode": "0x01", "payload": "01 effect sens", "attributes": ["effect 4 mild / 5 dynamic", "sensitivity 0-99"], "source": "SubModeMusic.java"},
+    {"name": "scene (H7024)", "submode": "0x09", "payload": "09 type+1 00 x15", "attributes": ["type 0..7"], "source": "SubModeScenes.java"},
+    {"name": "multi-scene (H7024)", "submode": "0xA5/0x01", "payload": "code effect subEffect speed colorCount colors...", "attributes": ["code=type+1", "effect=type", "default colors"], "source": "Common.makeScene4BleComm"}
+  ],
+  "notes": "Assignment mislabeled this split: it contains real bulb-device protocol code, not recognition/vision helpers. H7001/H7023 goodsType is not declared (AbsBleSku reads it from cloud product). Brightness scaling differs: H7001 maps percent to 1..40, H7024 writes raw. The 24-bit segment mask exceeds the 12/6 physical bulbs; extra bits likely per-half-bulb or ignored. H7001 leaves MultiSceneModel.code=0 while H7024 sets code=type+1. Snow/sky availability is version/capability gated outside the split."
+}

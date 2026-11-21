@@ -1,0 +1,390 @@
+{
+ "split": "split_pact_h5901",
+ "families": [
+  "H5901"
+ ],
+ "skus": [
+  {
+   "sku": "H5901",
+   "family": "water timer / irrigation gateway",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": null,
+    "code": null
+   },
+   "notes": "goodsType 363, gateway for sub-device water timers, Telink UUIDs, OTA via OtaManager4TeLinkV2"
+  }
+ ],
+ "ble": {
+  "service_uuid": "494e5445-4c4c-495f-524f-434b535f4857",
+  "characteristic_uuid": "494e5445-4c4c-495f-524f-434b535f2011",
+  "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; gateway wraps sub-device frames into cmdType 0x70",
+  "commands": [
+   {
+    "name": "valve_on",
+    "op": "0x33/0x01",
+    "payload": "[0]=1 [1]=durationLo [2]=durationHi",
+    "layout": "duration minutes = hours*60+minutes LE16",
+    "response": "0xAA/0x01 water status",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4ToggleValve.java"
+   },
+   {
+    "name": "valve_off",
+    "op": "0x33/0x01",
+    "payload": "{0,0,0}",
+    "layout": "close valve",
+    "response": "-",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4ToggleValve.java"
+   },
+   {
+    "name": "read_water_status",
+    "op": "0xAA/0x01",
+    "payload": "none",
+    "layout": "read only",
+    "response": "H5901DeviceInfo",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4ReadWaterStatus.java"
+   },
+   {
+    "name": "read_amount_water",
+    "op": "0xAA/0x02",
+    "payload": "none",
+    "layout": "read only",
+    "response": "amount",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4ReadAmountWater.java"
+   },
+   {
+    "name": "read_water_flow",
+    "op": "0xAA/0x03",
+    "payload": "none",
+    "layout": "read only",
+    "response": "flow",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4ReadWaterFlow.java"
+   },
+   {
+    "name": "read_battery",
+    "op": "0xAA/0x08",
+    "payload": "none",
+    "layout": "read only",
+    "response": "battery percent",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4ReadBattery.java"
+   },
+   {
+    "name": "sync_time",
+    "op": "0x33/0x10",
+    "payload": "[0..3]=epochSec LE32 [4]=1 [5]=tzIndex [6]=tzOffset",
+    "layout": "time + timezone",
+    "response": "-",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4SyncTime.java"
+   },
+   {
+    "name": "read_soft_version",
+    "op": "0xAA/0x0E",
+    "payload": "none",
+    "layout": "read only",
+    "response": "x.y.z",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4SoftVersion.java"
+   },
+   {
+    "name": "read_hard_version",
+    "op": "0xAA/0x0D",
+    "payload": "none",
+    "layout": "read only",
+    "response": "x.y.z",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4HardVersion.java"
+   },
+   {
+    "name": "read_mac",
+    "op": "0xAA/0x0F",
+    "payload": "none",
+    "layout": "read only",
+    "response": "MAC",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4MacAddress.java"
+   },
+   {
+    "name": "read_device_id",
+    "op": "0xAA/0x0C",
+    "payload": "none",
+    "layout": "read only",
+    "response": "device id",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4ReadDeviceId.java"
+   },
+   {
+    "name": "gw_status",
+    "op": "0xAA/0x04",
+    "payload": "[0]=sno",
+    "layout": "sub-device status request",
+    "response": "status frame [1]=5, see readings",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/GwReadStatusController.java"
+   },
+   {
+    "name": "next_water_info",
+    "op": "0xAA/0x04",
+    "payload": "none",
+    "layout": "read only",
+    "response": "LastDataDTO protobuf",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/NextWaterInfoController.java"
+   },
+   {
+    "name": "read_gw_sub_devices",
+    "op": "0xAA/0x04",
+    "payload": "[0]=sno",
+    "layout": "sub-device info",
+    "response": "sub-device list",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/ReadGWSubDeviceInfo.java"
+   },
+   {
+    "name": "reset_device",
+    "op": "0x33/0x20",
+    "payload": "none",
+    "layout": "reset",
+    "response": "-",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4ResetDevice.java"
+   },
+   {
+    "name": "net_check",
+    "op": "0x33|0xAA/0x35",
+    "payload": "none",
+    "layout": "network state",
+    "response": "net state",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4NetCheck.java"
+   },
+   {
+    "name": "sync_link",
+    "op": "0x33/0x19",
+    "payload": "link bytes",
+    "layout": "sub-device link",
+    "response": "-",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4SyncLink.java"
+   },
+   {
+    "name": "smart_plan_enable",
+    "op": "0x33/0x15",
+    "payload": "[0]=0|1",
+    "layout": "enable smart irrigation",
+    "response": "-",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/ControllerSetSmartPlanEnable.java"
+   },
+   {
+    "name": "pause_plan",
+    "op": "0x33/0x14",
+    "payload": "plan bytes",
+    "layout": "pause",
+    "response": "-",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/PausePlanController.java"
+   },
+   {
+    "name": "sync_city",
+    "op": "0x33/0x16",
+    "payload": "city/location",
+    "layout": "location",
+    "response": "-",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/ControllerSyncCityLocation.java"
+   },
+   {
+    "name": "delete_plan",
+    "op": "0x33/0x16",
+    "payload": "plan id",
+    "layout": "delete",
+    "response": "-",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/ControllersDeletePlan.java"
+   },
+   {
+    "name": "open_sub_device",
+    "op": "0x33/0x21",
+    "payload": "sub-device bytes",
+    "layout": "open/join",
+    "response": "-",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/OpenSubDeviceBle.java"
+   },
+   {
+    "name": "delete_sub_device",
+    "op": "0x33/0x11",
+    "payload": "sub-device bytes",
+    "layout": "remove",
+    "response": "-",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/Controller4DeleteSub.java"
+   },
+   {
+    "name": "gateway_heartbeat",
+    "op": "0xAA/0x01",
+    "payload": "none",
+    "layout": "read only",
+    "response": "heart event",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/H5901HeartController.java"
+   },
+   {
+    "name": "chart_step1",
+    "op": "0x33/0x02",
+    "payload": "none",
+    "layout": "chart data trigger",
+    "response": "chart",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/ReadChartStep1Controller.java"
+   },
+   {
+    "name": "chart_step2",
+    "op": "0x33/0x01",
+    "payload": "[0..3]=start LE32 [4..7]=end LE32",
+    "layout": "time range",
+    "response": "chart",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/ReadChartStep2Controller.java"
+   },
+   {
+    "name": "chart_step3",
+    "op": "0x33/0x03",
+    "payload": "none",
+    "layout": "chart data",
+    "response": "chart",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/ReadChartStep3Controller.java"
+   },
+   {
+    "name": "sub_device_forward",
+    "op": "0x33/0x70",
+    "payload": "[0]=sno [1..16]=inner frame bytes 1..16",
+    "layout": "gateway envelope for sub-device",
+    "response": "inner reply",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/TransGwComposeController.java"
+   }
+  ],
+  "notifications": [
+   {
+    "name": "sub_device_status",
+    "op": "0xAA/0x04 or 0xEE/0x32 or 0xEE/0x34",
+    "layout": "[0]=sno [1]=5 [2]=status(0 online,2 offline) [3]=battery [6]=signal [7..10]=timestamp LE32 [11]=flags(bit0 longBattery,bit1 switchRemind,bit2 flowAlarm,bit3 lowPower,bit4 smartWater) [12]=errorState [13..14]=remaining LE16 (FFFF none) [15]=bit0 switchStatus,bits1..4 runModel,bit6 gwWarning,bits7 planPause [16]=pauseDuration",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/utils/H5901Utils.java"
+   },
+   {
+    "name": "last_data_protobuf",
+    "op": "0x37",
+    "layout": "LastDataDTO: 1 nextTime(int64), 2 nextDuration(int32), 3 percentage(int32), 4 duration(int32), 5 volume(int64), 6 lastTime(int64)",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/proto/H5901Proto.java"
+   }
+  ]
+ },
+ "iot": {
+  "envelope": "IotMsgProType V2 via H5901GWIotManager; commands tunnel BLE frames as ptReal; responses carry op base64 frames",
+  "commands": [
+   {
+    "cmd": "ptReal",
+    "data": {
+     "command": [
+      "base64(20-byte frame)"
+     ]
+    },
+    "response": "status op frames",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/iot/H5901GWIotManager.java"
+   },
+   {
+    "cmd": "multiSync",
+    "data": {
+     "command": [
+      "base64 frames"
+     ]
+    },
+    "response": "status",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/iot/H5901GWIotManager.java"
+   },
+   {
+    "cmd": "status",
+    "data": {
+     "op": [
+      "base64 frames"
+     ],
+     "state": {
+      "onOff": "int"
+     }
+    },
+    "response": "sub-device status, LastDataDTO",
+    "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/iot/H5901GWIotManager.java"
+   }
+  ],
+  "status": {
+   "fields": {
+    "onOff": "int 0/1",
+    "battery": "percent",
+    "semaphore": "signal",
+    "gwTimestamp": "epoch seconds",
+    "longBatteryLife": "bool",
+    "deviceSwitchRemind": "bool",
+    "flowExceptionAlarm": "bool",
+    "lowPowerRemind": "bool",
+    "smartWaterEnable": "bool",
+    "switchStatus": "bool",
+    "runModel": "0-15",
+    "errorState": "byte",
+    "remainingTime": "minutes, 0xFFFF none",
+    "planPauseEnable": "bool",
+    "gwWarningEnable": "bool",
+    "pauseDuration": "byte"
+   },
+   "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/utils/H5901Utils.java"
+  }
+ },
+ "other_protocols": [
+  {
+   "name": "wifi_mqtt",
+   "details": "H5901GWIotManager subscribes to device topic; reconnect on NetChangeEvent; sends all commands as ptReal",
+   "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/iot/H5901GWIotManager.java"
+  },
+  {
+   "name": "ota_telink",
+   "details": "OtaManager4TeLinkV2 over the same GATT service",
+   "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/H5901GattCallbackImp.java"
+  },
+  {
+   "name": "http",
+   "details": "IH5901Network: gw bind (GwsCanBind), plan list/sync, weather P-value data",
+   "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/network/IH5901Network.java"
+  }
+ ],
+ "dynamic_effects": [
+  {
+   "name": "irrigation_plan",
+   "submode": null,
+   "payload": "sync plan request / plan id list; BLE cmdType 0x14 pause, 0x15 enable, 0x16 delete, 0x19 sync link, 0x70 forward",
+   "attributes": [
+    "stages",
+    "durations",
+    "time ranges",
+    "smart enable"
+   ],
+   "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/bean/IrrigationPlanInfo.java, StageRule.java, TaskTimeRange.java"
+  },
+  {
+   "name": "water_chart",
+   "submode": null,
+   "payload": "chart step1 0x02, step2 0x01 with start/end LE32, step3 0x03",
+   "attributes": [
+    "chart range",
+    "upload data"
+   ],
+   "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/ble/controller/ReadChartStep2Controller.java"
+  },
+  {
+   "name": "next_irrigation",
+   "submode": null,
+   "payload": "LastDataDTO protobuf",
+   "attributes": [
+    "next time",
+    "next duration",
+    "percentage",
+    "duration",
+    "volume",
+    "last time"
+   ],
+   "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/proto/H5901Proto.java"
+  }
+ ],
+ "notes": "Gaps: sub-device list offsets after byte 16 not fully enumerated; reserved protocol constants; cmdType collisions disambiguated by proType/payload; only LastDataDTO protobuf schema traced.",
+ "status_properties": [
+  {
+   "property": "waterShortageOnOff",
+   "kind": "setting",
+   "meaning": "Push-notification enable for water shortage; user preference, not the status flag.",
+   "carrier": "pact/Ext.java",
+   "source": "jadx-splits/split_pact_h5901/sources/com/govee/h5901/pact/Ext.java"
+  }
+ ]
+}

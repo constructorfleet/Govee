@@ -1,0 +1,50 @@
+{
+  "split": "split_pact_h1161",
+  "families": ["H1161"],
+  "skus": [
+    {"sku": "H1161", "family": "Govee Sync light controller / pickup box, up to 5 sub-devices", "transports": ["ble"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 32; supports (1,1),(1,2),(2,2); BLE-only (supportWifi=false, no IoT room op); per-device mark 0..4, color/music/brightness."}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write 0x33, read 0xAA, multi 0xA3, notify 0xEE",
+    "commands": [
+      {"name": "master on/off", "op": "0x33/0x10", "payload": "on", "layout": "[0]=0/1", "response": "0xAA/0x10 -> [0]", "source": "pickupbox/ble/OpenController.java"},
+      {"name": "brightness", "op": "0x33/0x11", "payload": "value", "layout": "0-100", "response": "0xEE/0x20 -> [0]", "source": "pickupbox/ble/BrightnessController.java"},
+      {"name": "music mode", "op": "0x33/0x05", "payload": "0F effect sensitivity enable colorful? R G B", "layout": "effect 4 rhythm; sensitivity 0-99; fixed RGB when colorful?==0", "response": "0xAA/0x05 [0]=0x0F", "source": "pickupbox/ble/SubModeMusic.java; ModeController.java"},
+      {"name": "color mode", "op": "0x33/0x05", "payload": "14 ...", "layout": "shared SubMode4Color per-segment payload (not in split)", "response": "0xAA/0x05 [0]=0x14", "source": "pickupbox/ble/BleProtocol.java; shared SubMode4Color"},
+      {"name": "device count", "op": "0xAA/0x40", "payload": "", "layout": "no payload", "response": "[0] count (negative = fail)", "source": "pickupbox/ble/DeviceNumController.java"},
+      {"name": "device info", "op": "0xAA/0x41", "payload": "pos", "layout": "[0]=slot", "response": "flag0 address6+ver, or flag1 nameLen+name+ver", "source": "pickupbox/ble/DeviceInfoController.java"},
+      {"name": "operate sub-device", "op": "0x33/0x43", "payload": "pos onInverted", "layout": "[0]=slot,[1]=(status==0)?1:0", "response": "ack", "source": "newdetails/H1161VM4Light.java r5"},
+      {"name": "set device list", "op": "0xA3/0x30", "payload": "[count, entries...]", "layout": "entry: mark,flag,cmdVersion,(addr6 reversed | nameLen+name)", "response": "ack", "source": "pickupbox/ble/MultiDeviceController.java"},
+      {"name": "clear devices", "op": "0x33/0x42", "payload": "positions | FF", "layout": "positions to clear, or FF for all", "response": "ack", "source": "pickupbox/ble/ClearDeviceController.java"},
+      {"name": "music multi", "op": "0xA3/0x41", "payload": "sensitivity effect colors", "layout": "MultipleController4Music V2 packetization", "response": "ack", "source": "base MultipleController4Music; newdetails/music/H1161NewMusicMode.java"},
+      {"name": "heart", "op": "0xAA/0x01", "payload": "", "layout": "base", "response": "0xAA/0x01", "source": "SmartRoomOp4H1161.java"},
+      {"name": "room switch", "op": "0x33/0x01", "payload": "on", "layout": "base switch", "response": "0xAA/0x01", "source": "SmartRoomOp4H1161.java"}
+    ],
+    "notifications": [
+      {"name": "brightness", "op": "0xEE/0x20", "layout": "[0] 0-100", "source": "pickupbox/ble/BrightnessNotifyParse.java"},
+      {"name": "device status", "op": "0xEE/0x40", "layout": "5 raw bytes -> EventDeviceStatus", "source": "pickupbox/ble/DeviceStatusNotifyParse.java"},
+      {"name": "factory reset", "op": "0xEE/0x41", "layout": "no payload", "source": "pickupbox/ble/ResetDeviceNotifyParse.java"},
+      {"name": "mode", "op": "0xEE/0x05", "layout": "[0] submode; 0x0F music fields", "source": "pickupbox/ble/ModeController.java"},
+      {"name": "open state", "op": "0xEE/0x10", "layout": "[0] on/off", "source": "pickupbox/ble/OpenController.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "none - BLE only; CmdTurn import is for cloud scene snapshots, not a transport",
+    "commands": [],
+    "status": {"fields": {}, "source": "n/a"}
+  },
+  "other_protocols": [
+    {"name": "ble-pairing", "details": "Secret key + switch pairing: BleBroadcastProcessor, ConnectDialog/ConnectDialogV2, PairAcV1, AddInfo.", "source": "pickupbox/add/*"},
+    {"name": "cloud-persistence", "details": "Sub-device list/sort/support catalogue via IPickUpApi (SaveDeviceRequest, SortData, SupportDeviceListData, DeviceGroupData, DeviceBean).", "source": "pickupbox/newdetails/net/*"},
+    {"name": "no-wifi", "details": "SmartRoomOp4H1161.supportWifi()==false and getRoomOp4Iot()==null; no MQTT/LAN/Matter.", "source": "pickupbox/SmartRoomOp4H1161.java"}
+  ],
+  "dynamic_effects": [
+    {"name": "music mode", "submode": "0x0F", "payload": "0F effect sensitivity enable colorful? R G B", "attributes": ["effect 4 rhythm (also 48 rhythm,49 bloom,50 bright-drill,51 wave,52 beat,53 spectrum,54 rolling)", "sensitivity 0-99", "fixed RGB when colorful?==0"], "source": "pickupbox/ble/SubModeMusic.java"},
+    {"name": "color mode", "submode": "0x14", "payload": "14 <shared SubMode4Color bytes>", "attributes": ["per-segment RGB + brightness", "shared framework"], "source": "pickupbox/ble/BleProtocol.java; base SubMode4Color"},
+    {"name": "per-device color", "submode": "0x14", "payload": "shared multi-color frame per mark", "attributes": ["slot/mark 0..4", "color list from DeviceInfoWithColor"], "source": "H1161NewInfo4Detail.java; H1161DelegateColorV2Part.java"},
+    {"name": "music multi", "submode": "0x41", "payload": "MultipleController4Music blocks", "attributes": ["sensitivity", "effect", "color bytes"], "source": "H1161NewMusicMode.java"}
+  ],
+  "notes": "H1161 is BLE-only. Per-device color payload is generated by shared SubMode4Color, not in this split; only submode 0x14 is defined here. The 0x40 5-byte status block is passed through raw and its fields are only partially inferred. MultiDeviceController supports address or name entries; app normally uses address. getMaxSupportDevice=5 and slots must match the cloud-assigned marks or colors desync."
+}

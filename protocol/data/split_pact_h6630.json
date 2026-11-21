@@ -1,0 +1,87 @@
+{
+  "split": "split_pact_h6630",
+  "families": ["H6630", "H8630", "H6631"],
+  "skus": [
+    {"sku": "H6630", "family": "gaming pixel light bar with speaker", "transports": ["ble", "iot", "matter"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 285; protocols (1,1),(1,2),(2,1),(2,2),(2,3); pixel display + tone + mic/music + DIY."},
+    {"sku": "H8630", "family": "gaming pixel light bar (co-brand/regional)", "transports": ["ble", "iot", "matter"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 285; same maker/protocol as H6630; H6630Support.c."},
+    {"sku": "H6631", "family": "gaming pixel light bar with speaker", "transports": ["ble", "iot", "matter"], "pact": {"type": 2, "code": 4}, "notes": "goodsType 286; adds protocol (2,4); own maker/online music config."}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write 0x33, read 0xAA, multi-write 0xA3, notify 0xEE",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "on", "layout": "[0]=0/1", "response": "0xAA/0x01", "source": "generic ControllerSwitch"},
+      {"name": "brightness", "op": "0x33/0x04", "payload": "level", "layout": "0-100", "response": "0xEE/0x20 -> [0]", "source": "generic ControllerBrightness; h6630/ble/BrightnessNotifyParse.java"},
+      {"name": "mode music", "op": "0x33/0x05", "payload": "13 musicCode sensitivity", "layout": "musicCode default 101, sensitivity 0-99", "response": "0xAA/0x05 [0]=0x13", "source": "h6630/ble/SubModeMusic.java"},
+      {"name": "mode scene", "op": "0x33/0x05", "payload": "04 effectLE16 musicCodeLE32 speed", "layout": "8 bytes", "response": "0xAA/0x05 [0]=0x04", "source": "h6630/ble/SubModeScenes.java"},
+      {"name": "mode new DIY", "op": "0x33/0x05", "payload": "0A codeLE16 speedLE16", "layout": "5 bytes", "response": "0xAA/0x05 [0]=0x0A", "source": "h6630/ble/SubModeNewDiy.java"},
+      {"name": "sub switch", "op": "0x33/0x30", "payload": "30 type val", "layout": "type 1 light, 5 disturbance/DND, 6 tone", "response": "0xEE/0x30 -> [1] index,[2] state", "source": "H6630ViewModel.G5; DeviceSwitchStatusNotifyParse"},
+      {"name": "indicator light schedule", "op": "0x33/0x30", "payload": "30 07 en !forever startH startM endH endM", "layout": "sub 7", "response": "0xAA/0x30", "source": "h6630/detail/controller/IndicatorLightController.java"},
+      {"name": "tone settings", "op": "0x33/0x30", "payload": "30 06 en powerTone screenOffTone keyTone countdownTone", "layout": "sub 6", "response": "0xAA/0x30", "source": "h6630/detail/controller/ToneController.java"},
+      {"name": "read device status", "op": "0xAA/0x40", "payload": "", "layout": "10 bytes (partially decoded)", "response": "0xEE/0x40", "source": "base DeviceStatusNotifyParse; Info4Detail"},
+      {"name": "read device info", "op": "0xAA/0x41", "payload": "", "layout": "switch bits byte0/1, C,D,E, indicator forever/start/end", "response": "0xAA/0x41", "source": "Info4Detail.d0"},
+      {"name": "auto-upgrade query", "op": "0xAA/0x25", "payload": "02", "layout": "sub 2", "response": "0xAA/0x25", "source": "h6630/detail/controller/AutoUpgradesController.java"},
+      {"name": "auto-upgrade info", "op": "0xAA/0x25", "payload": "04", "layout": "sub 4", "response": "[1,1,type,ver...]", "source": "AutoUpgradesController.java"},
+      {"name": "auto-upgrade enable", "op": "0x33/0x25", "payload": "03 on", "layout": "sub 3", "response": "ack", "source": "AutoUpgradesController.java"},
+      {"name": "volume", "op": "0x33/0x79", "payload": "val", "layout": "0-100 (UI slider)", "response": "0xAA/0x79 -> [0]", "source": "H6630ViewModel.K5; Info4Detail.h0"},
+      {"name": "shortcut", "op": "0x33/0x7C", "payload": "display effect bytes", "layout": "server effect type + effect id", "response": "ack", "source": "ShortcutSetController; ShortcutPlate.d"},
+      {"name": "24-hour display", "op": "0x33/0x7D", "payload": "en", "layout": "1 = 24h", "response": "ack", "source": "H6630ViewModel.J6"},
+      {"name": "temperature unit", "op": "0x33/0x7E", "payload": "en", "layout": "byte is !z for the caller boolean; unit convention inferred (0/1)", "response": "ack", "source": "H6630ViewModel.Z6"},
+      {"name": "DIY effect write", "op": "0xA3/0x58", "payload": "subEffect secondSubEffect params...", "layout": "MultiController V1 pages; then mode 0x0A code 0x00FE", "response": "ack", "source": "H6630DiyParser.makeBleController; Pro4H6630Diy.bytes"},
+      {"name": "tone play state", "op": "0x33/0x75", "payload": "01 songIdLE32 02", "layout": "online sound player", "response": "0xEE/0x70", "source": "SetPlayerStateController; h6630/detail/controller/TonePlayController.java"}
+    ],
+    "notifications": [
+      {"name": "wifi state", "op": "0xEE/0x11", "layout": "[0]==0 connected", "source": "h6630/ble/WifiNotifyParse.java"},
+      {"name": "brightness", "op": "0xEE/0x20", "layout": "[0] 0-100", "source": "h6630/ble/BrightnessNotifyParse.java"},
+      {"name": "device switch status", "op": "0xEE/0x30", "layout": "[1] sub-index, [2] state", "source": "h6630/ble/DeviceSwitchStatusNotifyParse.java"},
+      {"name": "device status", "op": "0xEE/0x40", "layout": "10 bytes (alarm/display fields partially decoded)", "source": "base DeviceStatusNotifyParse; Info4Detail.U"},
+      {"name": "device info/switch config", "op": "0xEE/0x41", "layout": "total/light/indicator bits, white-noise/DND/tone bits, C,D,E, indicator forever/start/end", "source": "Info4Detail.d0"},
+      {"name": "online music", "op": "0xEE/0x70", "layout": "OnlineMusicPares.parse(sku, bytes)", "source": "base onlinesound MusicNotifyParse"},
+      {"name": "movie feast", "op": "0xEE/0x60", "layout": "[0]=1,[1]=on", "source": "base MovieFeastOnOffNotifyParse"},
+      {"name": "alarm clock", "op": "0xEE/0x85", "layout": "alarm enable/h/m/repeat fields", "source": "Info4Detail.U"},
+      {"name": "custom GIF result", "op": "0xEE/0x7A", "layout": "[0]=2 -> reload DIY data", "source": "Info4Detail.W"},
+      {"name": "tone settings read", "op": "0xEE/0x30", "layout": "[1]=toneSwitch, [2]=power, [3]=screenOff, [4]=key, [5]=countdown", "source": "Info4Detail.g0"}
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite; V2-style state/op; large effects via CmdPtUrl",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{\"cmd\":\"turn\",\"data\":{\"val\":1}}", "response": "status", "source": "h6630/iot/Cmd.java"},
+      {"cmd": "brightness", "data": {"val": "0-100"}, "example": "{\"cmd\":\"brightness\",\"data\":{\"val\":80}}", "response": "state", "source": "h6630/iot/Cmd.java"},
+      {"cmd": "colorwc", "data": {"red": "0-255", "green": "0-255", "blue": "0-255"}, "example": "{\"cmd\":\"colorwc\",\"data\":{\"red\":255,\"green\":0,\"blue\":0}}", "response": "state", "source": "h6630/iot/Cmd.java"},
+      {"cmd": "state", "data": {"onOff": "0|1", "brightness": "0-100"}, "example": "{\"cmd\":\"state\",\"data\":{\"onOff\":1,\"brightness\":80}}", "response": "device state", "source": "h6630/iot/Cmd.java; Info4Detail.Y"},
+      {"cmd": "op", "data": {"command": ["<base64 20-byte frame>"]}, "example": "{\"cmd\":\"op\",\"data\":{\"command\":[\"...\"]}}", "response": "BLE frames decoded by the same parsers", "source": "Info4Detail.Y"},
+      {"cmd": "ptReal", "data": {"command": ["<base64>"]}, "example": "{\"cmd\":\"ptReal\",\"data\":{\"command\":[\"...\"]}}", "response": "ack", "source": "h6630/iot/Cmd.java"},
+      {"cmd": "pt", "data": {"command": ["<base64>"]}, "example": "{\"cmd\":\"pt\",\"data\":{\"command\":[\"...\"]}}", "response": "ack", "source": "h6630/iot/Cmd.java"},
+      {"cmd": "ptUrl", "data": {"command": "<url>"}, "example": "{\"cmd\":\"ptUrl\",\"data\":{...}}", "response": "fetch and execute blob", "source": "CmdPtUrl; GetIotCmdPtUrlLinkInfo; H6630GifParse"},
+      {"cmd": "status", "data": {}, "example": "{\"cmd\":\"status\"}", "response": "snapshot", "source": "h6630/iot/Cmd.java"},
+      {"cmd": "online", "data": {}, "example": "{\"cmd\":\"online\"}", "response": "presence", "source": "h6630/iot/Cmd.java"}
+    ],
+    "status": {
+      "fields": {
+        "state.onOff": "0|1",
+        "state.brightness": "0-100",
+        "op.command": "base64 20-byte frames (same dispatch as BLE: 0x19/0x27/0x30/0x40/0x41/0x70/0x85)",
+        "online": "bool"
+      },
+      "source": "h6630/iot/Cmd.java; Info4Detail.Y"
+    }
+  },
+  "other_protocols": [
+    {"name": "matter", "details": "MatterInterceptor registered for goodsType 285/286; MatterManager/MtGuide used for pairing and info. No cluster/attribute mapping in split.", "source": "h6630/add/AddDeviceM.java; h6630/detail/H6630SettingActivity.java"},
+    {"name": "ptUrl", "details": "GIF/custom watch-face/large DIY effects are uploaded and executed via CmdPtUrl (GetIotCmdPtUrlLinkInfo v4).", "source": "h6630/detail/delegate/EditCustomMusicEffectDialog.java; h6630/detail/diy/effect/gif/H6630GifParse.java"},
+    {"name": "custom-music-rest", "details": "GET/PUT/DELETE /bff-app/v1/music-mode/animation/custom for custom music effects.", "source": "h6630/detail/delegate/CustomMusicEffectService.java"},
+    {"name": "online-music", "details": "Shared onlinesound stack: MusicNotifyParse cmd 0x70, player state 0x75, white-noise events; cloud playlists.", "source": "base com/govee/onlinesound/*"},
+    {"name": "ota", "details": "ReportOtaPactController via ptIot and AutoUpgradesController (0x25).", "source": "H6630ViewModel.G6; AutoUpgradesController"}
+  ],
+  "dynamic_effects": [
+    {"name": "scene", "submode": "0x04", "payload": "04 effectLE16 musicCodeLE32 speed", "attributes": ["effect default 2002", "musicCode 32-bit LE", "speed"], "source": "h6630/ble/SubModeScenes.java"},
+    {"name": "music", "submode": "0x13", "payload": "13 musicCode sensitivity", "attributes": ["musicCode default 101", "sensitivity 0-99"], "source": "h6630/ble/SubModeMusic.java"},
+    {"name": "new DIY", "submode": "0x0A", "payload": "0A codeLE16 speedLE16", "attributes": ["advanced codes 751/752/753/799/800/853/854/855/856/862/863"], "source": "h6630/ble/SubModeNewDiy.java; H663xEffectCodeManager"},
+    {"name": "DIY effect payload", "submode": "0xA3/0x58", "payload": "subEffect secondSubEffect params...", "attributes": ["30+ effects: yunRan, xuanZhuan, boDong, liuDong, random, xianXing", "per-effect colors/speed/direction/density", "followed by mode 0x0A code 0x00FE"], "source": "h6630/detail/diy/parser/Pro4H6630Diy.java; H6630DiyParser.java"},
+    {"name": "custom watch-face", "submode": "0x81", "payload": "display effect bytes", "attributes": ["effect codes 853/854 (H6630) or 855/856 (H6631)"], "source": "H663xEffectCodeManager; CustomizeWatchFaceAC"},
+    {"name": "GIF effect", "submode": "ptUrl", "payload": "cloud-hosted GIF blob", "attributes": ["effect code 2 GIF UI"], "source": "H6630GifParse; GifEffectFragment"}
+  ],
+  "notes": "No H6078 effect hooks exist in this split. 0x40 status and 0x41 device-info payloads are only partially decoded (C/D/E bytes stored raw). DIY sub-effect table is partially named; per-effect byte layouts live in 30+ classes and are summarized, not byte-reproduced. Matter pairing is delegated to the base module. 0x7C/0x7D/0x7E and mode 0x81/0x82 semantics inferred from callers. Cloud music/white-noise is in the shared onlinesound module."
+}

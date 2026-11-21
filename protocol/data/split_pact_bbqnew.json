@@ -1,0 +1,103 @@
+{
+  "split": "split_pact_bbqnew",
+  "families": ["H5055", "H5181", "H5182", "H5183", "H5184", "H5185", "H5186", "H5191", "H5192", "H5194", "H5196", "H5198", "H5199", "H5610"],
+  "skus": [
+    {"sku": "H5181", "family": "BBQ thermometer, 2 probe, screen", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 28; 2xAAA."},
+    {"sku": "H5183", "family": "BBQ thermometer, 1 probe, no screen", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 29; 1xAAA."},
+    {"sku": "H5182", "family": "BBQ thermometer, 2 probe, 4-point UI", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 33."},
+    {"sku": "H5184", "family": "BBQ thermometer, 4 probe, 4-point UI", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 34."},
+    {"sku": "H5185", "family": "BBQ thermometer, 4 probe", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 48; protocols (1,1),(2,1),(2,2)."},
+    {"sku": "H5186", "family": "BBQ thermometer, 4 probe", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 47; protocols (1,1),(2,1),(2,2)."},
+    {"sku": "H5191", "family": "BBQ thermometer, 6 probe", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 314; advert prefix 0201060303519117ff."},
+    {"sku": "H5192", "family": "BBQ thermometer, 6 probe", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 281; advert prefix 0201060303519217ff."},
+    {"sku": "H5194", "family": "BBQ thermometer, 6 probe", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 282; advert prefix 0201060303519417ff."},
+    {"sku": "H5196", "family": "BBQ thermometer, 6 probe, H5199 hardware", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 169; advert prefix 0201060303519617ff; dual BLE stack (pact_h5199 + pact_bbqnew)."},
+    {"sku": "H5198", "family": "BBQ thermometer, 2 probe", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 85; advert prefix 0201060303519817ff."},
+    {"sku": "H5199", "family": "BBQ thermometer, 6 probe", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 155; advert prefix 0201060303519917ff; own H5199Ble/H5199Heart stack, char 2b10."},
+    {"sku": "H5610", "family": "BBQ thermometer, dual probe", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 344; advert prefix 0201050303561017ff."},
+    {"sku": "H5055", "family": "BBQ thermometer, legacy 2 probe", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "Legacy path identified by BLE name ihoment_H5055_*; goodsType not in Support.c; advert prefix 0201050303505517ff."}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; multi 0xA3 with index in [2]",
+    "commands": [
+      {"name": "device id / heart", "op": "0x33/0x01 or 0x24", "payload": "per SKU", "layout": "H5055/H5610 heart opcode 0x24 (36), other SKUs 0x01", "response": "0xAA/0x01 or 0xAA/0x24 -> heart bytes", "source": "Controller4DeviceId; Controller4BbqHeartV1"},
+      {"name": "temperature unit", "op": "0x33/0x02", "payload": "00 Celsius | 01 Fahrenheit", "layout": "[0] enum ordinal", "response": "ack", "source": "Controller4TemUnit; Controller4TempUnit"},
+      {"name": "heart / probe warning", "op": "0xAA/0x03", "payload": "", "layout": "read only; probe bitmasks + 6x int16 BE temperatures", "response": "[0..1]=connected mask, [2..3]=alarm mask, then temps", "source": "Controller4BbqHeartV1; Controller4BbqHeart"},
+      {"name": "hardware version", "op": "0xAA/0x04", "payload": "", "layout": "read only", "response": "version bytes", "source": "Controller4HardVersion"},
+      {"name": "software version", "op": "0xAA/0x05", "payload": "", "layout": "read only", "response": "version bytes", "source": "Controller4SoftVersion"},
+      {"name": "buzzer switch", "op": "0x33/0x07", "payload": "00|01", "layout": "[0] on/off", "response": "ack", "source": "Controller4SwitchBuzzer"},
+      {"name": "temperature calibration", "op": "0x33/0x08", "payload": "calLE16", "layout": "signed int16, x100", "response": "ack", "source": "Controller4TemCali"},
+      {"name": "preset food type", "op": "0x33/0x09", "payload": "foodType", "layout": "[0] id", "response": "ack", "source": "Controller4TempPresetFoodType"},
+      {"name": "time sync", "op": "0x33/0x0A", "payload": "tsLE32", "layout": "epoch seconds LE", "response": "ack", "source": "Controller4SyncTime"},
+      {"name": "device id", "op": "0xAA/0x0C or 0x06", "payload": "", "layout": "read only; SKU-dependent", "response": "id bytes", "source": "Controller4DeviceId"},
+      {"name": "BLE hardware", "op": "0xAA/0x0D", "payload": "", "layout": "read only", "response": "version", "source": "Controller4HardVersion"},
+      {"name": "BLE software", "op": "0xAA/0x0E", "payload": "", "layout": "read only", "response": "version", "source": "Controller4SoftVersion"},
+      {"name": "WiFi MAC", "op": "0xAA/0x0F", "payload": "", "layout": "read only", "response": "6-byte MAC", "source": "Controller4WifiMac"},
+      {"name": "probe id / long life", "op": "0x33/0x10", "payload": "probeId | enable", "layout": "[0]", "response": "ack", "source": "Controller4ProbePair; Controller4SwitchLongLife"},
+      {"name": "preset environment temp (H5055/H5199)", "op": "0x33/0x11", "payload": "probeId highLE16 lowLE16 foodType subTypeLE16", "layout": "temps x100, 0xFFFF = unset", "response": "ack", "source": "PresetEnvTempController"},
+      {"name": "preset probe target", "op": "0x33/0x12", "payload": "target", "layout": "[0] temp code", "response": "ack", "source": "Controller4PresetFtTem"},
+      {"name": "timer / data set", "op": "0x33/0x13", "payload": "see timer beans", "layout": "group/enable/time/mode/...", "response": "ack", "source": "pact_bbqnew timer UI"},
+      {"name": "pre-warn", "op": "0x33/0x0C or 0x27", "payload": "enable tempLE16", "layout": "[0] enable, [1..2] temp x100; 0x27 for H5055/H5610, 0x0C otherwise", "response": "ack", "source": "Controller4PreWarn; Controller4TempBatteryProbeWarning"},
+      {"name": "WiFi hard version", "op": "0xAA/0x20", "payload": "", "layout": "read only", "response": "version", "source": "Controller4WifiHardVersion"},
+      {"name": "WiFi soft version", "op": "0xAA/0x21", "payload": "", "layout": "read only", "response": "version", "source": "Controller4WifiSoftVersion"},
+      {"name": "temp/humidity warning", "op": "0x33/0x22", "payload": "enable minLE16 maxLE16", "layout": "temps x100", "response": "ack", "source": "Controller4TempBatteryProbeWarning"},
+      {"name": "stop send", "op": "0x33/0x23", "payload": "", "layout": "stop streaming", "response": "ack", "source": "Controller4StopSend"},
+      {"name": "IOT temperature (H5199)", "op": "0x33/0x24", "payload": "probeId tempLE16 humLE16 tsLE32", "layout": "temp/hum x100", "response": "ack", "source": "Controller4IotTemData"},
+      {"name": "buzzer gear / volume", "op": "0x33/0x25", "payload": "gear", "layout": "[0] gear", "response": "ack", "source": "Controller4BuzzerGear; Controller4VolumeGear"},
+      {"name": "auto reduce brightness", "op": "0x33/0x26", "payload": "enable brightness time", "layout": "3 bytes", "response": "ack", "source": "Controller4AutoReduceBrightness"},
+      {"name": "auto shutdown", "op": "0x33/0x26", "payload": "enable", "layout": "[0]", "response": "ack", "source": "ControllerAutoShutdown"},
+      {"name": "clear data", "op": "0x33/0x28", "payload": "probeId", "layout": "[0]", "response": "ack", "source": "Controller4ClearData"},
+      {"name": "volume", "op": "0x33/0x30", "payload": "volume", "layout": "[0]", "response": "ack", "source": "base Controller4Volume"},
+      {"name": "remain time (H5199)", "op": "0xAA/0x32", "payload": "", "layout": "read only", "response": "[hour0,hour1,min0,min1]", "source": "Controller4RemainTime"},
+      {"name": "close alarm", "op": "0x33/0x33", "payload": "01 alarmId", "layout": "[0]=1, [1] alarm id", "response": "ack", "source": "Controller4CloseAlarm"},
+      {"name": "clear probe", "op": "0x33/0x40", "payload": "probeId", "layout": "[0]", "response": "ack", "source": "Controller4ClearProbe"},
+      {"name": "probe pairing", "op": "0x33/0x41", "payload": "probeId", "layout": "[0]", "response": "ack", "source": "Controller4ProbePair"},
+      {"name": "break probe pairing", "op": "0x33/0x42", "payload": "", "layout": "none", "response": "ack", "source": "Controller4BreakProbePair"},
+      {"name": "upload interval", "op": "0x33/0x62", "payload": "00 interval", "layout": "[0]=0, [1] interval", "response": "ack", "source": "Controller4UploadInterval"},
+      {"name": "probe id (temp data, H5199)", "op": "0x33/0x21", "payload": "probeId", "layout": "[0]", "response": "ack", "source": "pact_h5199 Controller4TdSetProbeId"},
+      {"name": "time range (temp data, H5199)", "op": "0x33/0x22", "payload": "startLE16 endLE16", "layout": "minutes", "response": "ack", "source": "pact_h5199 Controller4TdTimeRange"}
+    ],
+    "notifications": [
+      {"name": "heart", "op": "0xAA/0x03", "layout": "COMMON: [0..1] temp BE16, [2..3] hum BE16, [4..5] third temp BE16, [6] battery, [7] flags; WITH_THIRD: same + bitmask; DUAL_PROBE: [0..1] temp, [2..3] hum, [4] battery, [5] flags; H5220/BBQ: + [5] switch", "source": "Controller4BbqHeartV1"},
+      {"name": "heart H5055 legacy", "op": "0xAA/0x01", "layout": "[0..1] probe1 temp BE16, [2..3] probe1 hum BE16 (JADX stub)", "source": "Controller4BbqHeart.w"},
+      {"name": "heart H5199", "op": "0xAA/0x03", "layout": "bitmask + 6x int16 BE temperatures, battery/unit byte (JADX stub)", "source": "pact_h5199 Controller4Heart.l"},
+      {"name": "history data", "op": "0x2b12 chunks", "layout": "16-byte records: relative time + per-probe temperature", "source": "BLeDataComm"}
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite V2 (new platform) / V1 (H5055); ptReal + op",
+    "commands": [
+      {"cmd": "online", "data": {}, "example": "{\"cmd\":\"online\"}", "response": "subscription", "source": "BbqnewModel"},
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte frame>"]}, "example": "{\"cmd\":\"ptReal\",\"data\":{\"command\":[\"...\"]}}", "response": "op", "source": "BLeDataComm; Model"},
+      {"cmd": "op", "data": {"command": ["<base64 20-byte frame>"]}, "example": "{\"cmd\":\"op\",\"data\":{\"command\":[\"...\"]}}", "response": "probe hearts/state", "source": "Vm4BbqOpManager.parsePtResponse"},
+      {"cmd": "status", "data": {}, "example": "{\"cmd\":\"status\"}", "response": "device status", "source": "BbqnewModel"}
+    ],
+    "status": {
+      "fields": {
+        "probeInfoMap[probeId].probeInnerCurrTemp": "float degC x100",
+        "probeInfoMap[probeId].probeAmbientCurrTemp": "float degC x100",
+        "probeInfoMap[probeId].battery": "int 0-100",
+        "probeInfoMap[probeId].probeConnected": "bool",
+        "probeInfoMap[probeId].probeInnerAlarm": "bool",
+        "probeInfoMap[probeId].probeError": "bool",
+        "tempUnit": "Celsius|Fahrenheit"
+      },
+      "source": "IotDeviceInfo; BleNotifyProbeInfo"
+    }
+  },
+  "other_protocols": [
+    {"name": "ble-broadcast", "details": "62-byte advert; prefix 02 01 06 03 03 51 xx 17 ff (H519x), 02 01 05 03 03 50 55 17 ff (H5055), 02 01 05 03 03 56 10 17 ff (H5610). Payload carries macSuffix, broadcastType, pactType/code, tempUnit, pedestalBattery, 1-2 probe temps.", "source": "BcDeviceInfoParseUtil; BbqConstant"},
+    {"name": "history-gatt", "details": "char 00010203-0405-0607-0809-0a0b0c0d2b12 and chart 494e5445-4c4c-495f-524f-434b535f2013; 16-byte records streamed by BLeDataComm.", "source": "BLeDataComm"},
+    {"name": "ota", "details": "Telink, Silicon Labs and FRK OTA packet formats.", "source": "update/telink, update/silicon, update/frk"},
+    {"name": "wifi-setup", "details": "H519x WiFi provisioning via WifiPairUtils / Activity4WifiChoose.", "source": "add/WifiPairUtils.java"},
+    {"name": "rest", "details": "Cook sessions, notes, images, preset menus, chart upload.", "source": "other/ProbeApiService; entity/*"}
+  ],
+  "dynamic_effects": [
+    {"name": "preset environment temperature", "submode": "0x11", "payload": "probeId highLE16 lowLE16 foodType subTypeLE16", "attributes": ["probe 1-6", "ambient high/low -10..100 C x100", "food type", "sub type"], "source": "PresetEnvTempController"},
+    {"name": "preset probe target", "submode": "0x12", "payload": "target", "attributes": ["probe target code"], "source": "Controller4PresetFtTem"},
+    {"name": "cook timer", "submode": "0x13", "payload": "timer bean", "attributes": ["group", "duration", "target temp", "scene"], "source": "TimerTaskInfo; TimerTaskSetActivity"}
+  ],
+  "notes": "Four generations: pact_bbqv1 (28/29), bbqmulti (33/34), h5185 (47/48), pact_bbqnew + pact_h5199 (85/155/169/281/282/314/344). All are ble+iot. BLE hearts are up to 6 probes with temperatures x100 (0xFFFF invalid); H5055/H5199 heart offsets are JADX method stubs (see md gaps). Broadcast prefixes are exact and SKU-specific."
+}

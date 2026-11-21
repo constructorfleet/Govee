@@ -1,0 +1,75 @@
+{
+  "split": "split_pact_outdoorlight",
+  "families": ["H7040", "H7056", "H7080/B7080/B7081/B7082/H7085", "H7086"],
+  "skus": [
+    {"sku": "H7040", "family": "Camping lantern", "transports": ["ble"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 36; BLE-only; SOS + mic + battery"},
+    {"sku": "H7056", "family": "Pathway Lights 2", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 304; 8 segments; MQTT capability only via shared supportMqtt"},
+    {"sku": "B7080", "family": "Outdoor ground/path light", "transports": ["ble"], "pact": {"type": 2, "code": 1}, "notes": "goodsType 45; 4 segments; location/check-location commands"},
+    {"sku": "B7081", "family": "Outdoor ground/path light", "transports": ["ble"], "pact": {"type": 2, "code": 1}, "notes": "goodsType 55; 8 segments"},
+    {"sku": "B7082", "family": "Outdoor ground/path light", "transports": ["ble"], "pact": {"type": 2, "code": 1}, "notes": "goodsType 56; 6 segments"},
+    {"sku": "H7085", "family": "Outdoor light (H7085 detail config)", "transports": ["ble"], "pact": {"type": null, "code": null}, "notes": "goodsType 276; detail/DIY config only (Support.isGoodsTypeH7085); not in Pact protocol list for 45/55/56"},
+    {"sku": "H7086", "family": "Garden Lights", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 293; 4 segments; cap calibration; effect code 761"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType 0x33 write / 0xAA read / 0xA3-0xA5 multi; [1]=cmdType; [2..18]=payload; [19]=XOR BCC",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "00|01", "layout": "[0] on/off", "response": "0xAA/0x01 -> [0]", "source": "base2light SwitchController used by all four pact Comm classes"},
+      {"name": "brightness", "op": "0x33/0x04", "payload": "<level>", "layout": "[0] level (H7040 1..254; H7056/H7080 raw; H7086 remap only if Support.c()[2]==1)", "response": "0xAA/0x04 -> [0]", "source": "h7040/pact/Comm.java; h7056/pact/Comm.java; h7080/pact/Comm.java; h7086/pact/Comm.java"},
+      {"name": "mode", "op": "0x33/0x05", "payload": "<submode>", "layout": "[0] sub-mode id", "response": "0xAA/0x05 -> [0] submode", "source": "base AbsModeController + family ModeController"},
+      {"name": "color", "op": "0x33/0x05, submode 0x15 (H7056/H7080/H7086) or 0x0D (H7040)", "payload": "0D/15 R G B kelLo kelHi R2 G2 B2 [mask]", "layout": "H7040 9B; H7056/H7080/H7086 mode 1/2/3 as documented", "response": "read-back", "source": "h7040/ble/SubModeColor.java; h7056/ble/SubModeColor.java; h7080/ble/SubModeColor.java; h7086/ble/SubModeColor.java"},
+      {"name": "music", "op": "0x33/0x05, submode 0x13", "payload": "13 code sens", "layout": "H7056/H7086 code+sensitivity; H7040/H7080 use submode 0x05 mic {05 01}", "response": "read-back", "source": "h7056/ble/SubModeMusic.java; h7086/ble/SubModeMusic.java; h7040/ble/SubModeMic.java; h7080/ble/SubModeMic.java"},
+      {"name": "scene", "op": "0x33/0x05, submode 0x04", "payload": "04 effLo effHi [music] [level]", "layout": "H7040/H7080 3B; H7056 8B with 32-bit music code + level; H7086 5B with 16-bit music code", "response": "read-back", "source": "family SubModeScenes.java"},
+      {"name": "DIY", "op": "0x33/0x05, submode 0x0A", "payload": "0A diyLo diyHi [group]", "layout": "H7040/H7080 3B; H7056/H7086 add 16-bit group/second diy code", "response": "read-back", "source": "family SubModeNewDiy.java"},
+      {"name": "multi-frame DIY/scene body", "op": "0xA3 or 0xA4 / idx", "payload": "<chunk>", "layout": "family MultipleBleBytes / MultipleControllerCommV1; last frame carries 0x05 mode", "response": "per chunk", "source": "h7056/pact/Comm.java; h7080/pact/Comm.java; h7086/pact/Comm.java"},
+      {"name": "H7040 SOS", "op": "0x33/0x0B", "payload": "00|01", "layout": "[0] SOS on/off", "response": "[0]", "source": "h7040/ble/SOS4BleController.java"},
+      {"name": "H7040 mic point", "op": "0x33/0x05", "payload": "05 00 R G B", "layout": "submode 5, type 0, rgb point", "response": "none", "source": "h7040/ble/MicController.java"},
+      {"name": "H7080 location write", "op": "0x33/0xA7", "payload": "N idx val idx val ...", "layout": "[0]=count N, then pairs (index,value); read p()=[N]", "response": "pairs index/value", "source": "h7080/ble/LocationController.java"},
+      {"name": "H7080 check location", "op": "0x33/0xA6", "payload": "count index", "layout": "[0]=count, [1]=index", "response": "write ack only (parseValidBytes returns false)", "source": "h7080/ble/CheckLocationController.java"},
+      {"name": "H7080 gradual", "op": "0xA3/0xA3", "payload": "00|01", "layout": "[0] gradual on/off", "response": "[0]", "source": "h7080/ble/Gradual4BleController.java"},
+      {"name": "H7080 read bulb-string colour", "op": "0xAA/0xA5", "payload": "[index]", "layout": "p()=[index]; response [0]=index then 3x(index,R,G,B)", "response": "BulbGroupColor", "source": "h7080/ble/BulbStringColorController.java; h7080/ble/BulbGroupColor.java"},
+      {"name": "H7086 cap calibration mode", "op": "0x33/0x30", "payload": "00|01", "layout": "[0] enable/disable", "response": "notify 0x32", "source": "h7086/adjust/controller/CapCalibrationStatusController.java"},
+      {"name": "H7086 cap calibration order", "op": "0x33/0x31", "payload": "serial bytes", "layout": "one byte per cap serial", "response": "notify 0x32", "source": "h7086/adjust/controller/CapCalibrationController.java"}
+    ],
+    "notifications": [
+      {"name": "wifi connected", "op": "0x11", "layout": "[0]==0", "source": "h7056/ble/WifiNotifyParse.java; h7086/ble/WifiNotifyParse.java"},
+      {"name": "brightness", "op": "0x20", "layout": "[0] level", "source": "h7056/ble/BrightnessNotifyParse.java; h7086/ble/BrightnessNotifyParse.java"},
+      {"name": "switch status", "op": "0x30", "layout": "[0]==1, [1] on/off, [2] secondary", "source": "h7056/ble/DeviceSwitchStatusNotifyParse.java; h7086/ble/DeviceSwitchStatusNotifyParse.java"},
+      {"name": "cap calibration status", "op": "0x32", "layout": "any payload -> callback", "source": "h7086/adjust/controller/CapCalibrationStatusParse.java"},
+      {"name": "H7040 heart/battery", "op": "0xAA/0x01", "layout": "[0] power, [1] work-mode flags, [2] battery byte (bit7 charging, bits6..4 bars 1..5, bit0/bit3 flags)", "source": "h7040/ble/HeartController.java; h7040/detail/BatteryInfo.java"},
+      {"name": "H7040 WiFi", "op": "0x11", "layout": "[0]==0", "source": "h7040/ble (no WifiNotifyParse; shared base notify)"}
+    ]
+  },
+  "iot": {
+    "envelope": "CmdBuilder.makeCmdStr -> Write/AbsCmdWrite; responses IotMsgProType.V2 (IotMsgV2) for H7056/H7086",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{\"msg\":{\"cmd\":\"turn\",\"data\":{\"val\":1}}}", "response": "state/status", "source": "h7056/iot/CmdTurn.java; h7086/pact/Comm.java (base CmdTurn)"},
+      {"cmd": "brightness", "data": {"brightness": "int"}, "example": "{\"msg\":{\"cmd\":\"brightness\",\"data\":{\"brightness\":100}}}", "response": "state.brightness", "source": "h7056/iot/CmdBrightness.java; h7086/pact/Comm.java"},
+      {"cmd": "colorwc", "data": {"color": {"red": "0-255", "green": "0-255", "blue": "0-255"}, "colorTemInKelvin": "int"}, "example": "{\"msg\":{\"cmd\":\"colorwc\",\"data\":{\"color\":{\"red\":255,\"green\":0,\"blue\":0},\"colorTemInKelvin\":0}}}", "response": "state", "source": "base2light/iot/CmdColorWc via family Comm"},
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte frame>"]}, "example": "{\"msg\":{\"cmd\":\"ptReal\",\"data\":{\"command\":[\"WjMB...\"]}}}", "response": "op", "source": "h7086/iot/CmdPtReal.java; h7056/pact/bleiot/OpDiyCommDialog4BleIot.java"}
+    ],
+    "status": {"fields": {"on": "bool", "brightness": "int", "color": "rgb", "colorTemInKelvin": "int", "mode": "submode byte + payload", "capCalibration": "H7086 only, notify 0x32"}, "source": "base Info4Detail/StateWithSubOnOff for H7056/H7086"}
+  },
+  "other_protocols": [
+    {"name": "merge/mqtt capability", "details": "No MQTT topics in this split. Shared AbsOpCommDialog4BleIot checks DeviceCommCapability.supportMqtt(sku,device,topic): capability list + non-empty topic -> LAN/MQTT path; otherwise cloud IoT.", "source": "com/govee/device/DeviceCommCapability.java (base); h70b1/h70b3 sibling dialogs"}
+  ],
+  "dynamic_effects": [
+    {"name": "H7040 color", "submode": "0x0D", "payload": "0D R G B kelLo kelHi R2 G2 B2", "attributes": ["single group; 1 segment"], "source": "h7040/ble/SubModeColor.java"},
+    {"name": "H7040 mic", "submode": "0x05", "payload": "05 01 (mode) / 05 00 R G B (point)", "attributes": ["mic enable/disable + per-point colour"], "source": "h7040/ble/SubModeMic.java; h7040/ble/MicController.java"},
+    {"name": "H7040 scene", "submode": "0x04", "payload": "04 effLo effHi", "attributes": ["ids 0,1,10,1018-1050"], "source": "h7040/adjust/ui/ScenesV0.java"},
+    {"name": "H7056 color", "submode": "0x15", "payload": "15 01 R G B kelLo kelHi R2 G2 B2 mask0..3", "attributes": ["8 segments", "mode 02 per-segment brightness", "mode 03 raw array"], "source": "h7056/ble/SubModeColor.java"},
+    {"name": "H7056 colour strip group", "submode": "0x15", "payload": "15 04 index c0..cN (4 per frame)", "attributes": ["grouped identical colours", "13-colour brightness group uses 15 03 index b0..b13"], "source": "h7056/pact/Comm.java"},
+    {"name": "H7056 music", "submode": "0x13", "payload": "13 code sens", "attributes": ["default code 101", "sensitivity 0..99"], "source": "h7056/ble/SubModeMusic.java"},
+    {"name": "H7056 scene", "submode": "0x04", "payload": "04 effLo effHi music0..3 level", "attributes": ["default 2002", "32-bit LE music code", "level byte"], "source": "h7056/ble/SubModeScenes.java"},
+    {"name": "H7056 DIY", "submode": "0x0A + proto 0x58", "payload": "0A diyLo diyHi groupLo groupHi; body [len][subEffect][n][RGB]…", "attributes": ["10 sub-effects: gradual, breath, rainbow, cover, glimmer, bloom, flow, flash, colour-wall, rotate"], "source": "h7056/diy/Pro4H7056Diy.java; h7056/diy/parser/H7056DiyParser.java"},
+    {"name": "H7080 color", "submode": "0x15", "payload": "mode1 15 01 R G B kelLo kelHi R2 G2 B2 mask0; mode2 15 02 level 00 mask0; mode3 15 03 raw", "attributes": ["4/8/6 segments by goodsType"], "source": "h7080/ble/SubModeColor.java"},
+    {"name": "H7080 location", "submode": "0xA7/0xA6", "payload": "pairs index/value; check (count,index)", "attributes": ["physical placement calibration"], "source": "h7080/ble/LocationController.java; h7080/ble/CheckLocationController.java"},
+    {"name": "H7086 color", "submode": "0x15", "payload": "15 01 R G B kelLo kelHi R2 G2 B2 mask0..3", "attributes": ["4 segments"], "source": "h7086/ble/SubModeColor.java"},
+    {"name": "H7086 music", "submode": "0x13", "payload": "13 code sens", "attributes": ["codes 1,2,7,8,9,16,17,18,19,20,52 (BleProtocol constants), default 5"], "source": "h7086/ble/SubModeMusic.java; h7086/ble/BleProtocol.java"},
+    {"name": "H7086 scene", "submode": "0x04", "payload": "04 effLo effHi musicLo musicHi", "attributes": ["16-bit effect + 16-bit music code"], "source": "h7086/ble/SubModeScenes.java"},
+    {"name": "H7086 DIY", "submode": "0x0A + proto 0x58", "payload": "0A diyLo diyHi groupLo groupHi", "attributes": ["7 primitive sub-effects: breath, meteor, loop, glimmer, pile-up, sunrise, firework", "23 UI presets incl. codes 21/22/23 templates"], "source": "h7086/adjust/mode/diy/H7086DiyParse.java; H7086DiyConfig.java"},
+    {"name": "H7086 cap calibration", "submode": "0x30/0x31", "payload": "mode enable; serial list", "attributes": ["status notify 0x32"], "source": "h7086/adjust/controller/*"}
+  ],
+  "notes": "H7040 heart byte2 battery bars are 1..5 (bit7 charging). H7056/H7086 scene music codes and most scene effect ids are cloud-supplied. H7085 (276) has detail/DIY config but no Pact registration. No MQTT topic format or Matter implementation in this split."
+}

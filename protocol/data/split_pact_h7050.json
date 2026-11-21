@@ -1,0 +1,1068 @@
+{
+  "split": "split_pact_h7050",
+  "families": [
+    "H7050",
+    "H7051",
+    "H7052",
+    "H7053",
+    "H7055",
+    "H7057",
+    "H7058",
+    "H7060",
+    "H7061",
+    "H7062",
+    "H7063",
+    "H7065",
+    "H7066",
+    "H6087",
+    "H6088",
+    "H7037",
+    "H7038",
+    "H7039",
+    "H7045",
+    "H7046",
+    "H7087",
+    "H7093",
+    "H7094",
+    "H8066",
+    "H8067",
+    "H3500",
+    "H3501",
+    "H3510",
+    "H3511",
+    "H3200",
+    "H1630",
+    "H7020",
+    "H7021",
+    "H7015",
+    "H7016",
+    "H7041",
+    "H7042",
+    "H7029",
+    "H7033",
+    "H7030",
+    "H7025",
+    "H702A",
+    "H702B",
+    "H702C",
+    "H7026",
+    "H7027",
+    "H3001",
+    "H30D01",
+    "H3010",
+    "H3011",
+    "H3012",
+    "H3013",
+    "R7015"
+  ],
+  "skus": [
+    {
+      "sku": "H7050",
+      "family": "permanent outdoor light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 46; 15 bulbs"
+    },
+    {
+      "sku": "H7051",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 105; 24 bulbs"
+    },
+    {
+      "sku": "H7052",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 218; also (2,1); 15 bulbs"
+    },
+    {
+      "sku": "H7053",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 219; also (2,1); 30 bulbs; device lock"
+    },
+    {
+      "sku": "H7055",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 116; 2 bulbs; 2200-6500K"
+    },
+    {
+      "sku": "H7057",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 274; 4 bulbs"
+    },
+    {
+      "sku": "H7058",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 275; 6 bulbs"
+    },
+    {
+      "sku": "H7060",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 76; 2 bulbs"
+    },
+    {
+      "sku": "H7061",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 98; 2 bulbs; 2200-6500K"
+    },
+    {
+      "sku": "H7062",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 107; 6 bulbs; 2200-6500K"
+    },
+    {
+      "sku": "H7063",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 227; also (2,1); 3 bulbs"
+    },
+    {
+      "sku": "H7065",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 113; 2 bulbs"
+    },
+    {
+      "sku": "H7066",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 171; 1 bulb; 2200-6500K"
+    },
+    {
+      "sku": "H6087",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 77"
+    },
+    {
+      "sku": "H6088",
+      "family": "RGBIC string",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 157; also (2,1)"
+    },
+    {
+      "sku": "H7037",
+      "family": "curtain light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 221; also (2,1)"
+    },
+    {
+      "sku": "H7038",
+      "family": "curtain light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "alias of H7037"
+    },
+    {
+      "sku": "H7039",
+      "family": "curtain light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "alias of H7037"
+    },
+    {
+      "sku": "H7045",
+      "family": "hexa/glide panel",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 338; also (1,2),(1,3); music feast"
+    },
+    {
+      "sku": "H7046",
+      "family": "hexa/glide panel",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 338"
+    },
+    {
+      "sku": "H7087",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 315; 3 bulbs"
+    },
+    {
+      "sku": "H7093",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 289; 2 bulbs"
+    },
+    {
+      "sku": "H7094",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 290; 4 bulbs"
+    },
+    {
+      "sku": "H8066",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 305; 3 bulbs"
+    },
+    {
+      "sku": "H8067",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 393; 6 bulbs"
+    },
+    {
+      "sku": "H3500",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 345; 8 bulbs"
+    },
+    {
+      "sku": "H3501",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 339; 8 bulbs; install calibration op 0x39"
+    },
+    {
+      "sku": "H3510",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 349; 1000-10000K"
+    },
+    {
+      "sku": "H3511",
+      "family": "string light",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 349"
+    },
+    {
+      "sku": "H3200",
+      "family": "lamp",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 353"
+    },
+    {
+      "sku": "H1630",
+      "family": "cube/hexa lamp",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 364; also (1,2),(1,3); graffiti DIY"
+    },
+    {
+      "sku": "H7020",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 53; also (2,1); bleiot/BleIotMaker"
+    },
+    {
+      "sku": "H7021",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 54; bleiot/BleIotMakerV2"
+    },
+    {
+      "sku": "H7015",
+      "family": "lighting",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 62; BLE-only AbsBleSku / BleMaker"
+    },
+    {
+      "sku": "H7016",
+      "family": "lighting",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 63; BLE-only / BleMakerV2"
+    },
+    {
+      "sku": "H7041",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 2
+      },
+      "notes": "goodsType 100; bleiot/BleIotMakerH7041"
+    },
+    {
+      "sku": "H7042",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 2
+      },
+      "notes": "goodsType 102; bleiot/BleIotMakerH7042"
+    },
+    {
+      "sku": "H7029",
+      "family": "lighting",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 149; BLE-only / BleMakerH7029"
+    },
+    {
+      "sku": "H7033",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 161; also (1,2); bleiot/BleIotMakerH7033"
+    },
+    {
+      "sku": "H7030",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 295; bleiot/BleIotMakerH7030"
+    },
+    {
+      "sku": "H7025",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 296; bleiot/BleIotMakerH7025"
+    },
+    {
+      "sku": "H702A",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 316; H702A/B/C share goodsType 316 / BleIotMakerH702ABC"
+    },
+    {
+      "sku": "H702B",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 316; alias"
+    },
+    {
+      "sku": "H702C",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 316; alias"
+    },
+    {
+      "sku": "H7026",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 318; bleiot/BleIotMakerH7026"
+    },
+    {
+      "sku": "H7027",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 337; bleiot/BleIotMakerH7027"
+    },
+    {
+      "sku": "H3001",
+      "family": "lighting",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 361; also (1,2),(1,3),(1,4); BLE-only / BleMakerH3001"
+    },
+    {
+      "sku": "H30D01",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 391; bleiot/BleIotMakerH30D0"
+    },
+    {
+      "sku": "H3010",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 411; H3010/11/12/13 share goodsType 411 / BleIotMakerH3010123"
+    },
+    {
+      "sku": "H3011",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 411; alias"
+    },
+    {
+      "sku": "H3012",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 411; alias"
+    },
+    {
+      "sku": "H3013",
+      "family": "lighting",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 411; alias"
+    },
+    {
+      "sku": "R7015",
+      "family": "lighting",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 416; BLE-only / BleMakerR7015"
+    }
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; single 0x33 write/0xAA read; multi 0xA3",
+    "commands": [
+      {
+        "name": "power",
+        "op": "0x33/0x01",
+        "payload": "01|00",
+        "layout": "[0] state",
+        "response": "0xAA/0x01 -> [0]",
+        "source": "base2light/ble/controller/SwitchController.java"
+      },
+      {
+        "name": "brightness",
+        "op": "0x33/0x04",
+        "payload": "0..100",
+        "layout": "[0]",
+        "response": "0xAA/0x04 -> [0]",
+        "source": "base2light/ble/controller/BrightnessController.java"
+      },
+      {
+        "name": "mode",
+        "op": "0x33/0x05",
+        "payload": "sub-mode",
+        "layout": "sub[0] = 0x15 color, 0x04 scenes, 0x0A DIY, 0x13 music, 0x05 mic",
+        "response": "0xAA/0x05",
+        "source": "h7050/ble/Mode.java, h7050/ble/ModeController.java"
+      },
+      {
+        "name": "segmentSetting",
+        "op": "0x33/0x40",
+        "payload": "totalLo totalHi total",
+        "layout": "total = bulbNum*perBulb LE16 at [0..1], [2]=low byte",
+        "response": "0xEE/0x40",
+        "source": "h7050/ble/SegmentSettingController.java"
+      },
+      {
+        "name": "powerOrder",
+        "op": "0x33/0x30",
+        "payload": "order",
+        "layout": "[0] order mode",
+        "response": "0xAA/0x30",
+        "source": "h7050/ble/PowerOrderController.java"
+      },
+      {
+        "name": "cutCalibration",
+        "op": "0x33/0x44",
+        "payload": "01 index",
+        "layout": "[0]=1 [1]=cut index",
+        "response": "0xAA/0x44",
+        "source": "h7050/ble/CutCaliController.java"
+      },
+      {
+        "name": "bulbStringColorRead",
+        "op": "0xAA/0xA5",
+        "payload": "index",
+        "layout": "read BulbGroupColor.parseBytes",
+        "response": "0xEE/0xA5",
+        "source": "h7050/ble/BulbStringColorController.java"
+      },
+      {
+        "name": "multiMusic",
+        "op": "0x33/0x41",
+        "payload": "len code sens ...",
+        "layout": "packed layer block then 0x13 trailer",
+        "response": "0xEE/0x41",
+        "source": "h7050/ble/MultiMusicController.java"
+      },
+      {
+        "name": "micPoint",
+        "op": "0x33/0x05",
+        "payload": "05 00 r g b",
+        "layout": "[0]=5 [1]=0 [2..4]=rhythm point RGB",
+        "response": "0xAA/0x05",
+        "source": "h7050/ble/MicController.java"
+      },
+      {
+        "name": "secretKeyWrite",
+        "op": "0x33/0xB2",
+        "payload": "key bytes",
+        "layout": "16-byte secret; base SecretKeyController defaults 0xB2 write / 0xB1 read",
+        "response": "0xAA/0xB1 read",
+        "source": "h7050/scenes/BleSecretBuilderV1.java, base2light/ble/controller/SecretKeyController.java"
+      },
+      {
+        "name": "installCalibrationH3501",
+        "op": "0x33/0x39",
+        "payload": "index",
+        "layout": "H3501 only (value_install_calibration_h3501=57)",
+        "response": "0xEE/0x39",
+        "source": "h7050/pact/BleProtocol.java, newdetail/h3501/H3501CalibrationAc.java"
+      }
+    ],
+    "notifications": [
+      {
+        "name": "wifi",
+        "op": "0x11",
+        "layout": "[0]==0 connected",
+        "source": "h7050/ble/WifiNotifyParse.java"
+      },
+      {
+        "name": "brightness",
+        "op": "0x20",
+        "layout": "[0] 0..100",
+        "source": "h7050/ble/BrightnessNotifyParse.java"
+      },
+      {
+        "name": "deviceStatus",
+        "op": "0x40",
+        "layout": "first 10 bytes",
+        "source": "base2light/ble/DeviceStatusNotifyParse.java"
+      }
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite; simple cmds V0, switch reply parsed as IotMsgV2",
+    "commands": [
+      {
+        "cmd": "turn",
+        "data": {
+          "val": "0|1"
+        },
+        "example": "{\"msg\":{\"type\":1,\"cmd\":\"turn\",\"data\":{\"val\":1}}}",
+        "response": "status",
+        "source": "h7050/iot/CmdTurn.java"
+      },
+      {
+        "cmd": "brightness",
+        "data": {
+          "val": "0..100"
+        },
+        "example": "{\"msg\":{\"type\":1,\"cmd\":\"brightness\",\"data\":{\"val\":50}}}",
+        "response": "status",
+        "source": "h7050/iot/CmdBrightness.java"
+      },
+      {
+        "cmd": "colorwc",
+        "data": {
+          "color": {
+            "r": "0..255",
+            "g": "0..255",
+            "b": "0..255"
+          },
+          "colorTemInKelvin": "int"
+        },
+        "example": "{\"msg\":{\"type\":1,\"cmd\":\"colorwc\",\"data\":{\"color\":{\"r\":255,\"g\":0,\"b\":0},\"colorTemInKelvin\":0}}}",
+        "response": "status",
+        "source": "h7050/iot/CmdColorWc.java, base2light/iot/Color.java"
+      },
+      {
+        "cmd": "ptReal",
+        "data": {
+          "command": [
+            "<base64 20-byte frame>"
+          ],
+          "isSetDynamic": "bool"
+        },
+        "example": "{\"msg\":{\"type\":1,\"cmd\":\"ptReal\",\"data\":{\"command\":[\"...\"]}}}",
+        "response": "op.pt[]",
+        "source": "h7050/iot/CmdPtReal.java"
+      },
+      {
+        "cmd": "status",
+        "data": {},
+        "example": "{\"msg\":{\"type\":0,\"cmd\":\"status\"}}",
+        "response": "state + op",
+        "source": "h7050/iot/Cmd.java"
+      },
+      {
+        "cmd": "online",
+        "data": {},
+        "example": "{}",
+        "response": "online",
+        "source": "h7050/iot/Cmd.java"
+      },
+      {
+        "cmd": "pt",
+        "data": {},
+        "example": "{}",
+        "response": "legacy passthrough",
+        "source": "h7050/iot/Cmd.java"
+      }
+    ],
+    "status": {
+      "fields": {
+        "state.onOff": "int 0|1",
+        "state.brightness": "int 0..100",
+        "op.pt": "array of base64 20-byte BLE frames re-dispatched to controllers",
+        "color.r/g/b": "int 0..255",
+        "colorTemInKelvin": "int (0 when colour mode)"
+      },
+      "source": "h7050/iot/Cmd.java, h7050/split NewDetailVM parse paths"
+    }
+  },
+  "other_protocols": [
+    {
+      "name": "matter",
+      "details": "H7052/H7053, H7063, H7057, H7087, H7093, H7045/H7046, H3500/H3501, H3510/H3511, H1630 register a MatterInterceptor.",
+      "source": "adjust/h7063/H7063MatterHelper.java, newdetail/h7045/H7045MatterHelper.java, newdetail/h7057/H7057MatterHelper.java, newdetail/h7087/H7087MatterHelper.java, newdetail/h7093/H7093MatterHelper.java, newdetail/h3501/H3501MatterHelper.java"
+    },
+    {
+      "name": "http",
+      "details": "H7020Api metadata/pairing endpoints; no LAN socket protocol in split.",
+      "source": "h7050/net/H7020Api.java"
+    }
+  ],
+  "dynamic_effects": [
+    {
+      "name": "color",
+      "submode": "0x15",
+      "payload": "15 01 R G B [kLo kHi R2 G2 B2] mask*",
+      "attributes": [
+        "rgb",
+        "colorTem 2000-10000K per SKU",
+        "segment mask 4 or 6 bytes",
+        "per-segment brightness"
+      ],
+      "source": "h7050/ble/SubModeColor.java"
+    },
+    {
+      "name": "colorSegment",
+      "submode": "0x15",
+      "payload": "15 02 colourIndex mask*",
+      "attributes": [
+        "color index",
+        "segment mask"
+      ],
+      "source": "h7050/ble/SubModeColor.java"
+    },
+    {
+      "name": "segmentBrightness",
+      "submode": "0x15",
+      "payload": "15 03 bri0..briN",
+      "attributes": [
+        "per-segment brightness 0..100"
+      ],
+      "source": "h7050/ble/SubModeColor.java"
+    },
+    {
+      "name": "scene",
+      "submode": "0x04",
+      "payload": "04 effectLo effectHi",
+      "attributes": [
+        "16-bit LE cloud effect id",
+        "multi-layer 0xA3 blob + 04 code trailer"
+      ],
+      "source": "h7050/ble/SubModeScenes.java, h7050/pact/Comm.java"
+    },
+    {
+      "name": "diy",
+      "submode": "0x0A",
+      "payload": "0A codeLo codeHi",
+      "attributes": [
+        "16-bit LE DIY code",
+        "multi-layer 0xA3 blob + 0A code trailer"
+      ],
+      "source": "h7050/ble/SubModeNewDiy.java, h7050/iot/CmdPtReal.java"
+    },
+    {
+      "name": "music",
+      "submode": "0x13",
+      "payload": "13 code sens [dyn] [auto] [R G B]",
+      "attributes": [
+        "music code 0..100",
+        "sensitivity 0..99",
+        "per-SKU optional dynamic/auto flags and RGB"
+      ],
+      "source": "h7050/adjust/ParamsSubMode4Music.java, h7050/adjust/v3|v7|v8|v9|h7037|h7053|h7066/*"
+    },
+    {
+      "name": "mic",
+      "submode": "0x05",
+      "payload": "05 00 r g b",
+      "attributes": [
+        "rhythm point RGB"
+      ],
+      "source": "h7050/ble/SubModeMic.java, h7050/ble/MicController.java"
+    },
+    {
+      "name": "multiMusic",
+      "submode": "0x41",
+      "payload": "len code sens ...",
+      "attributes": [
+        "per-layer colour music block"
+      ],
+      "source": "h7050/ble/MultiMusicController.java, h7050/iot/CmdPtReal.getMusicCmdPtReal"
+    },
+    {
+      "name": "scenesMulti",
+      "submode": "0xA3/0x04",
+      "payload": "0xA3 multi-packet layer blob; final 04 code",
+      "attributes": [
+        "scene version cmd byte 1/4/12",
+        "direction/speed/x/y for V4",
+        "MTU variants"
+      ],
+      "source": "base2light/ble/comm/MultipleControllerCommV1.java, base2light/ble/ScenesOp.java"
+    },
+    {
+      "name": "musicH7020",
+      "submode": "0x13",
+      "payload": "13 code sens [flags]",
+      "attributes": [
+        "new-music codes rhythm=3, spectrum=4, energy=5, scroll=6",
+        "H7033/H7041 own new-music lists"
+      ],
+      "source": "h7020/ble/SubModeMusic.java, h7020/ble/SubModeMusicV2.java"
+    }
+  ],
+  "notes": "All SKUs are AbsBleWifiSku => ble+iot. Scene/DIY ids are cloud-supplied; only 16-bit LE containers are static. Music layouts vary by goodsType via ParamsSubMode4Music. H7038/H7039 alias H7037. Multi-packet framing has V0/V1/V2/V3/MTU variants selected per controller. h7020 group adds 17 SKUs; H7015/H7016/H7029/H3001/R7015 are BLE-only (AbsBleSku), the rest are BLE+IoT. H3010-H3013 share 411, H702A-C share 316."
+}

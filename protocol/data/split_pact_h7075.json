@@ -1,0 +1,91 @@
+{
+  "split": "split_pact_h7075",
+  "families": ["H7075", "H7078", "H7072", "H7076", "H707A", "H707B", "H707C", "R707A", "R707B", "R707C", "H3751", "H3351", "H2800", "H3700", "R3352"],
+  "skus": [
+    {"sku": "H7075", "family": "Smart LED downlight", "transports": ["ble", "iot", "matter"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 205; colour size 3; matter commissioning gated on versions; 2700-6500K"},
+    {"sku": "H7078", "family": "Floodlight / wall washer", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 245; colour size 4; motion + splicing; 2700-6500K"},
+    {"sku": "H7072", "family": "COB strip / light bar", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 294; colour size 6; brightness sensor + auto dimming"},
+    {"sku": "H7076", "family": "RGBIC wall washer / graffiti", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 313; scene ops {0,1,2,3,5,6}; scrawl/graffiti DIY"},
+    {"sku": "H707A", "family": "Segment / matrix light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 326; color size 4; wide-Kelvin variant 1000-10000K"},
+    {"sku": "H707B", "family": "Segment / matrix light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 326"},
+    {"sku": "H707C", "family": "Segment / matrix light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 326"},
+    {"sku": "R707A", "family": "Segment / matrix light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 326; R-series variant"},
+    {"sku": "R707B", "family": "Segment / matrix light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 326; R-series variant"},
+    {"sku": "R707C", "family": "Segment / matrix light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 326; R-series variant"},
+    {"sku": "H3751", "family": "Light bar / combine device", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 354; multi-device combine; 1000-10000K"},
+    {"sku": "H3351", "family": "Strip light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 371; gear brightness slider; 1000-10000K"},
+    {"sku": "H2800", "family": "Wall light / online music", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 396; online music studio scene; 2700-6500K"},
+    {"sku": "H3700", "family": "Dual-zone light", "transports": ["ble", "iot", "matter"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 383; top/bottom zones; scene ops {0,1,2,3,6}; batch matter+wifi; 1000-10000K"},
+    {"sku": "R3352", "family": "Light-sense / auto-dimming light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 413; colour size 2; light sense 0x24 + auto dimming 0x25; 1000-10000K"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; multi-packet 0xA3/0xA4/0xA5 for large DIY/segment writes",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "<0|1>", "layout": "[0] on/off", "response": "0xAA/0x01", "source": "base2light SwitchController"},
+      {"name": "brightness", "op": "0x33/0x04", "payload": "<1..100>", "layout": "[0] level", "response": "0xAA/0x04", "source": "pact/Comm.java"},
+      {"name": "color-mode-1-rgb-temp", "op": "0x33/0x05 sub 0x15", "payload": "15 01 R G B kelLo kelHi R2 G2 B2 m0 m1 m2 m3", "layout": "17 bytes; mask is 32 segments (colour size dependent)", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h7075/sources/com/govee/h7075/mode/color/SubModeColor.java"},
+      {"name": "color-mode-2-brightness", "op": "0x33/0x05 sub 0x15", "payload": "15 02 level m0 m1 m2 m3", "layout": "single brightness + segment mask", "response": "0xAA/0x05", "source": "same"},
+      {"name": "color-mode-3-segment-brightness", "op": "0x33/0x05 sub 0x15", "payload": "15 03 idx b0..b13", "layout": "14 brightness bytes", "response": "0xAA/0x05", "source": "same"},
+      {"name": "color-mode-4-group-rgb", "op": "0x33/0x05 sub 0x15", "payload": "15 04 idx R G B R G B R G B R G B", "layout": "4 RGB triplets", "response": "0xAA/0x05", "source": "same"},
+      {"name": "mic", "op": "0x33/0x05 sub 0x05", "payload": "05 01", "layout": "enter mic/sound-reactive mode; sub_mode_music 0x13 declared but unused", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h7075/sources/com/govee/h7075/mode/mic/SubModeMic.java"},
+      {"name": "scene", "op": "0x33/0x05 sub 0x04", "payload": "04 effectLo effectHi", "layout": "16-bit LE effect code", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h7075/sources/com/govee/h7075/mode/scenes/SubModeScenes.java"},
+      {"name": "diy", "op": "0x33/0x05 sub 0x0A", "payload": "0A diyLo diyHi", "layout": "16-bit LE DIY code", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h7075/sources/com/govee/h7075/mode/diy/SubModeNewDiy.java"},
+      {"name": "ic-check", "op": "0x33/0x43", "payload": "<mode><index><count>", "layout": "CheckIcController q()", "response": "0xAA/0x43", "source": "jadx-splits/split_pact_h7075/sources/com/govee/h7075/ble/BleProtocol.java (CHECK_IC=67)"},
+      {"name": "cut-calibration-v1", "op": "0x33/0x44", "payload": "<0|1|2>", "layout": "mode 2 adds index+count", "response": "0xAA/0x44", "source": "BleProtocol.CUT_CALI=68"},
+      {"name": "cut-calibration-v2", "op": "0x33/0x46", "payload": "<0|1|2>", "layout": "as v1", "response": "0xAA/0x46", "source": "BleProtocol.CUT_CALI_V2=70"},
+      {"name": "splicing", "op": "0x33/0x40", "payload": "02 00 | 02 01 R G B", "layout": "exit/query | set group colour", "response": "0xAA/0x40", "source": "jadx-splits/split_pact_h7075/sources/com/govee/h7075/h7078/controller/SplicingController.java; SplicingNewController.java"},
+      {"name": "change-splicing-multi", "op": "0x5F multi", "payload": "<index><direction><MAC x6>...", "layout": "MultiController with MULTI_DEVICE_SPLICING=95", "response": "splice state", "source": "jadx-splits/split_pact_h7075/sources/com/govee/h7075/h7078/controller/ControllerChangeSplicing.java"},
+      {"name": "read-splicing-state", "op": "0xAA/0x4B", "payload": "", "layout": "empty read", "response": "[0]==1 spliced", "source": "Controller4ReadSpliceState (cmd 75)"},
+      {"name": "read-sub-device-version", "op": "0xAA/0x4C", "payload": "", "layout": "empty read", "response": "version bytes", "source": "ControllerReadSubDeviceVersion (cmd 76)"},
+      {"name": "motion-switch", "op": "0x33/0x47", "payload": "mode payload", "layout": "toggle/enter motion mode", "response": "0xAA/0x47", "source": "Controller4MotionSwitch (cmd 71)"},
+      {"name": "motion-delete", "op": "0x33/0x48", "payload": "<motionId LE32>", "layout": "4-byte id", "response": "write result", "source": "Controller4DeleteMotion (cmd 72); MotionConstants.e(int)"},
+      {"name": "motion-exit-preview", "op": "0x33/0x49", "payload": "", "layout": "empty", "response": "write result", "source": "Controller4ExitMotionPreview (cmd 73)"},
+      {"name": "stop-light-effect", "op": "0x33/0x25", "payload": "01", "layout": "[0]=1", "response": "write result", "source": "Controller4StopLightEffect (cmd 37)"},
+      {"name": "install-direction", "op": "0x33/0x16", "payload": "<1|2>", "layout": "[0] install direction", "response": "0xAA/0x16", "source": "BleProtocol.SET_INSTALLATION_DIRECTION=22"},
+      {"name": "motion-info-read", "op": "0xAA/0x05", "payload": "", "layout": "empty read", "response": "[0] groupCount, then groupCount*6: motionId LE32 + version LE16", "source": "jadx-splits/split_pact_h7075/sources/com/govee/h7075/h7078/controller/MotionReadInfoController.java; motion/MotionConstants.java"},
+      {"name": "brightness-sensor-read", "op": "0xAA/0x4B", "payload": "", "layout": "empty read", "response": "BrightnessInfo: envLow/envHigh/envCur, devLow/devHigh, switch 0/1/2, start/end, days, allTime", "source": "jadx-splits/split_pact_h7075/sources/com/govee/h7075/h7072/sensor/BrightnessInfo.java"},
+      {"name": "light-sense-model", "op": "0x33/0x24", "payload": "24 <enable> <minGear 0..3> <maxGear 0..3> <allDay> <timeLE16>", "layout": "7 bytes", "response": "0xAA/0x24 -> enable,min,max,allDay,time", "source": "jadx-splits/split_pact_h7075/sources/com/govee/h7075/r3352/protocol/R3352LightSenseInfo.java"},
+      {"name": "auto-dimming", "op": "0x33/0x25", "payload": "25 <enable> <min 1..100> <max 1..100> <effectTime>", "layout": "5 bytes", "response": "0xAA/0x25", "source": "jadx-splits/split_pact_h7075/sources/com/govee/h7075/r3352/protocol/R3352AutoDimmingInfo.java"}
+    ],
+    "notifications": [
+      {"name": "brightness", "op": "0x20", "layout": "[0] brightness", "source": "base BrightnessNotifyParse"},
+      {"name": "ic-segment", "op": "0x21", "layout": "[0..1] IC LE16, [2] segment count", "source": "base CheckIcNumParse"},
+      {"name": "device-status", "op": "0x30", "layout": "[0]==1, [1] bit1 = on", "source": "base DeviceStatusNotifyParse"},
+      {"name": "splice-state", "op": "0x4B", "layout": "[0]==1", "source": "Controller4ReadSpliceState"},
+      {"name": "motion-devices", "op": "0x05", "layout": "groupCount + 6-byte records", "source": "MotionReadInfoController"},
+      {"name": "brightness-sensor", "op": "0x4B", "layout": "BrightnessInfo", "source": "h7072/sensor/BrightnessInfo.java"},
+      {"name": "light-sense", "op": "0x24", "layout": "[0] enable,[1] min,[2] max,[3] allDay,[4..5] time LE16", "source": "R3352LightSenseInfo"},
+      {"name": "auto-dimming", "op": "0x25", "layout": "[0] enable,[1] min,[2] max,[3] effectTime", "source": "R3352AutoDimmingInfo"}
+    ]
+  },
+  "iot": {
+    "envelope": "IotMsgV2",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{\"msg\":{\"type\":1,\"origin\":32,\"cmd\":\"turn\",\"data\":{\"val\":1}}}", "response": "state", "source": "base2light CmdTurn"},
+      {"cmd": "brightness", "data": {"val": "1..100"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"brightness\",\"data\":{\"val\":50}}}", "response": "state", "source": "base2light CmdBrightness"},
+      {"cmd": "colorwc", "data": {"color": {"r": "int", "g": "int", "b": "int"}, "colorTemInKelvin": "int"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"colorwc\",\"data\":{\"color\":{\"r\":255,\"g\":0,\"b\":0},\"colorTemInKelvin\":0}}}", "response": "state", "source": "base2light CmdColorWc"},
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte frame>"]}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"ptReal\",\"data\":{\"command\":[\"M...\"]}}}", "response": "op.pt[]", "source": "base2light.pact.iot.CmdPtReal"},
+      {"cmd": "status", "data": {}, "example": "{\"msg\":{\"type\":0,\"cmd\":\"status\"}}", "response": "state/op", "source": "base AbsDeviceModel4BleIot"}
+    ],
+    "status": {"fields": {"on": "bool", "brightness": "int 1-100", "color": "r/g/b", "colorTemInKelvin": "int", "pt": "base64 20-byte frames", "ic": "int", "segment": "int", "motion": "group records"}, "source": "base state/op parser + family controllers"}
+  },
+  "other_protocols": [
+    {"name": "matter", "details": "H7075 goodsType 205 MatterInterceptor gated on soft>=1.00.11, hard>=3.05.01, wifi soft>=1.01.17, wifi hard>=1.04.01; H3700 batch Matter+WiFi provisioning", "source": "jadx-splits/split_pact_h7075/sources/com/govee/h7075/pact/MatterSupport.java; BatchMatterWifiConfig.java"},
+    {"name": "wifi-lan", "details": "DynamicDomainConfig registers H7075/H7078/H7072/H3700; MQTT capability from base DeviceCommCapability", "source": "pact/Support.setDynamicApi()"},
+    {"name": "http", "details": "device list/splice/sub-device version APIs", "source": "jadx-splits/split_pact_h7075/sources/com/govee/h7075/h7078/network/DeviceApi.java"},
+    {"name": "multi-device-combine", "details": "H3751 combine controller and 0x40/0x5F splicing", "source": "h3751/combine/CombineDeviceController.java; h7078/controller/ControllerChangeSplicing.java"},
+    {"name": "online-music", "details": "H2800 online music sends a scene controller with embedded studio scene, commandType 0x58", "source": "h2800/H2800OnlineMusicConfig.java"}
+  ],
+  "dynamic_effects": [
+    {"name": "color", "submode": "0x15", "payload": "15 <01|02|03|04> ...", "attributes": ["RGB", "Kelvin 2700-6500 or 1000-10000", "segment mask up to 32", "per-segment brightness 14 B", "group RGB 4x3 B"], "source": "jadx-splits/split_pact_h7075/sources/com/govee/h7075/mode/color/SubModeColor.java"},
+    {"name": "mic", "submode": "0x05", "payload": "05 01", "attributes": ["sound-reactive mic mode; 0x13 music declared but unused"], "source": "mode/mic/SubModeMic.java"},
+    {"name": "scene", "submode": "0x04", "payload": "04 <effect LE16>", "attributes": ["scene effect code", "scene op sets"], "source": "mode/scenes/SubModeScenes.java"},
+    {"name": "diy", "submode": "0x0A", "payload": "0A <diy LE16>", "attributes": ["DIY code", "protocol 0x56 for H7075; 765 H7072; 999/9998/10001 H3700; 960/963 H2800"], "source": "mode/diy/SubModeNewDiy.java; per-family DiyConfig"},
+    {"name": "motion-effect", "submode": null, "payload": "sceneCode LE16 | musicCode LE16 | cmdType | len LE16 | body", "attributes": ["motionId LE32", "version LE16", "motion switch 0x47/delete 0x48/exit 0x49"], "source": "h7078/motion/MotionConstants.java; MotionDeviceInfo.java"},
+    {"name": "light-sense", "submode": null, "payload": "24 <enable><minGear 0..3><maxGear 0..3><allDay><time LE16>", "attributes": ["enable", "gear 0..3", "all day", "time"], "source": "r3352/protocol/R3352LightSenseInfo.java"},
+    {"name": "auto-dimming", "submode": null, "payload": "25 <enable><min 1..100><max 1..100><effectTime>", "attributes": ["enable", "brightness 1..100", "effect-time index"], "source": "r3352/protocol/R3352AutoDimmingInfo.java"}
+  ],
+  "notes": "Ten goodsTypes share one BLE builder set; the family has a mic sub-mode only (0x13 music is declared but unused). Scene IDs and many DIY codes are cloud/base-config driven; only H7072=765, H2800=960/963, H3700=999/9998/10001 and H7075 protocol 0x56 are explicit. CheckIc/CutCali payload shapes are shared with the H705A codebase (0x43/0x44/0x46). H3351 gear is UI-only. Matter is commissioning-only. Motion timer/threshold payloads are runtime structures."
+}

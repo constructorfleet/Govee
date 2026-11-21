@@ -1,0 +1,80 @@
+{
+  "split": "split_pact_h7120",
+  "families": ["H7120", "H7121", "H7122", "H7123", "H7126", "H7127", "H7129"],
+  "skus": [
+    {"sku": "H7120", "family": "air purifier", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "also declares (1,2) and (2,1); goodsType 118"},
+    {"sku": "H7121", "family": "air purifier", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "also (1,2); goodsType 72; gear/child-lock/night-light/indicator"},
+    {"sku": "H7122", "family": "air purifier", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 79; custom mode + air quality + timer V3"},
+    {"sku": "H7123", "family": "air purifier", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 110"},
+    {"sku": "H7126", "family": "air purifier", "transports": ["ble", "iot", "matter"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 160"},
+    {"sku": "H7127", "family": "air purifier", "transports": ["ble", "iot", "matter"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 254, shares H7126 implementation"},
+    {"sku": "H7129", "family": "air purifier / PM chart sensor", "transports": ["ble", "iot", "matter"], "pact": {"type": 1, "code": 1}, "notes": "goodsTypes 223,224,225,226"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write proType 0x33, read 0xAA, mode write proType 0x3A",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "01=on, 00=off", "layout": "[0] state", "response": "0xAA/0x01 -> [0] state", "source": "base_h71xx/sku_base/ble/controller/SwitchController.java"},
+      {"name": "brightness", "op": "0x33/0x04", "payload": "val 0-100", "layout": "[0] brightness", "response": "0xAA/0x04 -> [0] brightness", "source": "base2light/ble/controller/BrightnessController.java"},
+      {"name": "mode", "op": "0x3A/0x05", "payload": "[modeId, value]", "layout": "modeId: GEAR=0x08, SLEEP=0x05, AUTO=0x03; GEAR value=gear 1..n; AUTO value=0", "response": "0xAA/0x05 -> [0] modeId [1] gear", "source": "h7120/ble/controller/ModeController.java, h7120/adjust/Mode.java, h7120/adjust/ModeInfo.java"},
+      {"name": "abnormalInfo", "op": "0x33/0x17", "payload": "01", "layout": "read: [0] code [1] subCode", "response": "0xAA/0x17", "source": "h7120/adjust/AbnormalInfo.java, h7120/ble/controller/AbnormalInfoController.java"},
+      {"name": "airQualityStateInfo", "op": "0x33/0x19", "payload": "pmLo pmHi level extra", "layout": "read: [0..1] signed16 LE value, [2] level, [3] extra", "response": "0xAA/0x19", "source": "base_h71xx/sku_base/adjust/component/bean/AirQualityInfo.java, h7120/ble/controller/StateInfoController.java"},
+      {"name": "delayOff", "op": "0x33/0x11", "payload": "on minLo minHi", "layout": "read: [0] isOpen, [1..2] minutes LE16, [3..5] remaining seconds LE24", "response": "0xAA/0x11", "source": "base_h71xx/sku_base/ble/controller/DelayOffController.java"},
+      {"name": "notDisturb", "op": "0x33/0x16", "payload": "enable startH startM endH endM forever", "layout": "enable 0x01; forever=1 means 00:00-23:59", "response": "0xAA/0x16", "source": "base_h71xx/sku_base/ble/controller/NotDisturbController.java"},
+      {"name": "timerGroupWrite", "op": "0x33/0x13", "payload": "group enableSwitch hour min repeat mode modeValue comfortable", "layout": "V2 8 bytes; H7122 V3 appends area LE16", "response": "0xAA/0x13", "source": "base_h71xx/sku_base/ble/controller/TimerGroupControllerV2.java, h7122/ble/controller/TimerGroupControllerV3.java"},
+      {"name": "timerGroupDelete", "op": "0x33/0x15", "payload": "group", "layout": "[0] group index", "response": "0xAA/0x15", "source": "base_h71xx/sku_base/ble/controller/TimerGroupDeleteController.java"},
+      {"name": "timerCountRead", "op": "0xAA/0x12", "payload": "", "layout": "returns timer count", "response": "0xEE/0x12 or 0xAA/0x12", "source": "base_h71xx/sku_base/ble/controller/TimerCountController.java"},
+      {"name": "syncTime", "op": "0x33/0xB5", "payload": "7 bytes: timestamp LE32 + TZ offset + minute offset", "layout": "see getSignedBytesFor4 timestamp", "response": "none", "source": "base_h71xx/sku_base/ble/controller/SyncTimeController.java"},
+      {"name": "reportChart", "op": "0x33/0x30", "payload": "01", "layout": "request device to report PM chart data", "response": "chart data channel", "source": "base_h71xx/sku_base/ble/controller/ReportChartController.java, h7120/adjust/v1/CommandOpV1.java"},
+      {"name": "indicatorLightH7121", "op": "0x33/0x1A", "payload": "0x26=on, 0x11=off", "layout": "[0] flag", "response": "0xAA/0x1A", "source": "h7121/ble/controller/IndicatorLightController.java"},
+      {"name": "childLockH7121", "op": "0x33/0x09", "payload": "0x02=lock, 0x08=unlock", "layout": "[0] flag", "response": "0xAA/0x09", "source": "h7121/ble/controller/ChildLockController.java"},
+      {"name": "gearH7121", "op": "0x33/0x1C", "payload": "gear", "layout": "[0] gear 1..n", "response": "0xAA/0x1C", "source": "h7121/ble/controller/GearController.java"},
+      {"name": "nightLightH7121", "op": "0x33/0x17", "payload": "onFlag brightness", "layout": "onFlag 0x10 or 0x1C, [1] brightness", "response": "0xAA/0x17", "source": "h7121/ble/controller/NightLightController.java"},
+      {"name": "childLockH7122", "op": "0x33/0x10", "payload": "01=lock, 00=unlock", "layout": "[0] state", "response": "0xAA/0x10", "source": "h7122/ble/controller/ChildLockController.java"},
+      {"name": "airQualityReadH7122", "op": "0xAA/0x1C", "payload": "val", "layout": "read-only", "response": "0xEE/0x1C", "source": "h7122/ble/controller/AirQualityController.java"},
+      {"name": "filterStateReadH7122", "op": "0xAA/0x19", "payload": "01", "layout": "read-only", "response": "0xEE/0x19", "source": "h7122/ble/controller/FilterStateController.java"},
+      {"name": "modeCustomH7126", "op": "0x3A/0x05", "payload": "02 (curIdx<<4|setGear) {gearIdx setMinLE16 leaveMinLE16}*", "layout": "repeat 5 bytes per gear; disabled gear = 0x00", "response": "0xAA/0x05", "source": "h7126/ble/controller/bean/ModeCustom.java"},
+      {"name": "modeGearH7126", "op": "0x3A/0x05", "payload": "08 gear", "layout": "[0]=0x08 [1]=gear", "response": "0xAA/0x05", "source": "h7126/ble/controller/ModeGearController.java"},
+      {"name": "modeAutoH7126", "op": "0x3A/0x05", "payload": "03 eco efficient useArea", "layout": "eco/efficient 00/01, useArea int", "response": "0xAA/0x05", "source": "h7126/ble/controller/bean/ModeAuto.java"}
+    ],
+    "notifications": [
+      {"name": "wifi", "op": "0x11", "layout": "[0]==0 means Wi-Fi connected", "source": "h7120/ble/WifiNotifyParse.java"},
+      {"name": "heartbeat", "op": "0x01", "layout": "carries device state + error byte", "source": "h7120/ble/HeartControllerV1.java"},
+      {"name": "mode", "op": "0x05", "layout": "[0] mode id, [1] gear/extra", "source": "h7126/ble/ModeNotifyParse.java"},
+      {"name": "airQuality", "op": "0x19", "layout": "[0..1] value LE16, [2] level, [3] extra", "source": "h7126/ble/StateInfoNotifyParse.java"},
+      {"name": "abnormal", "op": "0x17", "layout": "[0] code, [1] sub-code", "source": "h7126/ble/AbnormalNotifyParse.java"},
+      {"name": "delayOff", "op": "0x11", "layout": "[0] on, [1..2] min LE16, [3..5] remaining sec LE24", "source": "h7126/ble/DelayOffNotifyParse.java"},
+      {"name": "notDisturb", "op": "0x16", "layout": "DND window", "source": "h7126/ble/NotDisturbNotifyParse.java"},
+      {"name": "deviceStatus", "op": "0x40", "layout": "first 10 bytes of status frame", "source": "base2light/ble/DeviceStatusNotifyParse.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite, IotMsgProType.V1, incoming state/op JSON",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"turn\",\"data\":{\"val\":1}}}", "response": "state.onOff", "source": "h7121/iot/CmdTurn.java"},
+      {"cmd": "status", "data": {}, "example": "{\"msg\":{\"type\":0,\"cmd\":\"status\"}}", "response": "state + op.pt[]", "source": "base_h71xx/sku_base/iot/CmdStatus.java"},
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte BLE frame>"]}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"ptReal\",\"data\":{\"command\":[\"...\"]}}}", "response": "op.pt[]", "source": "h7120/adjust/v1/IotOpV1.java"},
+      {"cmd": "online", "data": {}, "example": "{\"msg\":{\"type\":0,\"cmd\":\"online\"}}", "response": "online state", "source": "h7120/adjust/v1/IotPactV1.java"},
+      {"cmd": "multiSync", "data": {}, "example": "{}", "response": "multi-sensor sync", "source": "base_h71xx/sku_base/iot/Cmd.java"}
+    ],
+    "status": {
+      "fields": {
+        "state.onOff": "int 0|1",
+        "state.result": "int",
+        "op.pt": "array of base64 20-byte BLE frames",
+        "airQuality.value": "int signed16 LE from frame bytes 2..3",
+        "airQuality.level": "int 0..5 (AirQualityInfo [2])",
+        "airQuality.extra": "int (AirQualityInfo [3])"
+      },
+      "source": "h7120/iot/CmdStatusParseV1.java, base_h71xx/sku_base/adjust/component/bean/AirQualityInfo.java"
+    }
+  },
+  "other_protocols": [
+    {"name": "matter", "details": "H7126/H7127 and H7129 read Matter info and use base MatterInterceptor for commissioning; no split-specific cluster map.", "source": "h7126/adjust/AdjustAc$readMatterInfo$2.java, h7129/vm/SettingViewModel$getMatterInfo$1.java"},
+    {"name": "http-filter", "details": "POST/update DeviceFilterRequest {sku, device, filterExpireOnOff} via IKtDeviceNet.updateDeviceFilter", "source": "h7120/adjust/v1/SettingAc$toSaveFilterSwitch$1.java"},
+    {"name": "cloud-chart", "details": "H7129 uploads PM history via H7129ChartViewModel/ChartController4PmMode/H7129ChartRepository", "source": "h7129/chart/*.java"}
+  ],
+  "dynamic_effects": [],
+  "notes": "Air-purifier family only; no colour/scene/DIY/music/gradient effects. Timing/readings are exact field layouts, but AirQualityInfo's physical unit and byte [3] meaning are unnamed in the decompiled class. Opcode accessors are obfuscated; hex values were resolved from BleProtocolConstants literal fields. H7129 goodsTypes 223-226 are regional variants of the same H7129 implementation."
+}

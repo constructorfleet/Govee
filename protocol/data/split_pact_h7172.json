@@ -1,0 +1,227 @@
+{
+ "split": "split_pact_h7172",
+ "families": [
+  "H7172",
+  "H7178",
+  "H717D"
+ ],
+ "skus": [
+  {
+   "sku": "H7172",
+   "family": "ice maker",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": null,
+    "code": null
+   },
+   "notes": "goodsType 117"
+  },
+  {
+   "sku": "H7178",
+   "family": "ice maker",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": null,
+    "code": null
+   },
+   "notes": "goodsType 211, extra SettingExtH7178"
+  },
+  {
+   "sku": "H717D",
+   "family": "ice maker / water dispenser",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": null,
+    "code": null
+   },
+   "notes": "goodsType 212, H717DDeviceState, shared settings"
+  }
+ ],
+ "ble": {
+  "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+  "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+  "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write 0x33, read 0xAA",
+  "commands": [
+   {
+    "name": "power",
+    "op": "0x33/0x01",
+    "payload": "[0]=0|1, if on [1]=1 (ice) or 2",
+    "layout": "[0] on/off",
+    "response": "0xAA/0x01 -> [0]!=0",
+    "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/ble/controller/SwitchController.java"
+   },
+   {
+    "name": "base_switch",
+    "op": "0x33/0x1F",
+    "payload": "[0]=switchId (6|7|8|9) [1]=state (1 on / 0 off)",
+    "layout": "four appliance switches",
+    "response": "read [0]=switchId [1]!=0",
+    "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/ble/controller/BaseSwitchController.java"
+   },
+   {
+    "name": "delay_start",
+    "op": "0x33/0x23",
+    "payload": "[0]=enable [1..2]=delayMinutes LE16 [3..6]=startEpochSec LE32 [7]=mode",
+    "layout": "delay start schedule",
+    "response": "DelayStartInfo parse",
+    "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/ble/controller/DelayStartController.java"
+   },
+   {
+    "name": "equipment_status_read",
+    "op": "0xAA/0x19",
+    "payload": "none",
+    "layout": "read only",
+    "response": "[0]=WorkStatus (0 idle,1 making,2 finish,3 washing,4 wash finish,5 reservation)",
+    "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/ble/controller/EquipmentStatusController.java"
+   },
+   {
+    "name": "abnormal_info",
+    "op": "0xAA/0x17",
+    "payload": "{1} read/write",
+    "layout": "clear72h + abnormalStatus",
+    "response": "[0]=clear72h [1]=abnormalStatus",
+    "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/ble/controller/AbnormalInfoController.java"
+   },
+   {
+    "name": "ice_size",
+    "op": "0x33/0x05",
+    "payload": "[0]=1 big | 2 middle | 3 small",
+    "layout": "[0] ice size",
+    "response": "read [0]",
+    "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/ble/controller/IceSizeController.java"
+   },
+   {
+    "name": "ice_full_switch",
+    "op": "0x33/0x1F",
+    "payload": "[0]=switchId [1]=state",
+    "layout": "shares 0x1F with base switches",
+    "response": "parse",
+    "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/ble/controller/IceFullSwitchController.java"
+   }
+  ],
+  "notifications": [
+   {
+    "name": "wifi",
+    "op": "0xEE/0x11",
+    "layout": "connected bool",
+    "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/ble/WifiNotifyParse.java"
+   },
+   {
+    "name": "heart",
+    "op": "0xAA/0x01",
+    "layout": "read only",
+    "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/ble/HeartControllerV1.java"
+   }
+  ]
+ },
+ "iot": {
+  "envelope": "AbsIotOpV1 (base_h71xx): status read, ptReal write; IotMsgProType V2",
+  "commands": [
+   {
+    "cmd": "status",
+    "data": {},
+    "response": "state.onOff + op frame list",
+    "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/adjust/v1/IotOpV1.java"
+   },
+   {
+    "cmd": "ptReal",
+    "data": {
+     "command": [
+      "base64(20-byte frame)"
+     ]
+    },
+    "response": "status",
+    "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/adjust/v1/IotOpV1.java"
+   },
+   {
+    "cmd": "online",
+    "data": {
+     "val": "0|1"
+    },
+    "response": "online state",
+    "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/pact/Model.java"
+   }
+  ],
+  "status": {
+   "fields": {
+    "onOff": "int 0/1 from state",
+    "result": "int",
+    "workStatus": "0 idle,1 making,2 finish,3 washing,4 wash finish,5 reservation",
+    "iceSize": "1 big,2 middle,3 small",
+    "clear72h": "bool",
+    "abnormalStatus": "byte",
+    "delayStart": "enable + minutes + epoch + mode",
+    "switches": "ids 6/7/8/9 booleans"
+   },
+   "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/iot/CmdStatusParseV1.java"
+  }
+ },
+ "other_protocols": [
+  {
+   "name": "ota",
+   "details": "OtaPactConfig registration in Support",
+   "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/Support.java"
+  },
+  {
+   "name": "push",
+   "details": "WaterLeakPush notification",
+   "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/push/WaterLeakPush.java"
+  }
+ ],
+ "dynamic_effects": [
+  {
+   "name": "modes",
+   "submode": null,
+   "payload": "mode id 1..10",
+   "attributes": [
+    "ice making",
+    "washing",
+    "dispensing",
+    "reservation",
+    "mode groups {1,2,3,7,8} {4,5,6,9,10}"
+   ],
+   "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/Support.java, adjust/Mode.java"
+  },
+  {
+   "name": "delay_start",
+   "submode": null,
+   "payload": "23 <enable> <minutes LE16> <epoch LE32> <mode>",
+   "attributes": [
+    "delay minutes",
+    "absolute start",
+    "target mode"
+   ],
+   "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/ble/controller/DelayStartController.java"
+  },
+  {
+   "name": "ice_size",
+   "submode": null,
+   "payload": "05 <size>",
+   "attributes": [
+    "big 1",
+    "middle 2",
+    "small 3"
+   ],
+   "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/ble/controller/IceSizeController.java"
+  }
+ ],
+ "notes": "Gaps: base-switch ids 6/7/8/9 function names come from UI strings; mode names are resource ids; H717D assumed same command set; state.result semantics unknown.",
+ "status_properties": [
+  {
+   "property": "waterShortageOnOff",
+   "kind": "setting",
+   "meaning": "Push-notification enable for water shortage; user preference, not the status flag.",
+   "carrier": "pact/Ext.java",
+   "source": "jadx-splits/split_pact_h7172/sources/com/govee/h7172/pact/Ext.java"
+  }
+ ]
+}

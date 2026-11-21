@@ -1,0 +1,82 @@
+{
+  "split": "split_pact_h705a",
+  "families": ["H705A", "H705B", "H706A", "H706B", "H706C", "H7067", "H7068", "H7069", "H805A", "H805B", "H805C", "H805D", "H806A", "H806C", "H801B", "H608A", "H808A", "H3401"],
+  "skus": [
+    {"sku": "H705A", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 125; 2000-9000K; scene ops {0,1,2,3}"},
+    {"sku": "H705B", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 125"},
+    {"sku": "H706A", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 180; 2200-6500K; segment count from SegmentIcDataConfig; code 49 uses CuiCanMusic4H706a"},
+    {"sku": "H706B", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 180"},
+    {"sku": "H706C", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 180"},
+    {"sku": "H806A", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 184; 2000-9000K"},
+    {"sku": "H806C", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 184"},
+    {"sku": "H801B", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 184; theme icon shared with H705B"},
+    {"sku": "H705D", "family": "Ceiling / downlight", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 240; 2700-6500K"},
+    {"sku": "H705E", "family": "Ceiling / downlight", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 240"},
+    {"sku": "H705F", "family": "Ceiling / downlight", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 240"},
+    {"sku": "H805A", "family": "Ceiling / downlight", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 240"},
+    {"sku": "H805B", "family": "Ceiling / downlight", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 240"},
+    {"sku": "H805C", "family": "Ceiling / downlight", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 240"},
+    {"sku": "H805D", "family": "Ceiling / downlight", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 240"},
+    {"sku": "H608A", "family": "Ceiling / downlight", "transports": ["ble", "iot", "matter"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 240; Matter commissioning soft>=1.00.10"},
+    {"sku": "H608B", "family": "Ceiling / downlight", "transports": ["ble", "iot", "matter"], "pact": {"type": 1, "code": 1}, "notes": "Matter, soft>=1.00.11"},
+    {"sku": "H608C", "family": "Ceiling / downlight", "transports": ["ble", "iot", "matter"], "pact": {"type": 1, "code": 1}, "notes": "Matter, soft>=1.00.11"},
+    {"sku": "H608D", "family": "Ceiling / downlight", "transports": ["ble", "iot", "matter"], "pact": {"type": 1, "code": 1}, "notes": "Matter, soft>=1.00.18"},
+    {"sku": "H808A", "family": "Ceiling / downlight", "transports": ["ble", "iot", "matter"], "pact": {"type": 1, "code": 1}, "notes": "Matter, soft>=1.00.19"},
+    {"sku": "H7067", "family": "Bulb string / light string", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 250; 2700-6500K; sub-effects BianHuan/BinFen/Breath/CaiQiang/Fade/Glimmer/MengHuan/Mirror/Rainbow/Ripple/Sawing"},
+    {"sku": "H7068", "family": "Bulb string / light string", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 250"},
+    {"sku": "H7069", "family": "Bulb string / light string", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 250"},
+    {"sku": "H3401", "family": "Segmented lamp", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 394; 1000-10000K; generic DIY-new config; segment/zone effects"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType (0x33/0xAA) [1]=cmdType [2..18]=payload [19]=XOR BCC",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "<0|1>", "layout": "[0]", "response": "0xAA/0x01", "source": "base2light SwitchController"},
+      {"name": "brightness", "op": "0x33/0x04", "payload": "<1..100>", "layout": "[0]", "response": "0xAA/0x04", "source": "base2light BrightnessController"},
+      {"name": "color-mode-1", "op": "0x33/0x05 sub 0x15", "payload": "15 01 R G B kelLo kelHi R2 G2 B2 mask0..4", "layout": "17 bytes; 5-byte segment mask up to 40 segments", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h705a/sources/com/govee/h705a/mode/color/SubModeColor.java"},
+      {"name": "color-mode-2", "op": "0x33/0x05 sub 0x15", "payload": "15 02 brightness mask0..4", "layout": "brightness + 5-byte mask", "response": "0xAA/0x05", "source": "same"},
+      {"name": "music", "op": "0x33/0x05 sub 0x13", "payload": "13 code sens 01 auto [R G B]", "layout": "sensitivity 0..99; new codes 49/74/72/81/113/50/51/52/53/55/48", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h705a/sources/com/govee/h705a/mode/music/SubModeMusic.java; MusicParams4H705A.java"},
+      {"name": "scene", "op": "0x33/0x05 sub 0x04", "payload": "04 effectLo effectHi", "layout": "16-bit LE", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h705a/sources/com/govee/h705a/mode/scenes/SubModeScenes.java"},
+      {"name": "diy", "op": "0x33/0x05 sub 0x0A", "payload": "0A diyLo diyHi", "layout": "16-bit LE", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h705a/sources/com/govee/h705a/mode/diy/SubModeNewDiy.java"},
+      {"name": "check-ic", "op": "0x33/0x43", "payload": "<mode><index><count>", "layout": "mode 0/1/2", "response": "0xAA/0x43 -> [0..1] IC LE16, [2] segment", "source": "jadx-splits/split_pact_h705a/sources/com/govee/h705a/ble/controller/CheckIcController.java"},
+      {"name": "cut-calibration", "op": "0x33/0x44", "payload": "<0|1|2>[<index><count>]", "layout": "mode 2 adds index/count", "response": "0xAA/0x44", "source": "jadx-splits/split_pact_h705a/sources/com/govee/h705a/ble/controller/CutCaliController.java"},
+      {"name": "ic-setting", "op": "0x33/0x40", "payload": "<value>", "layout": "[0] segment/IC value", "response": "0xAA/0x40", "source": "jadx-splits/split_pact_h705a/sources/com/govee/h705a/ble/controller/ICSettingController.java"},
+      {"name": "segment-setting", "op": "0x33/0x0F", "payload": "<value>", "layout": "[0]", "response": "0xAA/0x0F", "source": "jadx-splits/split_pact_h705a/sources/com/govee/h705a/ble/controller/SegmentSettingController.java"},
+      {"name": "color-group", "op": "0x33/0x05 sub 0x15", "payload": "15 04 idx R G B R G B R G B R G B", "layout": "4 RGB triplets", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h705a/sources/com/govee/h705a/ble/controller/ColorStripComposeController.java"},
+      {"name": "brightness-group", "op": "0x33/0x05 sub 0x15", "payload": "15 03 idx b0..b13", "layout": "14 brightness bytes", "response": "0xAA/0x05", "source": "same"}
+    ],
+    "notifications": [
+      {"name": "ic-segment", "op": "0x21", "layout": "[0..1] IC LE16, [2] segment", "source": "jadx-splits/split_pact_h705a/sources/com/govee/h705a/ble/CheckIcNumParse.java"},
+      {"name": "light-status", "op": "0x30", "layout": "[0]==1, [1] bit1 = on", "source": "jadx-splits/split_pact_h705a/sources/com/govee/h705a/ble/notify/DeviceInfoNotifyParse.java"},
+      {"name": "wifi", "op": "0x11", "layout": "[0]==0 connected", "source": "base WifiNotifyParse"},
+      {"name": "check-ic-result", "op": "0x43", "layout": "[0..1] IC, [2] segment", "source": "CheckIcController"},
+      {"name": "cut-cali-result", "op": "0x44", "layout": "[0] result,[1] index,[2] count", "source": "CutCaliController"}
+    ]
+  },
+  "iot": {
+    "envelope": "IotMsgV2",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"turn\",\"data\":{\"val\":1}}}", "response": "state", "source": "base2light CmdTurn"},
+      {"cmd": "brightness", "data": {"val": "1..100"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"brightness\",\"data\":{\"val\":50}}}", "response": "state", "source": "base2light CmdBrightness"},
+      {"cmd": "colorwc", "data": {"color": {"r": "int", "g": "int", "b": "int"}, "colorTemInKelvin": "int"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"colorwc\",\"data\":{\"color\":{\"r\":255,\"g\":0,\"b\":0},\"colorTemInKelvin\":0}}}", "response": "state", "source": "base2light CmdColorWc"},
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte>"]}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"ptReal\",\"data\":{\"command\":[\"M...\"]}}}", "response": "op.pt[]", "source": "jadx-splits/split_pact_h705a/sources/com/govee/h705a/pact/Comm.java"}
+    ],
+    "status": {"fields": {"on": "bool", "brightness": "int 1-100", "color": "r/g/b", "colorTemInKelvin": "int", "pt": "base64 20-byte frames"}, "source": "base state/op parser"}
+  },
+  "other_protocols": [
+    {"name": "matter", "details": "H608A/B/C/D + H808A goodsType 184; version-gated commissioning (H608A soft>=1.00.10, H608B/C>=1.00.11, H608D>=1.00.18, H808A>=1.00.19; hard 3.05.00; wifi soft 1.01.17; wifi hard 1.04.01)", "source": "jadx-splits/split_pact_h705a/sources/com/govee/h705a/matterconfig/H808aMatterHelper.java"},
+    {"name": "wifi-lan", "details": "dynamic domains H706A/H806A/H706B/H706C/H7067/H7068/H7069/H608A/H3401; MQTT capability from base", "source": "pact/Support.t()"},
+    {"name": "multi-segment-ic", "details": "SetSegmentIcMultiController + SegmentIcDataConfig write per-IC segment maps", "source": "ble/controller/SetSegmentIcMultiController.java; adjust/h706abc/*"}
+  ],
+  "dynamic_effects": [
+    {"name": "color", "submode": "0x15", "payload": "15 01/02/03/04 ...", "attributes": ["RGB", "Kelvin 2000-9000/2200-6500/2700-6500/1000-10000", "segment mask up to 40", "14 brightness", "4x RGB group"], "source": "mode/color/SubModeColor.java"},
+    {"name": "music", "submode": "0x13", "payload": "13 <code> <sens> [01] [auto] [R G B]", "attributes": ["codes 48-55,72,74,81,113", "sensitivity 0..99"], "source": "mode/music/SubModeMusic.java"},
+    {"name": "scene", "submode": "0x04", "payload": "04 <effect LE16>", "attributes": ["scene code", "op set {0,1,2,3}"], "source": "mode/scenes/SubModeScenes.java"},
+    {"name": "diy", "submode": "0x0A", "payload": "0A <diy LE16>", "attributes": ["DIY code"], "source": "mode/diy/SubModeNewDiy.java"},
+    {"name": "h7067-sub-effects", "submode": null, "payload": "DIY-new effect body", "attributes": ["BianHuan", "BinFen", "Breath", "CaiQiang", "Fade", "Glimmer1/2", "MengHuan", "Mirror", "Rainbow1/2", "Ripple", "Sawing1/2"], "source": "h706789/diy/subEffect/*"},
+    {"name": "h608a-gif", "submode": null, "payload": "GIF sub-effect id", "attributes": ["ids 1..18"], "source": "adjust/h608a/SubEffectGifConfig.java"},
+    {"name": "part-scene", "submode": null, "payload": "PartScenesViewModel scene writes + SubModePartScenes(segId, 5-byte selector)", "attributes": ["sceneCode groups", "16-bit segment mask"], "source": "pact/Comm.k()"}
+  ],
+  "notes": "No per-family iot/Cmd classes; base turn/brightness/colorwc/ptReal are used. Segment counts for goodsType 180 and H3401 come from runtime SegmentIcDataConfig/DefInfo. H705A/H7067/H3401 DIY effect-code universes live in the base DIY-new engine; only H608A GIF ids 1..18 and H7067 sub-effect classes are explicit. Matter is commissioning-only. Check-IC uses 0x43, cut-calibration 0x44, cut-calibration V2 0x46."
+}

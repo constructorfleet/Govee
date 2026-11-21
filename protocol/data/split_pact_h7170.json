@@ -1,0 +1,64 @@
+{
+  "split": "split_pact_h7170",
+  "families": ["H7170", "H7171", "H717A", "H7173", "H7175"],
+  "skus": [
+    {"sku": "H7170", "family": "smart kettle", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 103; modes green tea/oolong/coffee/red tea/DIY/slider; 4 DIY slots; beep"},
+    {"sku": "H7171", "family": "smart kettle", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 135; modes slider/M1-M4; delay start; sensor unit switch"},
+    {"sku": "H717A", "family": "smart kettle", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 135 alias"},
+    {"sku": "H7173", "family": "tea/coffee brewer", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 177; modes DIY/boil/tea/coffee/seek; custom tea/coffee/DIY tables; water light 0x1B; timer"},
+    {"sku": "H7175", "family": "smart kettle", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 168; same mode table as H7170 plus temp-unit switch"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write 0x33 (some controllers 0x3A), read 0xAA",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "[on][mode][params]", "layout": "on 1/0; mode byte then mode-specific params", "response": "0xAA/0x01 valid[0]", "source": "h7170/ble/controller/SwitchController.java, h7173 equivalent"},
+      {"name": "mode/recipe", "op": "0x33/0x05 sub 0x00", "payload": "h7170/h7173: [00][mode][params]; h7171: [mode][modeTempSet][brewSwitch]; h7175: [mode][temp*100 LE16]", "layout": "mode values per SKU", "response": "0xAA/0x05 {00} -> valid[0]=0, valid[1]=mode", "source": "h7170/ble/controller/ModeCurController.java, h7173/ble/controller/ModeCurWriteController.java, h7171, h7175"},
+      {"name": "gear", "op": "0x33/0x05 sub 0x08", "payload": "[08][gear]", "layout": "gear level", "response": "0xAA/0x05 [08] -> [1]", "source": "h7111-style ModeGearController; h7105/h7115 shared"},
+      {"name": "auto table", "op": "0x33/0x05 sub 0x03", "payload": "[03][startGear][startTemp*100 LE16][endGear][endTemp*100 LE16]", "layout": "start/end gear+temp", "response": "read [03]", "source": "h7175/ble/controller/ModeController.java"},
+      {"name": "custom/DIY table", "op": "0x33/0x05 sub 0x02", "payload": "[02][slot][child1 4B][child2 4B]", "layout": "child=[temp*100 LE16][diyId][brewOpen]; unused=FF", "response": "read [02][slot]", "source": "h7170/ble/controller/DiyModeWriteController.java, h7173 CustomModeWriteController"},
+      {"name": "read current mode", "op": "0xAA/0x05", "payload": "[00]", "layout": "—", "response": "mode + params", "source": "h7170/ble/controller/ModeCurController.java"},
+      {"name": "delay start", "op": "0x33/0x23", "payload": "[on][setMin LE16][timestamp LE32]", "layout": "7 payload bytes; timestamp=unix seconds + setMin*60", "response": "0xAA/0x23 -> same 7 bytes", "source": "h7170/adjust/DelayStartInfo.java, h7170/ble/controller/ModeStartController.java"},
+      {"name": "keep warm", "op": "0x33/0x22", "payload": "[on][setMin LE16][setMin LE16]", "layout": "writer duplicates setMin; reader takes [on][setMin][leaveMin]", "response": "0xAA/0x22", "source": "h7170/adjust/KeepWarm.java, h7170/ble/controller/KeepWarmController.java"},
+      {"name": "real-time temperature", "op": "0xAA/0x10", "payload": "none", "layout": "valid[1..2] signed BE16", "response": "signed 16-bit", "source": "h7170/ble/controller/RealTimeTemController.java"},
+      {"name": "equipment status", "op": "0xAA/0x19", "payload": "none", "layout": "valid[0]=WorkStatus", "response": "0 idle,1 heating,2 keep-warm,3 boiling,4 finish,5 cooling,6 reservation", "source": "h7170/ble/controller/EquipmentStatusController.java, h7170/adjust/WorkStatus.java"},
+      {"name": "abnormal info", "op": "0x33/0x17", "payload": "01 request", "layout": "[flag][code] response", "response": "0xAA/0x17", "source": "h7170/ble/controller/AbnormalInfoController.java"},
+      {"name": "beep", "op": "0x33/0x1F", "payload": "[06][00/01]", "layout": "sub-id 6", "response": "read [06]", "source": "h7170/ble/controller/BeepSwitchController.java, h7173 SettingSwitchController"},
+      {"name": "temp/sensor unit switch", "op": "0x33/0x1F", "payload": "[08][00/01]", "layout": "sub-id 8", "response": "read [08]", "source": "h7171/ble/controller/SensorUnitController.java, h7175 TempUnitSwitchController"},
+      {"name": "water light (H7173)", "op": "0x33/0x1B", "payload": "single [01][mode][RGB]; all [05] + 5 RGB", "layout": "modes DIY=1/BOIL=2/TEA=3/COFFEE=4/KEEP_TEMP=5; all order KEEP_TEMP,BOIL,TEA,COFFEE,DIY", "response": "read [01]/[05]", "source": "h7173/ble/controller/WaterLightController.java, h7173/adjust/WaterLight*.java"},
+      {"name": "setting switch (H7173)", "op": "0x33/0x1F", "payload": "[id][00/01]", "layout": "id 6 beep, 8 temp unit, 3 water light switch", "response": "read [id]", "source": "h7173/ble/controller/SettingSwitchController.java"},
+      {"name": "timer (shared)", "op": "0x33/0x13", "payload": "NewTimerV1Controller record (8 bytes)", "layout": "group/enable/hour/min/repeat/mode/modeValue/comfort", "response": "0xAA/0x13", "source": "base_h71xx timer controller, h7112 SharedViewModel timer write"},
+      {"name": "DIY read/write", "op": "0xAA/0x05 / 0x33/0x05 sub 0x02", "payload": "[02][slot]", "layout": "10-byte record", "response": "record", "source": "h7170/ble/controller/DiyModeReadController.java, DiyModeWriteController.java"}
+    ],
+    "notifications": [
+      {"name": "wifi/ble state", "op": "notify 0x11", "layout": "[0]==0 connected", "source": "all four ble/WifiNotifyParse.java"},
+      {"name": "equipment status", "op": "notify 0x19", "layout": "[0]=WorkStatus", "source": "h7170/ble/EquipmentStatusParse.java, h7175 equivalent"},
+      {"name": "device report", "op": "header 0xEE, subcmd byte1", "layout": "0x05 mode / 0x1F switches / 0x16 not-disturb / 0x26 delay-off / 0x17 abnormal / 0x1B water light", "source": "h7173/ble/DevCommReportParse.java, h7175/ble/DevCommReportParse.java"},
+      {"name": "heart/state", "op": "read reply 0x01", "layout": "[0] on, [1] modeChange, [3..4] temp signed BE16, [5] keep flag, [6] WorkStatus", "source": "h7170/ble/HeartControllerV1.java, h7173/h7175"},
+      {"name": "mode read events", "op": "0x05 reads", "layout": "temp x100 / custom 10-byte records", "source": "h7173/ble/controller/ModeRead*.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite type=1 origin=32 cmdVersion=0; cmd names state/op/online/turn/status/ptReal/multiSync; new BLE frames sent as ptReal, multi-device as multiSync",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{msg:{type:1,origin:32,cmdVersion:0,cmd:\"turn\",data:{val:1}}}", "response": "status", "source": "base_h71xx/sku_base/iot/CmdTurn.java"},
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte frame>"]}, "example": null, "response": "op.command[] parsed by CmdStatusParseV1", "source": "base_h71xx/sku_base/iot/CmdPtReal.java"},
+      {"cmd": "multiSync", "data": {"command": ["<base64 20-byte frame>"]}, "example": null, "response": "op", "source": "base_h71xx/sku_base/iot/CmdMultiSync.java"},
+      {"cmd": "status (read)", "data": {}, "example": null, "response": "state {onOff,result} + op.command[]", "source": "base_h71xx/sku_base/iot/CmdStatus.java, h7170/iot/CmdStatusParseV1.java"}
+    ],
+    "status": {"fields": {"onOff": "int 0|1", "result": "int", "op.command": "string[] base64 BLE frames", "WorkStatus": "0..6 via 0x19 frame", "mode": "0x05 frame", "keepWarm": "0x22 frame", "delayStart": "0x23 frame", "waterLight": "0x1B frame (H7173)"}, "source": "h7170/iot/CmdStatusParseV1.java, base_h71xx/sku_base/iot/ResultPt.java"}
+  },
+  "other_protocols": [
+    {"name": "wifi/cloud", "details": "No LAN/UDP; BleIotExt.topic is the cloud account topic used by BLE+IoT devices", "source": "h7170/pact/Model.java, pact/H7173Model.java"}
+  ],
+  "dynamic_effects": [
+    {"name": "mode/recipe", "submode": "0x00", "payload": "[00][mode][params]", "attributes": ["H7170: 2/3/4/5/1/6", "H7171: 1/2/3/4/5", "H7173: 1/2/3/4/5", "H7175: 2/3/4/5/1/6"], "source": "h7170/adjust/Mode.java, h7171/adjust/Mode.java, h7173/adjust/Mode.java, h7175/adjust/Mode.java"},
+    {"name": "auto ramp", "submode": "0x03", "payload": "[03][startGear][startTemp*100 LE16][endGear][endTemp*100 LE16]", "attributes": ["start/end gear and temperature"], "source": "h7175/ble/controller/ModeController.java"},
+    {"name": "custom/DIY recipe", "submode": "0x02", "payload": "[02][slot][child 4B][child 2x]", "attributes": ["child temp*100 LE16 + diyId + brewOpen", "slots 1..4"], "source": "h7173/adjust/ModeCustom.java, h7173/adjust/ModeCustomChild.java, h7170 DiyModeWriteController"},
+    {"name": "water light (H7173)", "submode": "0x1B", "payload": "[01][mode][RGB] or [05]+5xRGB", "attributes": ["modes DIY/BOIL/TEA/COFFEE/KEEP_TEMP", "colours blue/orange/green/yellow/purple/indigo", "3-byte RGB"], "source": "h7173/ble/controller/WaterLightController.java, h7173/adjust/WaterLight*.java"},
+    {"name": "delay start", "submode": "0x23", "payload": "[on][setMin LE16][timestamp LE32]", "attributes": ["one-shot start", "timestamp unix seconds"], "source": "h7170/adjust/DelayStartInfo.java"},
+    {"name": "keep warm", "submode": "0x22", "payload": "[on][setMin LE16][setMin LE16]", "attributes": ["minutes, default 120"], "source": "h7170/adjust/KeepWarm.java"}
+  ],
+  "notes": "KeepWarm writer duplicates setMin; parser reads second field as leaveMin. Temperature scaling differs between live probe (raw signed 16) and mode temperature (x100). H7173 ModeWriteCur has an odd DIY branch; generic [00][mode] forms are authoritative. H7175 mode parse is partially decompiled. Coffee timer step tables are runtime/UI data. Report header is 0xEE on h7170/h7173/h7175; h7171 has only WiFi notify + heart."
+}

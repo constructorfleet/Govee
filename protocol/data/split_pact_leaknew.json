@@ -1,0 +1,64 @@
+{
+  "split": "split_pact_leaknew",
+  "families": ["H5058", "H5059", "H5830"],
+  "skus": [
+    {"sku": "H5058", "family": "water leak / level sensor, 3 probes", "transports": ["iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 159; gateway sub-device type 12; 2xAAA; water-level mode, mute, SMS."},
+    {"sku": "H5059", "family": "water leak sensor, 1 probe", "transports": ["iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 292; gateway sub-device type 13; 2xAAA."},
+    {"sku": "H5830", "family": "water leak sensor, gateway-weak support", "transports": ["iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 357; gateway sub-device type 13; 2xAAA; SMS."}
+  ],
+  "ble": {
+    "service_uuid": "494e5445-4c4c-495f-524f-434b535f4857",
+    "characteristic_uuid": "494e5445-4c4c-495f-524f-434b535f2011",
+    "frame": "20 bytes over the gateway: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; leak sub-device commands use cmdType 0x08",
+    "commands": [
+      {"name": "find device", "op": "0x33/0x08", "payload": "sno 06 00", "layout": "[0]=sno, [1]=0x06, [2]=0", "response": "ack", "source": "controller/Controller4FindDevice.java"},
+      {"name": "gateway warning switch", "op": "0x33/0x08", "payload": "sno 0A 01 00|01", "layout": "[1]=0x0A, [2]=1, [3]=state", "response": "ack", "source": "controller/Controller4GwWarnSwitch.java"},
+      {"name": "low-battery switch", "op": "0x33/0x08", "payload": "sno 09 01 00|01", "layout": "[1]=0x09, [2]=1, [3]=state", "response": "ack", "source": "controller/Controller4LowBatSwitch.java"},
+      {"name": "set volume", "op": "0x33/0x08", "payload": "sno (0D|04) 02 level 01", "layout": "[1]=0x0D for H5058 else 0x04, [2]=2, [3]=level, [4]=1", "response": "ack", "source": "controller/Controller4SetVolume.java"},
+      {"name": "check signal", "op": "0x33/0x08", "payload": "sno 07 00", "layout": "[1]=0x07", "response": "ack", "source": "controller/Controller4CheckSignal.java"},
+      {"name": "sync check-net result", "op": "0x33/0x08", "payload": "sno 0F 01 00|01", "layout": "[1]=0x0F, [2]=1, [3]=result", "response": "ack", "source": "controller/Controller4SyncCheckNetResult.java"},
+      {"name": "mode switch", "op": "0x33/0x08", "payload": "sno 0B 01 mode", "layout": "[1]=0x0B, [2]=1, [3]=10 water-level / 11 leak", "response": "ack", "source": "controller/ControllerModeSwitch.java"},
+      {"name": "delete sub-device", "op": "0x33/0x11", "payload": "sno", "layout": "[0]=sno", "response": "ack", "source": "controller/Controller4DeleteSubDevice.java"}
+    ],
+    "notifications": [
+      {"name": "sub-device report (H5058 short)", "op": "gateway notify -> cmd 0x08", "layout": "[0..7]=name, [8]=sno, [9]=type(12/13/4), [10]=bit0 leak + bits1-7 battery/status, [11]=unused, [12]=signal; [3..5] raw leak bytes, [6..9] LE32 timestamp", "source": "base2newth ParseUtils4H5058.e"},
+      {"name": "sub-device report (long)", "op": "gateway notify -> cmd 0x08", "layout": "[0]=sno, [1]=type, [2]=bitfield(bit0 leak), [3..5]=state, [6..9]=timestamp, [10]/[11]=versions, [12]=signal, [13..16]=time LE32", "source": "ParseUtils4H5058.c"},
+      {"name": "legacy leak report", "op": "gateway notify -> cmd 0x08", "layout": "[0]=sno, [1]=type, [2]=leakState, [3]=bitfield, [4]=softVer, [5]=hardVer, [6]=battery, [7..10]=time LE32, [11]=mute, [12]=signal, [13]=?, [14]=?, [15]=switch bits", "source": "ParseUtils4H5044SubLeak.a"}
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite V2; gateway sub-device op frames",
+    "commands": [
+      {"cmd": "op", "data": {"command": ["<base64 20-byte frame>"]}, "example": "{\"cmd\":\"op\",\"data\":{\"command\":[\"...\"]}}", "response": "sub-device report", "source": "pact/Model; SubDevice4OpResultParse"},
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte frame>"]}, "example": "{\"cmd\":\"ptReal\",\"data\":{\"command\":[\"...\"]}}", "response": "ack", "source": "base2light CmdPtReal"},
+      {"cmd": "status", "data": {}, "example": "{\"cmd\":\"status\"}", "response": "gateway/leak snapshot", "source": "pact/Model"},
+      {"cmd": "warn", "data": {"recordData": "list"}, "example": "REST", "response": "warning history", "source": "net/RespWarnMessage"}
+    ],
+    "status": {
+      "fields": {
+        "probe": "int 0 top / 1 shortBot / 2 bot",
+        "probesState": "JSON {top,shortBot,bot}",
+        "status": "1 normal / 2 gateway error / 3 sub-device error",
+        "typeCode": "31101 leak alarm, 31102 leak clear, 31124 water-level alarm, 31125 water-level clear",
+        "createTime": "epoch ms",
+        "read": "bool",
+        "sno": "int",
+        "deviceType": "12 H5058 / 13 H5059 / 4 legacy",
+        "battery": "int 0-100",
+        "signal": "int dBm",
+        "leakMode": "10 water-level / 11 leak"
+      },
+      "source": "net/RespWarnMessageData; base2newth LeakSubInfo"
+    }
+  },
+  "other_protocols": [
+    {"name": "gateway-subdevice", "details": "The leak puck is always a gateway sub-device; no direct GATT or BLE advert. ExtLeak4Gw stores gateway sku/device/topic/address/bleName/versions/secretCode.", "source": "model/ExtLeak4Gw.java; base2newth GwDevice"},
+    {"name": "rest", "details": "Warning history, sub-device detail, delete data, SMS/notification settings.", "source": "net/ILeakNet; net/*"},
+    {"name": "push", "details": "Leak warning push and first-leak guide.", "source": "push/WarningPush.java; base2newth H5058FirstLeakGuideHint"}
+  ],
+  "dynamic_effects": [
+    {"name": "leak mode", "submode": "0x0B", "payload": "sno 0B 01 mode", "attributes": ["10 water level", "11 leak"], "source": "ControllerModeSwitch"},
+    {"name": "volume", "submode": "0x0D/0x04", "payload": "sno (0D|04) 02 level 01", "attributes": ["level 1-3"], "source": "Controller4SetVolume"}
+  ],
+  "notes": "Gateway-only sub-device family (goods 159/292/357, sub types 12/13/4). All commands are cmdType 0x08 with sno + function id. Reports carry 3-probe leak bits for H5058 and one probe for H5059/H5830. Warning history is REST with typeCodes 31101/31102/31124/31125. Gateway UUIDs are inherited from base2newth, not declared in the split."
+}

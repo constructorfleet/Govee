@@ -1,0 +1,555 @@
+{
+  "split": "split_pact_floorlamp",
+  "families": [
+    "H6071",
+    "H6075",
+    "H60B0",
+    "H60B3",
+    "R60B3",
+    "H60B1"
+  ],
+  "skus": [
+    {
+      "sku": "H6071",
+      "family": "CCT floor lamp",
+      "goods_type": 57,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Brightness + color temp + scenes only, no RGB. Kelvin 2200-6500. Scene group {0}. Secret-key pairing command 0xB2/0xB1."
+    },
+    {
+      "sku": "H6075",
+      "family": "CCT floor lamp",
+      "goods_type": 67,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Same protocol as H6071; different theme/asset and factor version (21 vs 16)."
+    },
+    {
+      "sku": "H60B0",
+      "family": "9-segment RGBIC floor lamp with zone lights",
+      "goods_type": 301,
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "0x0D color, scenes/music/DIY, operate mode 0x2C (8 top + 1 bottom piece), interaction 0x14. Matter commissioning via base module."
+    },
+    {
+      "sku": "H60B3",
+      "family": "RGBIC floor lamp (H60B3 DIY set)",
+      "goods_type": 301,
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Same goods type/protocol as H60B0; DIY blob has upper (types 1-7), lower (1-3), ceiling (1-13) effect programs."
+    },
+    {
+      "sku": "R60B3",
+      "family": "RGBIC floor lamp variant",
+      "goods_type": 301,
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Same goods type/protocol; market variant."
+    },
+    {
+      "sku": "H60B1",
+      "family": "RGBICWW floor lamp",
+      "goods_type": 300,
+      "transports": [
+        "ble",
+        "iot",
+        "matter",
+        "mqtt"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "0x15 color with 32-bit segment mask and 3 declared color pieces; scenes with 32-bit music code; DIY two 16-bit codes; local MQTT only for large ptUrl DIY payloads."
+    }
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC of bytes 0..18",
+    "commands": [
+      {
+        "name": "power",
+        "op": "0x33/0x01",
+        "payload": "01 <0/1>",
+        "layout": "[0] state",
+        "response": "0xAA/0x01 -> [0]",
+        "family": "all",
+        "source": "base2light/ble/controller/SwitchController.java"
+      },
+      {
+        "name": "brightness",
+        "op": "0x33/0x04",
+        "payload": "04 <1..100>",
+        "layout": "[0] brightness",
+        "response": "0xAA/0x04 -> [0]",
+        "family": "all",
+        "source": "base2light/ble/controller/BrightnessController.java"
+      },
+      {
+        "name": "heartbeat",
+        "op": "0xAA/0x01",
+        "payload": "01",
+        "layout": "no payload",
+        "response": "[0] non-zero alive",
+        "family": "all",
+        "source": "base2light/ble/controller/HeartController.java"
+      },
+      {
+        "name": "read_mode",
+        "op": "0xAA/0x05",
+        "payload": "05 01",
+        "layout": "AbsModeController.p() = {0x01}",
+        "response": "mode + sub-mode",
+        "family": "all",
+        "source": "base2light/ble/controller/AbsModeController.java"
+      },
+      {
+        "name": "read_color_group",
+        "op": "0xAA/0xA5",
+        "payload": "A5 <group>",
+        "layout": "response [0]=group, then 4 x (brightness,R,G,B)",
+        "response": "0xAA/0xA5",
+        "family": "all",
+        "source": "base2light/kt/general_controller/Controller4ColorInfoByGroup.java"
+      },
+      {
+        "name": "color_tem",
+        "op": "0x33/0x05",
+        "payload": "05 15 04 <kelvinLo> <kelvinHi>",
+        "layout": "sub-mode 0x15, flag 0x04, kelvin int16 LE clamped 2200-6500",
+        "response": "0xAA/0x05 sub-mode 0x15",
+        "family": "H6071/H6075",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h6071/ble/SubModeColor.java"
+      },
+      {
+        "name": "scene",
+        "op": "0x33/0x05",
+        "payload": "05 04 <effLo> <effHi> <speed>",
+        "layout": "effect int16 LE; speed byte default 0xFF",
+        "response": "0xAA/0x05 sub-mode 0x04",
+        "family": "H6071/H6075",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h6071/ble/SubModeScenes.java"
+      },
+      {
+        "name": "secret_key_write",
+        "op": "0x33/0xB2",
+        "payload": "<raw secret bytes>",
+        "layout": "base64 secret decoded and written verbatim",
+        "response": "write result",
+        "family": "H6071/H6075",
+        "source": "base2light/ble/controller/SecretKeyController.java"
+      },
+      {
+        "name": "secret_key_read",
+        "op": "0xAA/0xB1",
+        "payload": "",
+        "layout": "8-byte result",
+        "response": "8 bytes",
+        "family": "H6071/H6075",
+        "source": "base2light/ble/controller/SecretKeyController.java"
+      },
+      {
+        "name": "color",
+        "op": "0x33/0x05",
+        "payload": "05 0D R G B CT_H CT_L R2 G2 B2",
+        "layout": "sub-mode 0x0D; CT 16-bit big-endian (kelvin in white mode); R2G2B2 temperature RGB",
+        "response": "0xAA/0x05 sub-mode 0x0D",
+        "family": "H60B0/H60B3/R60B3",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b0/ble/SubModeColor.java"
+      },
+      {
+        "name": "scene",
+        "op": "0x33/0x05",
+        "payload": "05 04 <effLo> <effHi> <speed>",
+        "layout": "effect int16 LE, speed byte (default 0)",
+        "response": "0xAA/0x05 sub-mode 0x04",
+        "family": "H60B0/H60B3/R60B3",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b0/ble/SubModeScenes.java"
+      },
+      {
+        "name": "music",
+        "op": "0x33/0x05",
+        "payload": "05 13 <musicCode> <sensitivity>",
+        "layout": "sensitivity 0-99",
+        "response": "0xAA/0x05 sub-mode 0x13",
+        "family": "H60B0/H60B3/R60B3",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b0/ble/SubModeMusic.java"
+      },
+      {
+        "name": "diy",
+        "op": "0x33/0x05",
+        "payload": "05 0A <diyLo> <diyHi>",
+        "layout": "16-bit LE DIY code",
+        "response": "0xAA/0x05 sub-mode 0x0A",
+        "family": "H60B0/H60B3/R60B3",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b0/ble/SubModeNewDiy.java"
+      },
+      {
+        "name": "advanced_scene",
+        "op": "0xA3/0x5B",
+        "payload": "first: A3 00 02 <total> 5B <groups> <index> <verify8> <data4>; middle: A3 <idx> <17 bytes>; final: A3 FF <tail>",
+        "layout": "makeSendBytesV3 packetisation; last group followed by 05 04 <sceneCode>",
+        "response": "ptReal op.command",
+        "family": "H60B0/H60B3/R60B3",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b0/pact/Comm.java"
+      },
+      {
+        "name": "diy_upload",
+        "op": "0xA3/<diyCmd>",
+        "payload": "multi-packet V1 + 05 0A <code>",
+        "layout": "blob starts 0x50, length LE16, effect data",
+        "response": "ptReal op.command",
+        "family": "H60B0/H60B3/R60B3",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b0/pact/Comm.java makeDiyCmd4IotCommMulti"
+      },
+      {
+        "name": "read_switch_bits",
+        "op": "0xAA/0x42",
+        "payload": "42",
+        "layout": "response [0] bits: bit8 overall, bit7 zone/left, bit6 zone/right",
+        "response": "0xAA/0x42",
+        "family": "H60B0/H60B3/R60B3",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b0/adjust/h60b0/Info4Detail.java D()"
+      },
+      {
+        "name": "read_splicing",
+        "op": "0xAA/0x41",
+        "payload": "41",
+        "layout": "response [1] on-off memory / splicing value",
+        "response": "0xAA/0x41",
+        "family": "H60B0/H60B3/R60B3",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b0/adjust/h60b0/Info4Detail.java G()"
+      },
+      {
+        "name": "color_0x15",
+        "op": "0x33/0x05",
+        "payload": "05 15 <subtype...>",
+        "layout": "subtype 1: 01 R G B CT_H CT_L R2 G2 B2 M0 M1 M2 M3; subtype 2: 02 brightness mask...; subtype 3: 03 brightness values; subtype 4: 04 group R G B ...",
+        "response": "0xAA/0x05 sub-mode 0x15",
+        "family": "H60B1",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b1/ble/SubModeColor.java"
+      },
+      {
+        "name": "scene",
+        "op": "0x33/0x05",
+        "payload": "05 04 <effLo> <effHi> <music0> <music1> <music2> <music3> <speed>",
+        "layout": "effect int16 LE, music code int32 LE, direction/speed byte",
+        "response": "0xAA/0x05 sub-mode 0x04",
+        "family": "H60B1",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b1/ble/SubModeScenes.java"
+      },
+      {
+        "name": "music",
+        "op": "0x33/0x05",
+        "payload": "05 13 <musicCode> <sensitivity>",
+        "layout": "sensitivity 0-99",
+        "response": "0xAA/0x05 sub-mode 0x13",
+        "family": "H60B1",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b1/ble/SubModeMusic.java"
+      },
+      {
+        "name": "diy",
+        "op": "0x33/0x05",
+        "payload": "05 0A <codeLo> <codeHi> <code2Lo> <code2Hi>",
+        "layout": "two 16-bit LE codes",
+        "response": "0xAA/0x05 sub-mode 0x0A",
+        "family": "H60B1",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b1/ble/SubModeNewDiy.java"
+      },
+      {
+        "name": "color_strip_group",
+        "op": "0x33/0x05",
+        "payload": "05 15 04 <group> R G B [R G B ...]",
+        "layout": "group index + up to 4 RGB triples per frame",
+        "response": "0xAA/0x05 sub-mode 0x15 type 4",
+        "family": "H60B1",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b1/pact/Comm.java a()"
+      },
+      {
+        "name": "brightness_group",
+        "op": "0x33/0x05",
+        "payload": "05 15 03 <group> <b0..b13>",
+        "layout": "14 brightness values per group",
+        "response": "0xAA/0x05 sub-mode 0x15 type 3",
+        "family": "H60B1",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b1/pact/Comm.java d()"
+      }
+    ],
+    "notifications": [
+      {
+        "name": "brightness",
+        "op": "0xEE/0x20",
+        "layout": "[0] brightness",
+        "family": "H6071/H6075",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h6071/ble/BrightnessNotifyParse.java"
+      },
+      {
+        "name": "color_tem",
+        "op": "0xEE/0x30",
+        "layout": "[0..1] unsigned 16-bit big-endian kelvin",
+        "family": "H6071/H6075",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h6071/ble/ColorTemNotifyParse.java"
+      },
+      {
+        "name": "wifi",
+        "op": "0xEE/0x11",
+        "layout": "[0]==0 connected",
+        "family": "all",
+        "source": "h6071/ble/WifiNotifyParse.java; h60b0/ble/Ble$generateNotify$1.java; h60b1/ble/WifiNotifyParse.java"
+      },
+      {
+        "name": "device_status",
+        "op": "0xEE/0x40",
+        "layout": "first 10 bytes",
+        "family": "H60B0/H60B1",
+        "source": "base2light/ble/DeviceStatusNotifyParse.java"
+      },
+      {
+        "name": "switch_status",
+        "op": "0xEE/0x30",
+        "layout": "[0]==1, [1]==1 main switch, [2]==1 second switch",
+        "family": "H60B1",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b1/ble/DeviceSwitchStatusNotifyParse.java"
+      },
+      {
+        "name": "movie_feast",
+        "op": "0xEE/0x60",
+        "layout": "[0]==1 then [1] on/off",
+        "family": "H60B1",
+        "source": "base2light/ble/controller/MovieFeastOnOffNotifyParse.java"
+      },
+      {
+        "name": "music",
+        "op": "0xEE/0x70+",
+        "layout": "OnlineSound music frames",
+        "family": "H60B1",
+        "source": "jadx-splits/split_pact_floorlamp/sources/com/govee/h60b1/ble/BleNotifyComm.java"
+      }
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite; V2 callbacks (IotMsgV2); settings/status use state+op JSON",
+    "commands": [
+      {
+        "cmd": "turn",
+        "data": {
+          "val": "0/1"
+        },
+        "response": "status",
+        "source": "h6071/iot/CmdTurn.java + base2light/iot/CmdTurn"
+      },
+      {
+        "cmd": "brightness",
+        "data": {
+          "val": "1..100"
+        },
+        "response": "status",
+        "source": "h6071/iot/CmdBrightness.java + base2light/iot/CmdBrightness"
+      },
+      {
+        "cmd": "colorwc",
+        "data": {
+          "colorTemInKelvin": "kelvin",
+          "red": "0..255",
+          "green": "0..255",
+          "blue": "0..255"
+        },
+        "response": "status",
+        "source": "h6071/iot/CmdColorWc.java + base2light/iot/CmdColorWc"
+      },
+      {
+        "cmd": "ptReal",
+        "data": {
+          "command": [
+            "<base64 20-byte frame>"
+          ]
+        },
+        "response": "op.command",
+        "source": "h6071/iot/CmdPtReal.java; h60b0/pact/Comm.java; h60b1/pact/Comm.java"
+      },
+      {
+        "cmd": "ptUrl",
+        "data": {
+          "url": "string",
+          "command": "base64 workspace"
+        },
+        "response": "op.command",
+        "source": "base2light/light/AbsOpCommDialog4BleIot CmdPtUrl"
+      },
+      {
+        "cmd": "status",
+        "data": {},
+        "response": "state+op",
+        "source": "base2light AbsIotManagerV1"
+      },
+      {
+        "cmd": "online",
+        "data": {},
+        "response": "status",
+        "source": "base2light AbsIotManagerV1"
+      }
+    ],
+    "status": {
+      "fields": {
+        "state.onOff": "int 0/1",
+        "state.brightness": "int 1..100",
+        "state.mode": "int",
+        "state.colorTemInKelvin": "int (H6071/H6075)",
+        "op.command": "array of base64 20-byte frames",
+        "op frame 0x05": "mode + sub-mode (0x04 scene / 0x0A DIY / 0x0D color / 0x13 music / 0x15 color / 0x2C operate)",
+        "op frame 0x41/0x42": "switch bits / splicing value (H60B0 group)",
+        "op frame 0x23/0x11/0x12": "timers / sleep / wakeup"
+      },
+      "source": "h6071/iot/CmdStatusV0.java; h60b0/adjust/h60b0/Info4Detail.java; base2light AbsIotManagerV1"
+    }
+  },
+  "other_protocols": [
+    {
+      "name": "matter",
+      "details": "H60B0/H60B3/R60B3 and H60B1 are Matter-commissionable (MatterInterceptor, MatterManager, MtGuide, AddDeviceConfig.isSupportMatter). No cluster/attribute mapping in this split; control remains Govee BLE/IoT frames.",
+      "source": "h60b0/ConfigH60B0.java; h60b1/add/AddDeviceM.java; h60b1/detail/H60B1SettingActivity.java"
+    },
+    {
+      "name": "mqtt",
+      "details": "Local MQTT used only for large ptUrl DIY payloads when DeviceCommCapability.supportMqtt is true and a topic exists; normal control stays IoT/BLE.",
+      "source": "h60b1/pact/bleiot/OpDiyCommDialog4BleIot.java; base2light/device/DeviceCommCapability.java"
+    },
+    {
+      "name": "wifi_provisioning",
+      "details": "Paths /base2light/common/pair, /base2light/common/name, /base2light/common/NormalWifi; SSID/password 32/64 chars.",
+      "source": "h60b1/add/AddDeviceM.java; h60b0/ConfigH60B0.java"
+    }
+  ],
+  "dynamic_effects": [
+    {
+      "name": "color_0x0D",
+      "submode": "0x05/0x0D",
+      "payload": "0D R G B CT_H CT_L R2 G2 B2",
+      "attributes": [
+        "RGB",
+        "CT big-endian",
+        "temperature RGB"
+      ],
+      "family": "H60B0/H60B3/R60B3",
+      "source": "h60b0/ble/SubModeColor.java"
+    },
+    {
+      "name": "color_0x15",
+      "submode": "0x05/0x15",
+      "payload": "15 <subtype>",
+      "attributes": [
+        "subtype 1 RGB+CT+32-bit mask",
+        "subtype 2 brightness+mask",
+        "subtype 3 brightness values",
+        "subtype 4 strip groups"
+      ],
+      "family": "H60B1",
+      "source": "h60b1/ble/SubModeColor.java"
+    },
+    {
+      "name": "scene",
+      "submode": "0x05/0x04",
+      "payload": "04 <effLo> <effHi> [music 4B] [speed]",
+      "attributes": [
+        "16-bit LE effect",
+        "H60B1 32-bit music code + direction/speed"
+      ],
+      "family": "H60B0/H60B1",
+      "source": "h60b0/ble/SubModeScenes.java; h60b1/ble/SubModeScenes.java"
+    },
+    {
+      "name": "advanced_scene",
+      "submode": "0xA3/0x5B",
+      "payload": "A3 pkt 01 total 5B <param> + 05 04 <code>",
+      "attributes": [
+        "multi-packet V1",
+        "97-byte chunks",
+        "scene param blob"
+      ],
+      "family": "H60B0/H60B3/R60B3",
+      "source": "h60b0/pact/Comm.java"
+    },
+    {
+      "name": "music",
+      "submode": "0x05/0x13",
+      "payload": "13 <musicCode> <sensitivity>",
+      "attributes": [
+        "sensitivity 0-99",
+        "mic/online music"
+      ],
+      "family": "all RGB",
+      "source": "h60b0/ble/SubModeMusic.java; h60b1/ble/SubModeMusic.java"
+    },
+    {
+      "name": "diy",
+      "submode": "0x05/0x0A",
+      "payload": "0A <codeLo> <codeHi> [code2]",
+      "attributes": [
+        "16-bit LE codes",
+        "0x50 blob upload",
+        "H60B3 upper 1-7 / lower 1-3 / ceiling 1-13"
+      ],
+      "family": "H60B0/H60B1",
+      "source": "h60b0/adjust/h60b0/diy/*; h60b1/diy/*"
+    },
+    {
+      "name": "operate_zone",
+      "submode": "0x05/0x2C",
+      "payload": "read: ctTop int16 LE, brightTop, ctBottom int16 LE, brightBottom",
+      "attributes": [
+        "8 top + 1 bottom piece",
+        "independent zone CT/brightness"
+      ],
+      "family": "H60B0/H60B3/R60B3",
+      "source": "h60b0/adjust/h60b0/operate/SubMode4Operate.java"
+    },
+    {
+      "name": "interaction",
+      "submode": "0x05/0x14",
+      "payload": "base SubMode4HuDong",
+      "attributes": [
+        "gesture/clap interaction"
+      ],
+      "family": "H60B0/H60B3/R60B3",
+      "source": "base2light/pact/newdetail/sub/SubMode4HuDong.java"
+    }
+  ],
+  "notes": "H60B0/H60B3/R60B3 share goodsType 301 and differ by DIY/effect registration. H60B0 operate write and interaction layouts are delegated to base newdetail framework and not fully decoded here. Scene/DIY catalogues are cloud-served. H60B1 declares 3 color pieces but the 0x15 format allows up to 32 mask bits. Matter is commissioning-only; control frames stay Govee BLE/IoT."
+}

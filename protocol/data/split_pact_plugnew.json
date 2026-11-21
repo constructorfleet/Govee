@@ -1,0 +1,115 @@
+{
+  "split": "split_pact_plugnew",
+  "families": ["H5080", "H5082", "H5083", "H5085", "H5086", "H5089", "H5160", "H5161"],
+  "skus": [
+    {"sku": "H5080", "family": "smart plug, 1 socket", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 43; V1 protocol; old-H5080 gate soft <= 10008."},
+    {"sku": "H5083", "family": "smart plug, 1 socket", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 43; lock/indicator light requires soft >= 10003 and hard >= 40100."},
+    {"sku": "H5085", "family": "smart plug, 1 socket", "transports": ["ble", "iot", "matter"], "pact": {"type": null, "code": null}, "notes": "goodsType 43; Matter commissioning when soft/hard match 1.00.20/3.01.00."},
+    {"sku": "H5082", "family": "smart plug, 2 sockets", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 50; getPlugNum=2; Plug2 UI."},
+    {"sku": "H5160", "family": "smart plug, 3 sockets", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 90; getPlugNum=3."},
+    {"sku": "H5161", "family": "smart plug, 3 sockets", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 90; isTripPlugV2."},
+    {"sku": "H5089", "family": "smart plug, 2 sockets + RGB night light", "transports": ["ble", "iot", "matter"], "pact": {"type": null, "code": null}, "notes": "goodsType 307; 3 timer groups: socket0, socket1, night light; Matter supported."},
+    {"sku": "H5086", "family": "smart plug pro with energy metering", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 195; electric data, runtime, time monitor, power alarms, chart upload."}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write proType 0x33, read 0xAA, multi 0xA3/0xA5, notify 0xEE; H5086 chart also uses service 494e5445-4c4c-495f-524f-434b535f4857, write char ...2014, chart notify ...2015",
+    "commands": [
+      {"name": "switch socket 0", "op": "0x33/0x01", "payload": "10|01", "layout": "[0] = 0x10 | (on?1:0)", "response": "0xAA/0x01 -> [0] bit mask", "source": "h5080/ble/controller/SwitchControllerV2.java"},
+      {"name": "switch socket 1", "op": "0x33/0x01", "payload": "20|02", "layout": "[0] = 0x20 | (on?2:0)", "response": "same", "source": "SwitchControllerV2.java"},
+      {"name": "switch socket 2", "op": "0x33/0x01", "payload": "40|04", "layout": "[0] = 0x40 | (on?4:0)", "response": "same", "source": "SwitchControllerV2.java"},
+      {"name": "switch all", "op": "0x33/0x01", "payload": "F0|0F", "layout": "[0] = 0xF0 | (on?0x0F:0)", "response": "same", "source": "SwitchControllerV2.java"},
+      {"name": "heartbeat", "op": "0xAA/0x00", "payload": "", "layout": "no payload", "response": "0xAA/0x00 -> 8 socket bits", "source": "HeartControllerV2.java"},
+      {"name": "total switch (H5089)", "op": "0x33/0x02", "payload": "on?01:00", "layout": "[0] state", "response": "none parsed", "source": "h5080/ble/controller/h5089/Controller4TotalSwitch.java"},
+      {"name": "child lock (H5089/H5086)", "op": "0x33/0x1F", "payload": "02 on", "layout": "[0]=2, [1]=on", "response": "0xAA/0x1F 02 -> [0]=2,[1]=state", "source": "h5080/ble/controller/h5089/Controller4ChildLock.java; h5086/ble/controller/ChildLockController.java"},
+      {"name": "night light switch (H5089)", "op": "0x33/0x1B", "payload": "01 01 on", "layout": "[0]=1, [1]=1, [2]=state", "response": "0xAA/0x1B -> [0]=1,[1]=state,[2]=brightness", "source": "h5080/ble/controller/h5089/Controller4NlSwitch.java"},
+      {"name": "night light brightness (H5089)", "op": "0x33/0x1B", "payload": "01 02 val", "layout": "val 0-100", "response": "same as switch", "source": "Controller4NlSwitch.java"},
+      {"name": "night light mode (H5089)", "op": "0x33/0x1B", "payload": "05 <submode> ...", "layout": "see dynamic_effects", "response": "0xEE/0x1B or 0xAA/0x1B -> LightModeInfo", "source": "base_h71xx LightRgbController; Notify4NightLight"},
+      {"name": "night light sleep timer (H5089)", "op": "0x33/0x28", "payload": "en startBri closeMin curMin defaultLight R G B ctHi ctLo", "layout": "[0]=en,[1]=startBri,[2]=closeMin,[3]=curMin,[4]=defaultLight,[5..7]=RGB,[8..9]=colorTemp BE16", "response": "0xAA/0x28", "source": "h5080/ble/controller/h5089/Controller4NlSleep.java"},
+      {"name": "night light wake timer (H5089)", "op": "0x33/0x29", "payload": "en endBri hour min repeat wakeMin defaultLight R G B ctHi ctLo", "layout": "12 bytes; [0]=en,[1]=endBri,[2]=hour,[3]=min,[4]=repeat,[5]=wakeMin,[6]=defaultLight,[7..9]=RGB,[10..11]=colorTemp", "response": "0xAA/0x29", "source": "h5080/ble/controller/h5089/Controller4NlWakeUp.java"},
+      {"name": "new timer V1", "op": "0x33/0xB4", "payload": "group en hour min repeat", "layout": "[0]=group (+0x10 if page 1); [1]=enableAndType; [2]=hour; [3]=minute; [4]=repeat", "response": "0xAA/0xB4 -> 4*(en,h,m,repeat) or group=FF -> 4 records", "source": "h5080/ble/controller/NewTimerController.java"},
+      {"name": "new timer V2", "op": "0x33/0x13", "payload": "index group en hour min repeat", "layout": "16-byte page, four 4-byte records", "response": "0xAA/0x13 -> page", "source": "NewTimerControllerV2.java"},
+      {"name": "timer count", "op": "0xAA/0x12", "payload": "group", "layout": "[0]=group", "response": "[1]=count", "source": "NewTimerCountController.java"},
+      {"name": "delete timer", "op": "0x33/0x15", "payload": "group index", "layout": "[0]=group,[1]=index", "response": "ack", "source": "TimerDeleteController.java"},
+      {"name": "on/off delay", "op": "0x33/0xB0", "payload": "index type hour minute", "layout": "type 0=turn-on,1=turn-off; minutes split h/m", "response": "0xAA/0xB0 -> [index,type,h,m,remainSec24]", "source": "TurnOnOffDelayController.java"},
+      {"name": "sync time", "op": "0x33/0xB5", "payload": "ts32BE 00 00 00 00 01 tzH tzM", "layout": "Unix seconds big-endian", "response": "ack", "source": "h5080/ble/controller/SyncTimeController.java"},
+      {"name": "H5089 timer page read", "op": "0xAA/0x13", "payload": "(page<<4)|group", "layout": "4 TimerInfo records per page", "response": "0xAA/0x13", "source": "h5080/ble/controller/h5089/Controller4H5089TimerInfo.java"},
+      {"name": "H5086 switch", "op": "0x33/0x01", "payload": "on", "layout": "[0]=0/1", "response": "0xAA/0x01", "source": "h5086/ble/controller/SwitchController.java"},
+      {"name": "H5086 brightness", "op": "0x33/0x04", "payload": "val", "layout": "0-100", "response": "0xAA/0x20 notify -> [0]", "source": "base BrightnessController; h5086 BrightnessNotifyParse"},
+      {"name": "H5086 delay on", "op": "0x33/0xB0", "payload": "00 hour minute", "layout": "type 0", "response": "0xAA/0xB0 00 -> [?,h,m,remainSec24]", "source": "h5086/ble/controller/DelayOnOffController.java"},
+      {"name": "H5086 delay off", "op": "0x33/0xB0", "payload": "01 hour minute", "layout": "type 1", "response": "0xAA/0xB0 01", "source": "DelayOnOffController.java"},
+      {"name": "H5086 timer write", "op": "0x33/0xB4", "payload": "group en hour min repeat", "layout": "5 bytes", "response": "ack", "source": "h5086/ble/controller/TimerWriteController.java"},
+      {"name": "H5086 timer delete", "op": "0x33/0x15", "payload": "group", "layout": "[0]=group", "response": "ack", "source": "h5086/ble/TimerDeleteController.java"},
+      {"name": "H5086 sync time", "op": "0x33/0xB5", "payload": "ts32BE 01 tzH tzM", "layout": "Unix seconds big-endian", "response": "ack", "source": "h5086/ble/controller/SyncTimeController.java"},
+      {"name": "H5086 read device info", "op": "0xAA/0x07", "payload": "10", "layout": "[0]=0x10", "response": "addr8, soft3, hard3, byte", "source": "h5086/ble/controller/DeviceBasicInfoController.java"},
+      {"name": "H5086 read wifi info", "op": "0xAA/0x07", "payload": "11", "layout": "[0]=0x11", "response": "mac6, wifiSoft3, wifiHard3", "source": "h5086/ble/controller/WifiInfoController.java"},
+      {"name": "H5086 electric data", "op": "0xAA/0x19", "payload": "", "layout": "runtime BE24/60, kWh BE24/10000, V BE16/100, A BE16/100, W BE24/100", "response": "0xAA/0x19", "source": "h5086/ble/controller/DeviceElectricController.java"},
+      {"name": "H5086 time monitor", "op": "0xAA/0x1A", "payload": "", "layout": "id BE32,state,h,m,remain BE24,electUse BE24", "response": "0xAA/0x1A", "source": "h5086/ble/controller/TimeMonitorController.java"},
+      {"name": "H5086 power warning read", "op": "0xAA/0x27", "payload": "", "layout": "warningIsSet,open,val BE16,offIsSet,open,val BE16", "response": "0xAA/0x27", "source": "h5086/ble/controller/PowerWarningController.java"},
+      {"name": "H5086 power warning write", "op": "0x33/0x28", "payload": "02|01 en valHi valLo", "layout": "sub 2=warning, 1=auto-off; value BE16", "response": "0xAA/0x28", "source": "h5086/ble/controller/PowerWarningControllerV2.java"},
+      {"name": "H5086 DND light", "op": "0x33/0x16", "payload": "en startH startM endH endM forever", "layout": "forever=1/0", "response": "0xAA/0x16", "source": "h5086/ble/controller/LightController.java"},
+      {"name": "H5086 exception state", "op": "0xAA/0x17", "payload": "01", "layout": "[0]=1", "response": "[0]=exception", "source": "h5086/ble/controller/ExceptionStateController.java"},
+      {"name": "H5086 chart prepare", "op": "0x33/0x02", "payload": "", "layout": "empty", "response": "ack", "source": "h5086/ble/chartcontroller/ChartPrepareInfoController.java"},
+      {"name": "H5086 chart range", "op": "0x33/0x01", "payload": "start32BE end32BE", "layout": "Unix seconds", "response": "ack", "source": "h5086/ble/chartcontroller/ChartTimeRangeController.java"},
+      {"name": "H5086 read all", "op": "0xAA/0xAA", "payload": "", "layout": "empty", "response": "device full read", "source": "h5086/ble/ReadAllNotifyParse.java"}
+    ],
+    "notifications": [
+      {"name": "wifi state", "op": "0xEE/0x11", "layout": "[0]==0 -> connected", "source": "h5080/ble/WifiNotifyParse.java; h5086/ble/WifiNotifyParse.java"},
+      {"name": "switch/heart", "op": "0xEE/0x01 or 0xAA/0x01", "layout": "8-bit socket mask", "source": "HeartControllerV2; SwitchControllerV2"},
+      {"name": "brightness (H5086)", "op": "0xEE/0x20", "layout": "[0]=0-100", "source": "h5086/ble/BrightnessNotifyParse.java"},
+      {"name": "device electric (H5086)", "op": "0xEE/0x19", "layout": "runtime BE24/60, kWh BE24/10000, V BE16/100, A BE16/100, W BE24/100", "source": "h5086/ble/DeviceStateNotifyParse.java"},
+      {"name": "time monitor (H5086)", "op": "0xEE/0x1A", "layout": "id BE32,state,h,m,remain BE24,electUse BE24", "source": "h5086/ble/TimeMonitorNotifyParse.java"},
+      {"name": "read-all done (H5086)", "op": "0xEE/0xAA", "layout": "event only", "source": "h5086/ble/ReadAllNotifyParse.java"},
+      {"name": "night light (H5089)", "op": "0xEE/0x1B", "layout": "[0]=1 -> [1]=on,[2]=brightness; [0]=5 -> LightModeInfo from [1..]", "source": "h5080/ble/controller/h5089/Notify4NightLight.java"},
+      {"name": "chart state (H5086)", "op": "0xEE/0x01 on service ...4857", "layout": "[0]=1 done (total packets BE16 at [1..2]); [0]=2 querying", "source": "h5086/ble/ChartStateNotifyParser.java"},
+      {"name": "chart data (H5086)", "op": "0xAC/0x03 on char ...2015", "layout": "startHour BE16, then 5*(runMin, kWh BE16/10000)", "source": "h5086/ble/AbsBleWithChartDataComm.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite; replies parsed as IotMsgProType.V2 (IotMsgV2)",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "bit0 socket0, bit1 socket1, bit2 socket2/all (0x10|on etc.)"}, "example": "{\"cmd\":\"turn\",\"data\":{\"val\":17}}", "response": "status/ptReal", "source": "h5080/iot/CmdTurn.java"},
+      {"cmd": "state", "data": {"onOff": "int bitmask"}, "example": "{\"cmd\":\"state\",\"data\":{\"onOff\":1}}", "response": "device state", "source": "h5080/iot/Cmd.java; CmdStatusV0.State"},
+      {"cmd": "status", "data": {}, "example": "{\"cmd\":\"status\"}", "response": "state+op snapshot", "source": "h5080/iot/CmdStatus.java"},
+      {"cmd": "op", "data": {"command": ["<base64 20-byte frame>"]}, "example": "{\"cmd\":\"op\",\"data\":{\"command\":[\"...\"]}}", "response": "timer/delay/child-lock/night-light frames", "source": "h5080/iot/Cmd.java; ResultPt"},
+      {"cmd": "ptReal", "data": {"command": ["<base64>"]}, "example": "{\"cmd\":\"ptReal\",\"data\":{\"command\":[\"...\"]}}", "response": "ack", "source": "h5080/iot/CmdPtReal.java"},
+      {"cmd": "ptIot", "data": {"command": ["<base64>"]}, "example": "{\"cmd\":\"ptIot\",\"data\":{\"command\":[\"...\"]}}", "response": "ack", "source": "h5080/iot/Cmd.java (H5089 OTA)"},
+      {"cmd": "online", "data": {}, "example": "{\"cmd\":\"online\"}", "response": "presence", "source": "h5080/iot/Cmd.java"},
+      {"cmd": "brightness", "data": {"val": "0-100"}, "example": "{\"cmd\":\"brightness\",\"data\":{\"val\":50}}", "response": "state", "source": "h5080/iot/Cmd.java"},
+      {"cmd": "colorwc", "data": {"red": "0-255", "green": "0-255", "blue": "0-255"}, "example": "{\"cmd\":\"colorwc\",\"data\":{\"red\":255,\"green\":0,\"blue\":0}}", "response": "state", "source": "h5080/iot/Cmd.java"},
+      {"cmd": "status (H5086)", "data": {}, "example": "{\"cmd\":\"status\"}", "response": "read info + op frames (electric/time monitor/power warning)", "source": "h5086/iot/CmdStatus.java"}
+    ],
+    "status": {
+      "fields": {
+        "state.onOff": "int bitmask (bit0 socket0, bit1 socket1, bit2 night light/H5089)",
+        "state.brightness": "int 0-100 (night light/H5086)",
+        "state.mode": "int",
+        "op.command": "list<base64 20-byte frame>; cmdType 0xB0 delay, 0xB4 timer V1, 0x12 timer count, 0x13 timer V2, 0x1F child lock, 0x1B night light, 0x16 DND, 0x28/0x29 night timers",
+        "electricData.runtime": "minutes (BE24/60)",
+        "electricData.electricUse": "kWh (BE24/10000)",
+        "electricData.volts": "V (BE16/100)",
+        "electricData.amps": "A (BE16/100)",
+        "electricData.activePower": "W (BE24/100)",
+        "timeMonitor": "{id BE32,state,hour,minute,remainSeconds BE24,electUse BE24}",
+        "powerWarning": "{warningOpen,warningValue, warningIsSet, offOpen, offValue, offIsSet}"
+      },
+      "source": "h5080/iot/CmdStatusV0/V3/V4; h5086/iot/CmdStatus; h5086/network/entity/ReadInfo.java"
+    }
+  },
+  "other_protocols": [
+    {"name": "matter", "details": "H5085 (goodsType 43) and H5089 (307) can be commissioned over Matter via H5085MatterHelper + base com.govee.matter; H5085 version gate 1.00.20 / 3.01.00. No cluster mapping in split.", "source": "h5080/H5085MatterHelper.java"},
+    {"name": "rest", "details": "H5086 time-monitor start/end/list, chart series upload, data export/clear/links, device bind.", "source": "h5086/network/ApiService.java"},
+    {"name": "ota", "details": "ReportOtaPactController tunneled via CmdPtReal/PtIot; payload {-85,2,pactTypeLo,pactTypeHi,pactCode}.", "source": "h5080/adjust/h5089/H5089OpManager.java; h5080/adjust/v1/UiV1.java"},
+    {"name": "widget", "details": "WidgetBleIotOpSubV2 registers goods types 43/50/90/307 for quick switch.", "source": "h5080/pact/WidgetBleIotOpSubV2.java"}
+  ],
+  "dynamic_effects": [
+    {"name": "night light color", "submode": "0x0D", "payload": "05 0D R G B brHi brLo", "attributes": ["RGB 24-bit big-endian", "brightness/color temperature 16-bit BE"], "source": "base_h71xx LightRgbController; LightModeInfo"},
+    {"name": "night light scene", "submode": "0x13", "payload": "05 13 00 sceneId", "attributes": ["scene id"], "source": "base_h71xx LightModeInfo/ModeScene"},
+    {"name": "night light DIY", "submode": "0x0A", "payload": "05 0A 00 00", "attributes": ["DIY stored on device"], "source": "base_h71xx ModeDiy"},
+    {"name": "night light default", "submode": "0xFC", "payload": "05 FC", "attributes": ["default/white"], "source": "base_h71xx LightSubMode.DEFAULT"},
+    {"name": "night light sleep", "submode": "0x28", "payload": "en startBri closeMin curMin defaultLight R G B ctHi ctLo", "attributes": ["closeMin/curMin max 240", "brightness 0-100", "RGB + color temp"], "source": "Controller4NlSleep"},
+    {"name": "night light wake", "submode": "0x29", "payload": "en endBri hour min repeat wakeMin defaultLight R G B ctHi ctLo", "attributes": ["repeat bitmask", "brightness 0-100", "RGB + color temp"], "source": "Controller4NlWakeUp"}
+  ],
+  "notes": "H5086 CmdStatus body failed to decompile; JSON keys beyond state.onOff and op.command are inferred from ReadInfo/TimeMonitorInfo/PowerWarningInfo/ElectricData. H5080-family onOff bit mapping beyond H5089 is inferred from Model/Model4Plug2. Light submode values 13/19/10/252 are mutable base_h71xx defaults, not immutable spec. H5089 getPlugNum(307)=2 but has 3 timer groups (2 sockets + night light). Chart frame layout inferred from AbsBleWithChartDataComm; verify with a capture. TimeMonitorInfo.electUse scaling is applied in UI, raw parser leaves it unscaled."
+}

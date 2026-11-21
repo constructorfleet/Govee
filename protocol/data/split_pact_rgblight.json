@@ -1,0 +1,1719 @@
+{
+  "split": "split_pact_rgblight",
+  "families": [
+    "H6159",
+    "H6110",
+    "H6109",
+    "H614A",
+    "H614B",
+    "H614E",
+    "H6138",
+    "H6139",
+    "H613A",
+    "H613B",
+    "H613C",
+    "H613D",
+    "H613E",
+    "H613F",
+    "H6160",
+    "H6165",
+    "H6166",
+    "H6181",
+    "H6182",
+    "H6113",
+    "H6114",
+    "H6101",
+    "H6104",
+    "H7004",
+    "H7017",
+    "H7310",
+    "H7312",
+    "H7317",
+    "H7318",
+    "H6179",
+    "H6118",
+    "H6194",
+    "H6148",
+    "H6188",
+    "H7308",
+    "H7309",
+    "H7311",
+    "H7313",
+    "H7315",
+    "H7316",
+    "H6085",
+    "H6086",
+    "H6089",
+    "H6141",
+    "H6142",
+    "H6195",
+    "H6196",
+    "H6197",
+    "H6170",
+    "H6154",
+    "H6121",
+    "H615A",
+    "H615B",
+    "H615C",
+    "H615D",
+    "H616B",
+    "H6178",
+    "H615E",
+    "H6192"
+  ],
+  "skus": [
+    {
+      "sku": "H6159",
+      "family": "RGB/RGBIC strip (h6159 dialect)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Sku.b() true; NewRgb2TL4BleIot also accepted. Brightness range 6-254 for H6159/H6110/H614A/H614B/H614E, 20-254 for H6109."
+    },
+    {
+      "sku": "H6110",
+      "family": "RGB/RGBIC strip (h6159 dialect)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Sku.b() true; NewRgb2TL4BleIot also accepted. Brightness range 6-254 for H6159/H6110/H614A/H614B/H614E, 20-254 for H6109."
+    },
+    {
+      "sku": "H6109",
+      "family": "RGB/RGBIC strip (h6159 dialect)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Sku.b() true; NewRgb2TL4BleIot also accepted. Brightness range 6-254 for H6159/H6110/H614A/H614B/H614E, 20-254 for H6109."
+    },
+    {
+      "sku": "H614A",
+      "family": "RGB/RGBIC strip (h6159 dialect)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Sku.b() true; NewRgb2TL4BleIot also accepted. Brightness range 6-254 for H6159/H6110/H614A/H614B/H614E, 20-254 for H6109."
+    },
+    {
+      "sku": "H614B",
+      "family": "RGB/RGBIC strip (h6159 dialect)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Sku.b() true; NewRgb2TL4BleIot also accepted. Brightness range 6-254 for H6159/H6110/H614A/H614B/H614E, 20-254 for H6109."
+    },
+    {
+      "sku": "H614E",
+      "family": "RGB/RGBIC strip (h6159 dialect)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Sku.b() true; NewRgb2TL4BleIot also accepted. Brightness range 6-254 for H6159/H6110/H614A/H614B/H614E, 20-254 for H6109."
+    },
+    {
+      "sku": "H6138",
+      "family": "RGB strip (h613839 dialect)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D)."
+    },
+    {
+      "sku": "H6139",
+      "family": "RGB strip (h613839 dialect)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D)."
+    },
+    {
+      "sku": "H613A",
+      "family": "RGB strip (h613839 dialect)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D)."
+    },
+    {
+      "sku": "H613B",
+      "family": "RGB strip (h613839 dialect)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D)."
+    },
+    {
+      "sku": "H613C",
+      "family": "RGB strip (h613839 dialect)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D)."
+    },
+    {
+      "sku": "H613D",
+      "family": "RGB strip (h613839 dialect)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D)."
+    },
+    {
+      "sku": "H613E",
+      "family": "RGB strip (h613839 dialect)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D)."
+    },
+    {
+      "sku": "H613F",
+      "family": "RGB strip (h613839 dialect)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Brightness 6-254; scenes 2-byte id; adds 9-byte colour+BK (0x0D)."
+    },
+    {
+      "sku": "H6160",
+      "family": "RGBIC strip (segment mask)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Ble extends AbsBle4Old; 15-segment colour 0x0B; gradual change 0xA3/0x01; scenes 2-byte. Brightness 20-254."
+    },
+    {
+      "sku": "H6165",
+      "family": "RGB strip / mic",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Brightness 20-254; no scenes; mic 0x05 00 flag."
+    },
+    {
+      "sku": "H6166",
+      "family": "RGB strip / mic",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Brightness 20-230; no scenes; mic 0x05 00 flag."
+    },
+    {
+      "sku": "H6181",
+      "family": "RGB strip",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "1-byte scene id; no music; mic marker 0xFF only; DIY from version 10100."
+    },
+    {
+      "sku": "H6182",
+      "family": "RGB strip",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "1-byte scene id; music 0x03; IoT direct JSON, no ptReal."
+    },
+    {
+      "sku": "H6113",
+      "family": "RGB strip",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "No scenes; music 0x03; brightness 20-254."
+    },
+    {
+      "sku": "H6114",
+      "family": "RGB strip",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "1-byte scene id; music 0x03; brightness 20-254."
+    },
+    {
+      "sku": "H6101",
+      "family": "RGB strip (video sync)",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Nordic FFE0/FFE1 UART. Video 0x00, music 0x01 effect 0-3, calibration 0x08."
+    },
+    {
+      "sku": "H6104",
+      "family": "RGBIC strip (WiFi+BLE / TV)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Nordic FFE0/FFE1 UART. Versions 10102/10131/10135/10140; direction 0x13, IP 0x15, calibration via IoT. pact (unknown)."
+    },
+    {
+      "sku": "H7004",
+      "family": "Plant / red-blue grow light",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Only 0x0D red/blue proportion implemented in this split (4:1,6:1,8:1)."
+    },
+    {
+      "sku": "H7017",
+      "family": "Plant / red-blue grow light",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Protocol skeleton: only RED_BLUE_PROPORTION 0x0D."
+    },
+    {
+      "sku": "H7310",
+      "family": "RGBIC strip / copper mic",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Mic 0x05 01; colour 8-byte; scenes 1-byte; H7317 uses ModeH7317. H7310/H7312 mic from soft 10100."
+    },
+    {
+      "sku": "H7312",
+      "family": "RGBIC strip / copper mic",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Mic 0x05 01; colour 8-byte; scenes 1-byte; H7317 uses ModeH7317. H7310/H7312 mic from soft 10100."
+    },
+    {
+      "sku": "H7317",
+      "family": "RGBIC strip / copper mic",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Mic 0x05 01; colour 8-byte; scenes 1-byte; H7317 uses ModeH7317. H7310/H7312 mic from soft 10100."
+    },
+    {
+      "sku": "H7318",
+      "family": "RGBIC strip / mic",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Music 0x01 [effect,sens] with 4=soft,5=power; scenes 1-byte."
+    },
+    {
+      "sku": "H6179",
+      "family": "TV light bar",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "TV light bar. goodsType 12; protocol pair (1,1). 9-byte colour 0x0D; no scenes/music; DIY 0x0A."
+    },
+    {
+      "sku": "H6118",
+      "family": "Car light / interior",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Car light. goodsType 6; protocol pairs (1,1),(1,2). Colour 0x0D; music 0x0E/0x13; scenes 0x04 2-byte."
+    },
+    {
+      "sku": "H6194",
+      "family": "Car light / interior",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Car light. goodsType 6; protocol pairs (1,1),(1,2). Colour 0x0D; music 0x0E/0x13; scenes 0x04 2-byte."
+    },
+    {
+      "sku": "H6148",
+      "family": "Home light / bulb",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Home light. goodsType 16; protocol pair (1,1). Colour 0x0D; music 0x0F; scenes 1-byte; IoT V1 state/op."
+    },
+    {
+      "sku": "H6188",
+      "family": "RGBIC strip (new detail)",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Colour 0x0D; music 0x03; scenes 2-byte; IoT V1 state/op + ptReal."
+    },
+    {
+      "sku": "H7308",
+      "family": "RGBIC strip / light bar (H7308 group)",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Scene sub-mode is 0xA1, effects 20-27 (combination/in-waves/sequential/slow-glow/chasing/slow-fade/twinkle/steady-on)."
+    },
+    {
+      "sku": "H7309",
+      "family": "RGBIC strip / light bar (H7308 group)",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Scene sub-mode is 0xA1, effects 20-27 (combination/in-waves/sequential/slow-glow/chasing/slow-fade/twinkle/steady-on)."
+    },
+    {
+      "sku": "H7311",
+      "family": "RGBIC strip / light bar (H7308 group)",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Scene sub-mode is 0xA1, effects 20-27 (combination/in-waves/sequential/slow-glow/chasing/slow-fade/twinkle/steady-on)."
+    },
+    {
+      "sku": "H7313",
+      "family": "RGBIC strip / light bar (H7308 group)",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Scene sub-mode is 0xA1, effects 20-27 (combination/in-waves/sequential/slow-glow/chasing/slow-fade/twinkle/steady-on)."
+    },
+    {
+      "sku": "H7315",
+      "family": "RGBIC strip / light bar (H7308 group)",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Scene sub-mode is 0xA1, effects 20-27 (combination/in-waves/sequential/slow-glow/chasing/slow-fade/twinkle/steady-on)."
+    },
+    {
+      "sku": "H7316",
+      "family": "RGBIC strip / light bar (H7308 group)",
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Scene sub-mode is 0xA1, effects 20-27 (combination/in-waves/sequential/slow-glow/chasing/slow-fade/twinkle/steady-on)."
+    },
+    {
+      "sku": "H6085",
+      "family": "WiFi bulb (IoT only)",
+      "transports": [
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "No BLE (needBle()=false). SoftAP provisioning SSID Govee_bulb_<SKU> at 192.168.1.1:7200, then cloud MQTT topic. Commands color/colorTem/mode(mode 4 scene / 10 DIY)."
+    },
+    {
+      "sku": "H6086",
+      "family": "WiFi bulb (IoT only)",
+      "transports": [
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "No BLE (needBle()=false). SoftAP provisioning SSID Govee_bulb_<SKU> at 192.168.1.1:7200, then cloud MQTT topic. Commands color/colorTem/mode(mode 4 scene / 10 DIY)."
+    },
+    {
+      "sku": "H6089",
+      "family": "WiFi bulb (IoT only)",
+      "transports": [
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "No BLE (needBle()=false). SoftAP provisioning SSID Govee_bulb_<SKU> at 192.168.1.1:7200, then cloud MQTT topic. Commands color/colorTem/mode(mode 4 scene / 10 DIY)."
+    },
+    {
+      "sku": "H6141",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H6142",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H6195",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H6196",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H6197",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H6170",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H6154",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H6121",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H615A",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H615B",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H615C",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H615D",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H616B",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H6178",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H615E",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04."
+    },
+    {
+      "sku": "H6192",
+      "family": "RGBIC string light v2",
+      "transports": [
+        "ble",
+        "ble+iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "stringlightv2 SKU. Transport depends on device goodsType: 1/40/108 = ble+iot, 2/39/68/78/143 = ble. Colour 0x0D, music 0x0E, new music 0x13, mic 0x05, scenes 0x04. H6192 uses the dedicated mic sub-mode 0x05 single byte and GroupFactorH6192."
+    }
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC",
+    "alternative_uuids": [
+      {
+        "service_uuid": "0000ffe0-0000-1000-8000-00805f9b34fb",
+        "characteristic_uuid": "0000ffe1-0000-1000-8000-00805f9b34fb",
+        "families": [
+          "H6101",
+          "H6104"
+        ]
+      }
+    ],
+    "protypes": {
+      "0x33": "single write",
+      "0xAA": "single read",
+      "0xA5": "multi-packet write",
+      "0xA4": "multi-packet read",
+      "0xA3": "multi-packet V1 write",
+      "0xEE": "notification"
+    },
+    "commands": [
+      {
+        "name": "power",
+        "op": "0x33/0x01",
+        "payload": "01",
+        "layout": "[0]=0 off, 1 on",
+        "response": "0xAA/0x01 -> [0]=state",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/SwitchController.java"
+      },
+      {
+        "name": "heartbeat",
+        "op": "0xAA/0x01",
+        "payload": "",
+        "layout": "read-only heartbeat, payload empty/zero",
+        "response": "0xAA/0x01 -> [0]=0/1",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/HeartController.java"
+      },
+      {
+        "name": "brightness",
+        "op": "0x33/0x04",
+        "payload": "04 <abs>",
+        "layout": "[0]=absolute brightness after NumUtil.calculateProgress(max,min,ui%)",
+        "response": "0xAA/0x04 -> [0]=absolute",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/BrightnessController.java"
+      },
+      {
+        "name": "brightness_read",
+        "op": "0xAA/0x04",
+        "payload": "",
+        "layout": "empty",
+        "response": "[0]=absolute",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/BrightnessController.java"
+      },
+      {
+        "name": "mode_write",
+        "op": "0x33/0x05",
+        "payload": "05 <submode payload>",
+        "layout": "[0]=submode (0x02/0x03/0x04/0x0A/0x0B/0x0D/0x0E/0x0F/0x13/0x00/0x01/0x05)",
+        "response": "0xAA/0x05 -> [0]=submode, [1..]=body",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/AbsModeController.java"
+      },
+      {
+        "name": "mode_read",
+        "op": "0xAA/0x05",
+        "payload": "01",
+        "layout": "p()={1} (version selector)",
+        "response": "[0]=submode, [1..] body; AbsMode.parse dispatches",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/AbsModeController.java"
+      },
+      {
+        "name": "soft_version",
+        "op": "0xAA/0x06",
+        "payload": "",
+        "layout": "read ASCII",
+        "response": "[0..]=ASCII version",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/SoftVersionController.java"
+      },
+      {
+        "name": "hard_version",
+        "op": "0xAA/0x07",
+        "payload": "03",
+        "layout": "[0]=3 requests MCU hard version",
+        "response": "[0]==3, [1..]=ASCII",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/HardVersionController.java"
+      },
+      {
+        "name": "wifi_hard_version",
+        "op": "0xAA/0x20",
+        "payload": "",
+        "layout": "read",
+        "response": "ASCII",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/WifiHardVersionController.java"
+      },
+      {
+        "name": "wifi_soft_version",
+        "op": "0xAA/0x21",
+        "payload": "",
+        "layout": "read",
+        "response": "ASCII",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/WifiSoftVersionController.java"
+      },
+      {
+        "name": "auto_time_write",
+        "op": "0x33/0x0A",
+        "payload": "0A <open/close h,m,repeat>",
+        "layout": "[0]=open flag, on/off hours+minutes, repeat mask",
+        "response": "0xAA/0x0A",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/AutoTimeController.java"
+      },
+      {
+        "name": "new_timer_v1",
+        "op": "0x33/0x23",
+        "payload": "23 <timer slots>",
+        "layout": "4 independent slots, each enable/openHour/openMin/closeHour/closeMin/repeat",
+        "response": "0xAA/0x23 -> parsed by NewTimerV1.parseBytes",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/NewTimerV1Controller.java"
+      },
+      {
+        "name": "sleep",
+        "op": "0x33/0x11",
+        "payload": "11 <sleep window>",
+        "layout": "sleep enable/start/end",
+        "response": "0xAA/0x11 -> SleepController.parseSleep",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/SleepController.java"
+      },
+      {
+        "name": "wakeup",
+        "op": "0x33/0x12",
+        "payload": "12 <wake window>",
+        "layout": "wake enable/start/end",
+        "response": "0xAA/0x12 -> WakeUpController.parse2WakeUp",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/WakeUpController.java"
+      },
+      {
+        "name": "limit",
+        "op": "0x33/0x0E",
+        "payload": "0E <0|1>",
+        "layout": "[0]=max-current/brightness cap enable",
+        "response": "0xAA/0x0E -> [0]==1",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/stringlightv2/ble/LimitController.java"
+      },
+      {
+        "name": "ota_prepare",
+        "op": "0x33/0xEE",
+        "payload": "EE",
+        "layout": "no payload",
+        "response": "write result",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/stringlightv2/ble/OtaPrepareController.java"
+      },
+      {
+        "name": "calibration_start_h6101",
+        "op": "0x33/0x08",
+        "payload": "08",
+        "layout": "[0]=8 starts calibration",
+        "response": "read 0xAA/0x01 ack via CalibrationOkController",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6101/ble/CalibrationController.java"
+      },
+      {
+        "name": "direction_h6104",
+        "op": "0x33/0x13",
+        "payload": "13 <dir>",
+        "layout": "[0]=direction byte (2 up,1 down,4 left,3 right,5 in,6 out,8 max->min,7 min->max,10 CW,9 CCW,11..20 stretch/loop)",
+        "response": "0xAA/0x13 -> [0]=direction",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6104/ble/DirectionController.java"
+      },
+      {
+        "name": "ip_read_h6104",
+        "op": "0xAA/0x15",
+        "payload": "",
+        "layout": "empty",
+        "response": "[0..3]=IPv4, [4..7]=port (int32)",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6104/ble/IPController.java"
+      },
+      {
+        "name": "red_blue_ratio_h7004",
+        "op": "0x33/0x0D",
+        "payload": "0D <ratio> <reserved>",
+        "layout": "[0]: 1=4:1, 2=6:1, 3=8:1; [1]=reserved (unset by callers)",
+        "response": "0xAA/0x0D -> [0]=ratio,[1]=reserved",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h7004/ble/RedBlueController.java"
+      },
+      {
+        "name": "gradual_change_h6160",
+        "op": "0xA3/0x01",
+        "payload": "A3 00 01 <count> 01 ... / data A3 <i> <17B> / end A3 FF",
+        "layout": "Gradual4BleWifiController value={0|1}; wrapped by 0xA3 V1 packetiser",
+        "response": "write result",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6160/ble/v1/Gradual4BleWifiController.java"
+      },
+      {
+        "name": "multi_diy_write",
+        "op": "0xA5/0x02",
+        "payload": "start A5 02 00 <packCount> 00 | data A5 02 <i> <16B> | end A5 02 FF",
+        "layout": "value=[0]diyCode [1]effect [2]subEffect [3]speed [4]=3N [5..]=RGB triples [5+3N]=2M [..]=(effect,subEffect) pairs; 16-byte chunks",
+        "response": "write result",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/AbsMultipleController4Diy.java"
+      },
+      {
+        "name": "multi_diy_read",
+        "op": "0xA4/0x02",
+        "payload": "",
+        "layout": "proType 0xA4 for read",
+        "response": "device DIY body",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/AbsMultipleController.java"
+      },
+      {
+        "name": "multi_scenes_v1",
+        "op": "0xA3/0x01",
+        "payload": "start A3 00 01 <packCount> 01 <bigNum> <cur+1> <8B verify> <4B> | data A3 <i> <17B> | end A3 FF <last>",
+        "layout": "value = base64-decoded effect blob from ScenesRgb; attributes direction/x/y/speed in controller",
+        "response": "write result",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/MultiNewScenesControllerV1.java"
+      },
+      {
+        "name": "multi_scenes_v2",
+        "op": "0xA3/0x02",
+        "payload": "same as multi_scenes_v1 with cmdType 02",
+        "layout": "value = ScenesRgbIC blob",
+        "response": "write result",
+        "source": ".../MultiNewScenesControllerV2.java"
+      },
+      {
+        "name": "multi_scenes_v3",
+        "op": "0xA3/0x07",
+        "payload": "same framing, cmdType 07",
+        "layout": "value = ScenesGraffiti blob",
+        "response": "write result",
+        "source": ".../MultiNewScenesControllerV3.java"
+      },
+      {
+        "name": "multi_scenes_v4",
+        "op": "0xA3/0x04",
+        "payload": "same framing, cmdType 04",
+        "layout": "value = ScenesCube blob; attributes x,y,speed,direction,focusParams",
+        "response": "write result",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/AbsMultipleControllerV14Scenes.java"
+      },
+      {
+        "name": "multi_scenes_v5",
+        "op": "0xA3/0x0A",
+        "payload": "same framing, cmdType 0A",
+        "layout": "value = ScenesCompose blob",
+        "response": "write result",
+        "source": ".../MultiNewScenesControllerV5.java"
+      },
+      {
+        "name": "multi_new_music",
+        "op": "0xA3/0x41",
+        "payload": "start A3 00 01 <count> 41 <p> ... | data | end A3 FF",
+        "layout": "value=[effect][sensitivity][param][manualFlag][R G B]",
+        "response": "write result",
+        "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/MultipleController4Music.java"
+      },
+      {
+        "name": "submode_color_8b",
+        "op": "0x33/0x05 + 0x02",
+        "payload": "02 R G B flag R2 G2 B2",
+        "layout": "RGB+tempFlag+background RGB (8 bytes)",
+        "response": "[0]=submode 02",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6159/ble/SubModeColor.java"
+      },
+      {
+        "name": "submode_color_9b",
+        "op": "0x33/0x05 + 0x0D",
+        "payload": "0D R G B kHi kLo R2 G2 B2",
+        "layout": "RGB + kelvin big-endian + background RGB (9 bytes)",
+        "response": "[0]=submode 0D",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6159/ble/SubModeColor4Bk.java"
+      },
+      {
+        "name": "submode_color_v1_segments",
+        "op": "0x33/0x05 + 0x0B",
+        "payload": "0B R G B maskLo maskHi 00 00",
+        "layout": "15-bit segment enable mask (bits 0-7 byte4, 8-14 byte5)",
+        "response": "[0]=submode 0B",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6160/adjust/v1/SubModeColorV1.java"
+      },
+      {
+        "name": "submode_music_03",
+        "op": "0x33/0x05 + 0x03",
+        "payload": "03 auto sens [R G B]",
+        "layout": "auto 0=manual/colour (3B) 1=auto (6B); sens 0-99",
+        "response": "[0]=submode 03",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6159/ble/SubModeMusic.java"
+      },
+      {
+        "name": "submode_music_01",
+        "op": "0x33/0x05 + 0x01",
+        "payload": "01 effect sens [R G B]",
+        "layout": "effect h6101/h6104 0=energic 1=spectrum 2=rolling 3=rhythm; h7318 4=soft 5=power",
+        "response": "[0]=submode 01",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6104/ble/SubModeMusic.java"
+      },
+      {
+        "name": "submode_music_0e",
+        "op": "0x33/0x05 + 0x0E",
+        "payload": "0E effect sens auto [R G B]",
+        "layout": "V1 music; auto inverted (0 when auto); V2 new-code form 0E code sens",
+        "response": "[0]=submode 0E",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6159/ble/SubModeMusicV1.java"
+      },
+      {
+        "name": "submode_music_0f",
+        "op": "0x33/0x05 + 0x0F",
+        "payload": "0F effect sens param auto [R G B]",
+        "layout": "home-light music",
+        "response": "[0]=submode 0F",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/homelightv1/ble/SubModeMusic.java"
+      },
+      {
+        "name": "submode_music_13",
+        "op": "0x33/0x05 + 0x13",
+        "payload": "13 effect sens param auto [R G B]",
+        "layout": "new music (8 bytes)",
+        "response": "[0]=submode 13",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/carlightv1/ble/SubModeMusicV2.java"
+      },
+      {
+        "name": "submode_mic",
+        "op": "0x33/0x05 + 0x05",
+        "payload": "05 00 flag | 05 01 | 05",
+        "layout": "h6165 05 00 flag; h7310/17 05 01; stringlightv2 H6192 05",
+        "response": "-",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6165/ble/MicController.java"
+      },
+      {
+        "name": "submode_scenes_2b",
+        "op": "0x33/0x05 + 0x04",
+        "payload": "04 lo hi",
+        "layout": "16-bit little-endian effect id",
+        "response": "[0]=submode 04, [1..2]=effect",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6159/ble/SubModeScenes.java"
+      },
+      {
+        "name": "submode_scenes_1b",
+        "op": "0x33/0x05 + 0x04",
+        "payload": "04 effect",
+        "layout": "single-byte effect id (h6104,h6114,h6181,h6182,h7318,h7310/17,homelightv1)",
+        "response": "[0]=submode 04, [1]=effect",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6104/ble/SubModeScenes.java"
+      },
+      {
+        "name": "submode_scenes_h7308",
+        "op": "0x33/0x05 + 0xA1",
+        "payload": "A1 effect",
+        "layout": "H7308 group scene submode (-95); effects 20-27",
+        "response": "[0]=submode A1",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/rgblight/h7308/H7308BleProtocol.java"
+      },
+      {
+        "name": "submode_video_00",
+        "op": "0x33/0x05 + 0x00",
+        "payload": "00 videoType syncFlag | 00 00 syncFlag videoBrightness",
+        "layout": "h6101 videoType 0=part,1=all,2=dynamic; h6104 adds brightness byte",
+        "response": "[0]=submode 00",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6101/ble/SubModeVideo.java"
+      },
+      {
+        "name": "submode_diy",
+        "op": "0x33/0x05 + 0x0A",
+        "payload": "0A diyLo diyHi",
+        "layout": "16-bit LE DIY code",
+        "response": "[0]=submode 0A, [1..2]=code",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6159/ble/SubModeNewDiy.java"
+      }
+    ],
+    "notifications": [
+      {
+        "name": "wifi_connect",
+        "op": "0xEE/0x11",
+        "layout": "[0]==0 -> connected; 0x11 is notify type after proType 0xEE",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6159/ble/WifiNotifyParse.java"
+      }
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite V0 for h6104/h6159/h6160/h6182; V1 (state/op) for homelightv1/stringlightv2/H6085-89",
+    "envelopes": [
+      {
+        "variant": "V0",
+        "shape": "{\"msg\":{\"transaction\",\"accountTopic\",\"type\":1|0,\"origin\":32,\"cmdVersion\",\"cmd\",\"data\"}}",
+        "families": [
+          "h6104",
+          "h6159",
+          "h6160",
+          "h6182"
+        ]
+      },
+      {
+        "variant": "V1 (state/op)",
+        "shape": "incoming {\"state\":{...},\"op\":{\"command\":[...]|{\"modeValue\",\"sleepValue\",\"wakeupValue\",\"timerValue\"}}}",
+        "families": [
+          "homelightv1",
+          "stringlightv2",
+          "H6085/H6086/H6089"
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "cmd": "online",
+        "data": {},
+        "example": "{\"msg\":{\"transaction\":\"...\",\"accountTopic\":\"...\",\"type\":0,\"origin\":32,\"cmdVersion\":0,\"cmd\":\"online\",\"data\":{}}}",
+        "response": "device status/state",
+        "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6159/iot/IOnline.java"
+      },
+      {
+        "cmd": "turn",
+        "data": {
+          "val": "0|1"
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"turn\",\"data\":{\"val\":1}}}",
+        "response": "status",
+        "source": ".../h6159/iot/CmdTurn.java"
+      },
+      {
+        "cmd": "brightness",
+        "data": {
+          "val": "int (family absolute 0-254)"
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"brightness\",\"data\":{\"val\":120}}}",
+        "response": "status",
+        "source": ".../h6159/iot/CmdBrightness.java"
+      },
+      {
+        "cmd": "color",
+        "data": {
+          "red": "0-255",
+          "green": "0-255",
+          "blue": "0-255"
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"color\",\"data\":{\"red\":255,\"green\":0,\"blue\":0}}}",
+        "response": "status",
+        "source": ".../h6159/iot/CmdColor.java"
+      },
+      {
+        "cmd": "colorTem",
+        "data": {
+          "colorTemInKelvin": "int",
+          "color": {
+            "red": "int",
+            "green": "int",
+            "blue": "int"
+          }
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"colorTem\",\"data\":{\"colorTemInKelvin\":4000,\"color\":{\"red\":255,\"green\":200,\"blue\":140}}}}",
+        "response": "status",
+        "source": ".../h6159/iot/CmdColorTem.java"
+      },
+      {
+        "cmd": "colorwc",
+        "data": {
+          "color": {
+            "red": "int",
+            "green": "int",
+            "blue": "int"
+          },
+          "colorTemInKelvin": "int (0 when colour)"
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"colorwc\",\"data\":{\"color\":{\"red\":255,\"green\":0,\"blue\":0},\"colorTemInKelvin\":0}}}",
+        "response": "status",
+        "source": ".../h6159/iot/CmdColorWc.java"
+      },
+      {
+        "cmd": "status",
+        "data": {},
+        "example": "{\"msg\":{...,\"type\":0,\"cmd\":\"status\"}}",
+        "response": "see iot.status",
+        "source": ".../h6159/iot/CmdStatusV0.java"
+      },
+      {
+        "cmd": "timer",
+        "data": {
+          "enable": "0|1",
+          "timeOffset": "int",
+          "timeOffsetMinute": "int",
+          "isGroup": "0|1",
+          "group": "int",
+          "time": [
+            {
+              "enable": "int",
+              "openHour": "int",
+              "openMin": "int",
+              "closeHour": "int",
+              "closeMin": "int",
+              "repeat": "byte"
+            }
+          ]
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"timer\",\"cmdVersion\":1,\"data\":{\"enable\":1,\"time\":[{\"enable\":1,\"openHour\":8,\"openMin\":0,\"closeHour\":22,\"closeMin\":30,\"repeat\":127}]}}}",
+        "response": "timer",
+        "source": ".../h6159/iot/CmdTimerV1.java"
+      },
+      {
+        "cmd": "pt",
+        "data": {
+          "op": "mode|sleep|wakeup|timer",
+          "value": [
+            "base64(20-byte BLE frame)"
+          ]
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"pt\",\"data\":{\"op\":\"mode\",\"value\":[\"<b64 A5 packet>\",\"<b64 A3 packet>\",\"<b64 05/0A mode frame>\"]}}}",
+        "response": "op/modeValue",
+        "source": ".../h6159/iot/CmdPt.java"
+      },
+      {
+        "cmd": "ptReal",
+        "data": {
+          "command": [
+            "base64(20-byte BLE frame)"
+          ]
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"ptReal\",\"data\":{\"command\":[\"<b64 20B frame>\",...]}}}",
+        "response": "op.command",
+        "source": ".../h6159/iot/CmdPtReal.java"
+      },
+      {
+        "cmd": "calibrationPoints",
+        "data": {
+          "points": [
+            {
+              "pointX": "int",
+              "pointY": "int"
+            }
+          ]
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"calibrationPoints\",\"data\":{\"points\":[{\"pointX\":0,\"pointY\":0}]}}}",
+        "response": "-",
+        "source": ".../h6104/iot/CmdCalibrationPoints.java"
+      },
+      {
+        "cmd": "calibrationSnapshot",
+        "data": {
+          "snapshotUrl": "string"
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"calibrationSnapshot\",\"data\":{\"snapshotUrl\":\"https://...\"}}}",
+        "response": "-",
+        "source": ".../h6104/iot/CmdCalibrationSnapshot.java"
+      },
+      {
+        "cmd": "IP",
+        "data": {
+          "ip": "string",
+          "port": "int"
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"IP\",\"data\":{\"ip\":\"192.168.1.50\",\"port\":4001}}}",
+        "response": "-",
+        "source": ".../h6104/iot/CmdIP.java"
+      },
+      {
+        "cmd": "direction",
+        "data": {
+          "change": "int"
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"direction\",\"data\":{\"change\":10}}}",
+        "response": "-",
+        "source": ".../h6104/iot/CmdDirection.java"
+      },
+      {
+        "cmd": "IoTConnected",
+        "data": {},
+        "example": "{\"msg\":{...,\"cmd\":\"IoTConnected\"}}",
+        "response": "-",
+        "source": ".../h6104/iot/Cmd.java"
+      },
+      {
+        "cmd": "mode (H6085/86/89 DIY)",
+        "data": {
+          "mode": "10",
+          "code": "int",
+          "color": [
+            {
+              "red": "int",
+              "green": "int",
+              "blue": "int"
+            }
+          ],
+          "effect": "int",
+          "subEff": "int",
+          "speed": "int",
+          "effArr": [
+            {
+              "effect": "int",
+              "subEff": "int"
+            }
+          ]
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"mode\",\"data\":{\"mode\":10,\"code\":12,\"color\":[{\"red\":255,\"green\":0,\"blue\":0}],\"effect\":0,\"subEff\":1,\"speed\":50,\"effArr\":[]}}}",
+        "response": "status",
+        "source": ".../rgblight/h60858689/iot/CmdDiy.java"
+      },
+      {
+        "cmd": "mode (H6085/86/89 scene)",
+        "data": {
+          "mode": "4",
+          "code": "int"
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"mode\",\"data\":{\"mode\":4,\"code\":13}}}",
+        "response": "status",
+        "source": ".../rgblight/h60858689/iot/CmdScenes.java"
+      },
+      {
+        "cmd": "colorTem (H6085/86/89)",
+        "data": {
+          "colorTemInKelvin": "int",
+          "color": {
+            "red": "int",
+            "green": "int",
+            "blue": "int"
+          }
+        },
+        "example": "{\"msg\":{...,\"cmd\":\"colorTem\",\"data\":{\"colorTemInKelvin\":4000,\"color\":{\"red\":255,\"green\":200,\"blue\":140}}}}",
+        "response": "status",
+        "source": ".../rgblight/h60858689/iot/CmdColorTem.java"
+      }
+    ],
+    "status": {
+      "fields": {
+        "turn": "0|1",
+        "brightness": "int (family absolute range)",
+        "mode": "2 colour/colourTem | 4 scene | 10 DIY | 0 video",
+        "color": {
+          "red": "0-255",
+          "green": "0-255",
+          "blue": "0-255"
+        },
+        "colorTemInKelvin": "int (2000-9000 typical)",
+        "softversion": "string",
+        "wifiSoftVersion": "string",
+        "modeValue": [
+          "base64 20-byte BLE frame (frame[1]==0x05)"
+        ],
+        "timer": {
+          "enable": "0|1",
+          "time": [
+            {
+              "openHour": "int",
+              "openMin": "int",
+              "closeHour": "int",
+              "closeMin": "int"
+            }
+          ]
+        },
+        "state (V1)": {
+          "onOff": "0|1",
+          "brightness": "0-100",
+          "mode": "int",
+          "color": {
+            "red": "int",
+            "green": "int",
+            "blue": "int"
+          },
+          "colorTemInKelvin": "int"
+        },
+        "op (V1)": {
+          "opcode": "mode|sleep|wakeup|timer",
+          "modeValue": [
+            "b64"
+          ],
+          "sleepValue": [
+            "b64"
+          ],
+          "wakeupValue": [
+            "b64"
+          ],
+          "timerValue": [
+            "b64"
+          ],
+          "command": [
+            "b64 20B frame"
+          ]
+        }
+      },
+      "source": "jadx-splits/split_pact_rgblight/sources/com/govee/h6159/iot/CmdStatusV0.java; .../homelightv1/iot/CmdStatusV0.java; .../stringlightv2/iot/CmdStatusV1.java"
+    }
+  },
+  "other_protocols": [
+    {
+      "name": "softAP provisioning (H6085/H6086/H6089)",
+      "details": "SSID prefix Govee_bulb_<SKU>, device 192.168.1.1 port 7200, JSON BaseRequest/BaseResponse: type 1 read device info, type 2 send WifiApInfo; then CheckDeviceWifiRequest/DeviceBindRequest/DeviceTopicRequest bootstrap. No BLE.",
+      "source": "jadx-splits/split_pact_rgblight/sources/com/govee/rgblight/h60858689/add/ApComm.java; .../H60858689Config.java"
+    },
+    {
+      "name": "MQTT/cloud (IoT)",
+      "details": "After provisioning, device bound to account topic; DeviceSetting{mac,topic} used for IoT publish/subscribe; online cmd 'online'.",
+      "source": ".../rgblight/h60858689/pact/DeviceSetting.java; .../iot/OpDiyCommDialog4Iot.java"
+    },
+    {
+      "name": "BLE advertisement matching",
+      "details": "BleBroadcastProcessorV1 (rgblight, carlightv1, homelightv1) matches advertisements to SKU for connect dialog; no telemetry parsing in this split.",
+      "source": ".../rgblight/add/BleBroadcastProcessorV1.java"
+    },
+    {
+      "name": "group / multi-device",
+      "details": "BleCommGroup/BleMultiCommGroup + GroupOp; group code g()=3; secret key via SecretKeyController; response match frame[0]==0xAA && frame[1]==0x01 -> frame[2]!=0.",
+      "source": ".../stringlightv2/ble/GroupOp.java; .../carlightv1/ble/GroupOp.java"
+    }
+  ],
+  "dynamic_effects": [
+    {
+      "name": "colour (8-byte)",
+      "submode": "0x02",
+      "payload": "02 R G B flag R2 G2 B2",
+      "attributes": [
+        "rgb",
+        "tempFlag",
+        "background rgb"
+      ],
+      "source": ".../h6159/ble/SubModeColor.java"
+    },
+    {
+      "name": "colour + kelvin (9-byte)",
+      "submode": "0x0D",
+      "payload": "0D R G B kHi kLo R2 G2 B2",
+      "attributes": [
+        "rgb",
+        "kelvin (big-endian)",
+        "background rgb"
+      ],
+      "source": ".../h6159/ble/SubModeColor4Bk.java"
+    },
+    {
+      "name": "colour segments (15)",
+      "submode": "0x0B",
+      "payload": "0B R G B maskLo maskHi 00 00",
+      "attributes": [
+        "rgb",
+        "15-bit segment mask"
+      ],
+      "source": ".../h6160/adjust/v1/SubModeColorV1.java"
+    },
+    {
+      "name": "music (legacy)",
+      "submode": "0x03",
+      "payload": "03 auto sens [R G B]",
+      "attributes": [
+        "auto flag",
+        "sensitivity 0-99",
+        "rgb (manual)"
+      ],
+      "source": ".../h6159/ble/SubModeMusic.java"
+    },
+    {
+      "name": "music (effect id)",
+      "submode": "0x01",
+      "payload": "01 effect sens [R G B]",
+      "attributes": [
+        "effect 0-3 / 4-5",
+        "sensitivity 0-99",
+        "rgb"
+      ],
+      "source": ".../h6104/ble/SubModeMusic.java"
+    },
+    {
+      "name": "music V1",
+      "submode": "0x0E",
+      "payload": "0E effect sens auto [R G B]",
+      "attributes": [
+        "effect",
+        "sensitivity",
+        "auto",
+        "rgb"
+      ],
+      "source": ".../h6159/ble/SubModeMusicV1.java"
+    },
+    {
+      "name": "music V2 (new codes)",
+      "submode": "0x0E",
+      "payload": "0E musicCode sens | 0E auto sens manualFlag R G B",
+      "attributes": [
+        "musicCode (runtime new-code list)",
+        "sensitivity",
+        "auto",
+        "rgb"
+      ],
+      "source": ".../h6159/ble/SubModeMusicV2.java"
+    },
+    {
+      "name": "music (home light)",
+      "submode": "0x0F",
+      "payload": "0F effect sens param auto [R G B]",
+      "attributes": [
+        "effect",
+        "sensitivity",
+        "param",
+        "auto",
+        "rgb"
+      ],
+      "source": ".../homelightv1/ble/SubModeMusic.java"
+    },
+    {
+      "name": "music (new, 0x13)",
+      "submode": "0x13",
+      "payload": "13 effect sens param auto [R G B]",
+      "attributes": [
+        "effect",
+        "sensitivity",
+        "param",
+        "auto",
+        "rgb"
+      ],
+      "source": ".../carlightv1/ble/SubModeMusicV2.java"
+    },
+    {
+      "name": "mic on/off",
+      "submode": "0x05",
+      "payload": "05 00 flag | 05 01 | 05",
+      "attributes": [
+        "on/off",
+        "family-specific length"
+      ],
+      "source": ".../h6165/ble/MicController.java"
+    },
+    {
+      "name": "scene (2-byte id)",
+      "submode": "0x04",
+      "payload": "04 lo hi",
+      "attributes": [
+        "16-bit LE effect id"
+      ],
+      "source": ".../h6159/ble/SubModeScenes.java"
+    },
+    {
+      "name": "scene (1-byte id)",
+      "submode": "0x04",
+      "payload": "04 effect",
+      "attributes": [
+        "8-bit effect id"
+      ],
+      "source": ".../h6104/ble/SubModeScenes.java"
+    },
+    {
+      "name": "scene (H7308)",
+      "submode": "0xA1",
+      "payload": "A1 effect",
+      "attributes": [
+        "effect 20-27: combination,in-waves,sequential,slow-glow,chasing,slow-fade,twinkle,steady-on"
+      ],
+      "source": ".../rgblight/h7308/H7308BleProtocol.java"
+    },
+    {
+      "name": "video sync",
+      "submode": "0x00",
+      "payload": "00 videoType syncFlag | 00 00 syncFlag videoBrightness",
+      "attributes": [
+        "part/all/dynamic",
+        "soft/hard sync",
+        "video brightness (h6104)"
+      ],
+      "source": ".../h6101/ble/SubModeVideo.java"
+    },
+    {
+      "name": "DIY activate",
+      "submode": "0x0A",
+      "payload": "0A diyLo diyHi",
+      "attributes": [
+        "16-bit LE DIY code"
+      ],
+      "source": ".../h6159/ble/SubModeNewDiy.java"
+    },
+    {
+      "name": "multi-DIY body",
+      "submode": "0xA5/0x02",
+      "payload": "[diyCode][effect][subEffect][speed][3N][RGB triples][2M][(effect,subEffect) pairs]",
+      "attributes": [
+        "N colour points",
+        "M effect steps",
+        "speed"
+      ],
+      "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/AbsMultipleController4Diy.java"
+    },
+    {
+      "name": "multi-layer scene blob",
+      "submode": "0xA3/0x01|0x02|0x07|0x04|0x0A",
+      "payload": "<raw effect blob from ScenesRgb/ScenesRgbIC/ScenesGraffiti/ScenesCube/ScenesCompose>",
+      "attributes": [
+        "effectCode",
+        "direction",
+        "x",
+        "y",
+        "speed",
+        "musicCode (default 255)",
+        "musicSwitch",
+        "focusParams(4B for cube)"
+      ],
+      "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/ScenesOp.java"
+    },
+    {
+      "name": "gradient / gradual",
+      "submode": "0xA3/0x01 (h6160)",
+      "payload": "{0|1}",
+      "attributes": [
+        "gradual transition enable"
+      ],
+      "source": ".../h6160/ble/v1/Gradual4BleWifiController.java"
+    },
+    {
+      "name": "carousel / combination (constants only)",
+      "submode": "0x5F/0x60/0x61/0x62",
+      "payload": "not emitted by this split",
+      "attributes": [
+        "multi carousel",
+        "multi combination"
+      ],
+      "source": "jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/BleProtocolConstants.java"
+    }
+  ],
+  "notes": "Effect blobs for 0xA3 multi-scene are runtime base64 payloads from the effect library (ScenesRgb/ScenesRgbIC/ScenesGraffiti/ScenesCube/ScenesCompose/ScenesH610B) and cannot be statically enumerated. H7004/H7017 only expose the 0x0D red/blue ratio in this split. stringlightv2 transport depends on runtime goodsType (1/40/108 = ble+iot, 2/39/68/78/143 = ble). H6138/H6139 are classified ble+iot via the shared h6159 IoT builders/Ble.u() ptReal, although their own EffectOp4Ble is BLE-only. New-music code list (AbsNewMusicEffect.newMusicCode4RgbList) is runtime data. Only notify type 0x11 (WiFi connect) is handled by BleNotifyComm in this split. ptUrl/multiSync/OTA transfer are not implemented here (only 0xEE OTA-prepare)."
+}

@@ -1,0 +1,58 @@
+{
+  "split": "split_pact_h7180",
+  "families": ["H7180"],
+  "skus": [
+    {"sku": "H7180", "family": "smart rice cooker / multi-mode cooker", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 152, modes rice/saute/steam/slowcook/diy, keep temp/weigh/recipe making"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; normally write 0x33/read 0xAA, but ModeController writes 0x3A and reads 0xAA",
+    "commands": [
+      {"name": "mode_submit", "op": "0x3A/0x05 write, 0xAA/0x05 read", "payload": "[0]=modeByte; DIY adds [1]=diyIndex", "layout": "mode 0 none,1 rice,2 saute,3 steam,4 slowcook,5 diy", "response": "[0]=modeByte + bean bytes", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/ModeController.java"},
+      {"name": "keep_temp", "op": "0x33|0xAA/0x22", "payload": "[0]=type(1 inner/2 outside) [1]=start [2..3]=temp*100 LE16 [4..5]=keepWarmSumTime LE16 (type 1 inserts mode at [1])", "layout": "keep warm config", "response": "KeepTempBean", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/KeepTempController.java"},
+      {"name": "weigh", "op": "0x33|0xAA/0x23", "payload": "[0]=start [1]=unit", "layout": "[0] start, [1] unit", "response": "[0]=start [1..2]=weight LE16 (bit15 sign) [3]=unit", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/WeighController.java"},
+      {"name": "recipe_making", "op": "0x33|0xAA/0x24", "payload": "[0]=start [1]=type (only [0] when start=1)", "layout": "menu recipe start/stop", "response": "[0]=start [1]=flagFinish [2]=deviceState [3..4]=menuCode LE16 [5]=index [6]=mode [7]=gear [8..9]=workMinute [10..11]=leaveMinute", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/RecipeMakingController.java"},
+      {"name": "recipe_multi", "op": "0xA3/0x24", "payload": "MenuListMenuResponse.Data bytes", "layout": "multi V1", "response": "event", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/RecipeMakingModeMultipleControl.java"},
+      {"name": "collect_water_remind", "op": "0xAA/0x25", "payload": "none", "layout": "read only", "response": "[0]==1 -> remind event", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/CollectWaterController.java"},
+      {"name": "not_disturb", "op": "0x33|0xAA/0x16", "payload": "[0]=enable(1)/disable(0) [1]=startHour [2]=startMin [3]=endHour [4]=endMin [5]=0 scheduled/1 forever", "layout": "DND schedule", "response": "[0]=enable [1..4]=times [5]=forever flag", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/H7180NotDisturbController.java"},
+      {"name": "abnormal_info", "op": "0xAA/0x17", "payload": "{1}", "layout": "clear72h + abnormal", "response": "[0]=clear72h [1]=abnormalStatus", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/AbnormalInfoController.java"},
+      {"name": "diy_multi", "op": "0xA3/0x05", "payload": "CookingDiyModelBean bytes", "layout": "multi V1: start, stepState, reservation LE16, up to 3 programs {code, workMinute, leaveMinute}, deviceState", "response": "event", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/DiyModeMultipleControl.java"},
+      {"name": "equipment_status", "op": "0xAA/0x19", "payload": "none", "layout": "read only", "response": "[0]=Mode [1]=DeviceState", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/adjust/v1/BleOpV1.java"},
+      {"name": "delay_off", "op": "0x33/0x??", "payload": "base DelayOffController(0,0,3)", "layout": "delay off", "response": "-", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/adjust/v1/BleOpV1.java"}
+    ],
+    "notifications": [
+      {"name": "mode", "op": "0xEE/0x05", "layout": "mode payload (0x3A write-ack ignored)", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/iot/CmdStatusParseV1.java"},
+      {"name": "not_disturb", "op": "0xEE/0x16", "layout": "enable + start/end + forever flag", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/iot/CmdStatusParseV1.java"},
+      {"name": "work_status", "op": "0xEE/0x17", "layout": "work status/abnormal byte", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/iot/CmdStatusParseV1.java"},
+      {"name": "keep_temp", "op": "0xEE/0x22", "layout": "KeepTempBean", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/iot/CmdStatusParseV1.java"},
+      {"name": "weigh", "op": "0xEE/0x23", "layout": "WeighBean", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/WeighNotifyParse.java"},
+      {"name": "recipe_making", "op": "0xEE/0x24", "layout": "RecipeMakingBean", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/RecipeMakingNotifyParse.java"},
+      {"name": "collect_water_remind", "op": "0xEE/0x25", "layout": "[0]==1", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/iot/CmdStatusParseV1.java"},
+      {"name": "mode_state", "op": "0xEE/0x19", "layout": "[0]=Mode [1]=DeviceState", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/iot/CmdStatusParseV1.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "AbsIotOpV1 (base_h71xx): status read (CmdStatus), ptReal writes; IotMsgProType V2",
+    "commands": [
+      {"cmd": "status", "data": {}, "response": "state.onOff + op bytes", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/adjust/v1/IotOpV1.java"},
+      {"cmd": "ptReal", "data": {"command": ["base64(20-byte frame)"]}, "response": "status", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/adjust/v1/IotOpV1.java"},
+      {"cmd": "online", "data": {"val": "0|1"}, "response": "online", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/pact/Model.java"}
+    ],
+    "status": {"fields": {"onOff": "int 0/1 from state", "mode": "0 none,1 rice,2 saute,3 steam,4 slowcook,5 diy", "deviceState": "enum", "keepTemp": "type,start,temp*100,sumTime", "weigh": "start,weight,unit", "recipe": "start,flagFinish,menuCode,index,mode,gear,workMinute,leaveMinute", "notDisturb": "enable,start/end,forever", "collectWaterRemind": "bool"}, "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/iot/CmdStatusParseV1.java"}
+  },
+  "other_protocols": [
+    {"name": "wifi", "details": "cloud MQTT IoT via base framework; status + ptReal", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/adjust/v1/IotOpV1.java"},
+    {"name": "recipe_service", "details": "MenuListMenuResponse / net package supplies recipe menus for multi-frame recipe making", "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/net/"}
+  ],
+  "dynamic_effects": [
+    {"name": "rice", "submode": "0x05", "payload": "01 flavor resLE16 keepWarm temp*100LE16 sumTimeLE16 start", "attributes": ["flavor", "reservation minutes", "keep warm", "temperature*100", "start"], "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/model/RiceModelBean.java"},
+    {"name": "saute", "submode": "0x05", "payload": "02 gear start", "attributes": ["gear", "start"], "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/model/SatuteModelBean.java"},
+    {"name": "steam", "submode": "0x05", "payload": "03 workTimeLE16 resLE16 keepWarm temp*100LE16 sumTimeLE16 start", "attributes": ["work time", "reservation", "keep warm", "start"], "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/model/SteamModelBean.java"},
+    {"name": "slow_cook", "submode": "0x05", "payload": "04 gear workTimeLE16 resLE16 keepWarm temp*100LE16 sumTimeLE16 slowCookType start", "attributes": ["gear", "work time", "reservation", "keep warm", "type"], "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/model/SlowCookModelBean.java"},
+    {"name": "diy", "submode": "0x05", "payload": "05 diyIndex + multi: start, stepState, resLE16, up to 3 {code, workMinuteLE16, leaveMinuteLE16}, deviceState", "attributes": ["3 cooking programs", "reservation", "device state"], "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/DiyModeMultipleControl.java"},
+    {"name": "keep_temp", "submode": "0x22", "payload": "type start temp*100LE16 sumTimeLE16 [mode]", "attributes": ["inner/outside", "target temp", "duration"], "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/adjust/component/widget/KeepTempBean.java"},
+    {"name": "recipe_making", "submode": "0x24", "payload": "start [type] / menu multi bytes", "attributes": ["menu code", "gear", "work/leave minutes"], "source": "jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/controller/RecipeMakingModeMultipleControl.java"}
+  ],
+  "notes": "Gaps: not-disturb forever byte is asymmetric between writer and parser (likely inverted); DeviceState/WorkStatus/WeigtUnit values partly in base; recipe menu byte layout not fully decoded; ModeController uses non-standard write proType 0x3A."
+}

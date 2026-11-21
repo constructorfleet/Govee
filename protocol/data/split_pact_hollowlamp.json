@@ -1,0 +1,1047 @@
+{
+  "split": "split_pact_hollowlamp",
+  "families": [
+    "hollowlamp",
+    "H6057",
+    "straightfloorlamp",
+    "tablelampv1"
+  ],
+  "skus": [
+    {
+      "sku": "H6050",
+      "family": "hollow/candle lamp",
+      "goods_type": 27,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Kelvin 1800-3000; group factor V1; scene groups {0,1}."
+    },
+    {
+      "sku": "H6051",
+      "family": "hollow lamp",
+      "goods_type": 37,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Kelvin 2200-6500; group factor V2; scene groups {0,1}."
+    },
+    {
+      "sku": "H6055",
+      "family": "portable hollow lamp (battery)",
+      "goods_type": 42,
+      "transports": [
+        "ble"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "BLE-only: Support.d()={42} and SubLib (BLE-only) lists only this goods type; SubLib4BleIot lists 27,37,59,58,84,395. Battery via heartbeat byte 4; group factor V3."
+    },
+    {
+      "sku": "H6058",
+      "family": "hollow lamp (energy saving)",
+      "goods_type": 59,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Energy saving cmd 0x16 when soft >= 1.01.05; group factor V3; kelvin 2200-6500."
+    },
+    {
+      "sku": "H6059",
+      "family": "hollow lamp (auto induction)",
+      "goods_type": 84,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "PIR auto on/off 0xA6 + sensitivity 0xA7 (soft >= 1.00.12); music V3 effects 75/76; kelvin 2200-6500."
+    },
+    {
+      "sku": "H6073",
+      "family": "hollow lamp",
+      "goods_type": 58,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Kelvin 2200-6500; scene groups {0,1}."
+    },
+    {
+      "sku": "H1771",
+      "family": "hollow lamp (4-color / new scenes)",
+      "goods_type": 395,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Kelvin 1000-10000; new scenes groups {0,1,2,3,6,5,4}; BLE effect op but WiFi SKU."
+    },
+    {
+      "sku": "H6057",
+      "family": "lamp with speaker/voice/battery",
+      "goods_type": 104,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Kelvin 1000-10000; game mode, preset slots 0x24-0x29, voice/volume/night, battery, detail info 0x34."
+    },
+    {
+      "sku": "H6072",
+      "family": "straight floor lamp",
+      "goods_type": 30,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "8 segments; scene default 2099 (new versions); remote pair 0xA4/0xA6; gradual 0xA3."
+    },
+    {
+      "sku": "H8072",
+      "family": "straight floor lamp",
+      "goods_type": 30,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "Same goods type/protocol as H6072; scene default 2099."
+    },
+    {
+      "sku": "H6076",
+      "family": "straight floor lamp",
+      "goods_type": 69,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "7 segments; scene default 2143."
+    },
+    {
+      "sku": "H60B2",
+      "family": "straight floor lamp",
+      "goods_type": 312,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "3 segments; part-brightness color (0x15)."
+    },
+    {
+      "sku": "H3270",
+      "family": "straight floor lamp (AI effects)",
+      "goods_type": 409,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "8 segments; scene groups {0,1,2,3,5}; AI effect categories 29/30."
+    },
+    {
+      "sku": "H16C0",
+      "family": "straight floor lamp",
+      "goods_type": 377,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "7 segments; 16C0-specific pact checks."
+    },
+    {
+      "sku": "H6052",
+      "family": "table lamp",
+      "goods_type": 22,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "2 color pieces; scenes {0,1,4,5}; color 0x0D; music 0x0F."
+    },
+    {
+      "sku": "H6078",
+      "family": "table/floor lamp RGBICWW",
+      "goods_type": 128,
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "1 color piece; scenes {0,1,5,9}; music 0x13 codes 105/72/85/50/84/98; indicator 0x16; AI graffiti effect."
+    }
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC of bytes 0..18",
+    "commands": [
+      {
+        "name": "power",
+        "op": "0x33/0x01",
+        "payload": "01 <0/1>",
+        "layout": "[0] state",
+        "response": "0xAA/0x01 -> [0]",
+        "family": "all",
+        "source": "base2light/ble/controller/SwitchController.java"
+      },
+      {
+        "name": "brightness",
+        "op": "0x33/0x04",
+        "payload": "04 <1..100>",
+        "layout": "[0] brightness",
+        "response": "0xAA/0x04 -> [0]",
+        "family": "all",
+        "source": "base2light/ble/controller/BrightnessController.java"
+      },
+      {
+        "name": "heartbeat",
+        "op": "0xAA/0x01",
+        "payload": "01",
+        "layout": "no payload; H6055 battery is in response byte [4]",
+        "response": "[0] alive",
+        "family": "all",
+        "source": "base2light/ble/controller/HeartController.java"
+      },
+      {
+        "name": "read_mode",
+        "op": "0xAA/0x05",
+        "payload": "05 01",
+        "layout": "AbsModeController.p() = {0x01}",
+        "response": "mode + sub-mode",
+        "family": "all",
+        "source": "base2light/ble/controller/AbsModeController.java"
+      },
+      {
+        "name": "read_color_group",
+        "op": "0xAA/0xA5",
+        "payload": "A5 <group>",
+        "layout": "response [0]=group, then 4 x (brightness,R,G,B)",
+        "response": "0xAA/0xA5",
+        "family": "all",
+        "source": "base2light/kt/general_controller/Controller4ColorInfoByGroup.java"
+      },
+      {
+        "name": "read_bulb_color",
+        "op": "0xAA/0xA2",
+        "payload": "A2",
+        "layout": "colour-only read",
+        "response": "0xAA/0xA2",
+        "family": "straightfloorlamp",
+        "source": "base2light/kt/general_controller/Controller4ColorInfoByGroup.generateReadController4OnlyColor"
+      },
+      {
+        "name": "color",
+        "op": "0x33/0x05",
+        "payload": "05 0D R G B CT_H CT_L R2 G2 B2",
+        "layout": "sub-mode 0x0D, CT big-endian, R2G2B2 temperature RGB",
+        "response": "0xAA/0x05 sub-mode 0x0D",
+        "family": "hollowlamp",
+        "source": "jadx-splits/split_pact_hollowlamp/sources/com/govee/hollowlamp/ble/SubModeColor.java"
+      },
+      {
+        "name": "scene",
+        "op": "0x33/0x05",
+        "payload": "05 04 <effLo> <effHi>",
+        "layout": "16-bit LE effect, default 0x22 (34)",
+        "response": "0xAA/0x05 sub-mode 0x04",
+        "family": "hollowlamp",
+        "source": "hollowlamp/ble/SubModeScenes.java"
+      },
+      {
+        "name": "diy",
+        "op": "0x33/0x05",
+        "payload": "05 0A <diyLo> <diyHi>",
+        "layout": "16-bit LE DIY code",
+        "response": "0xAA/0x05 sub-mode 0x0A",
+        "family": "hollowlamp",
+        "source": "hollowlamp/ble/SubModeNewDiy.java"
+      },
+      {
+        "name": "music_v1",
+        "op": "0x33/0x05",
+        "payload": "05 0E <effect> <sens> <flag> [R G B]",
+        "layout": "flag 0=auto (4 bytes), 1=manual color (7 bytes); sens 0-99",
+        "response": "0xAA/0x05 sub-mode 0x0E",
+        "family": "hollowlamp",
+        "source": "hollowlamp/ble/SubModeMusic.java"
+      },
+      {
+        "name": "music_v2",
+        "op": "0x33/0x05",
+        "payload": "05 0F 04 <sens> <effect> <flag> [R G B]",
+        "layout": "8 bytes; effect mode id; flag 0 auto / 1 manual",
+        "response": "0xAA/0x05 sub-mode 0x0F",
+        "family": "hollowlamp",
+        "source": "hollowlamp/ble/SubModeMusicV2.java"
+      },
+      {
+        "name": "music_v3",
+        "op": "0x33/0x05",
+        "payload": "05 13 <effect> <manual> <sens> 00",
+        "layout": "effect 75=Rhythm, 76=Magic; manual 0/1; sens 0-99",
+        "response": "0xAA/0x05 sub-mode 0x13",
+        "family": "hollowlamp",
+        "source": "hollowlamp/ble/SubModeMusicV3.java"
+      },
+      {
+        "name": "multi_music_color",
+        "op": "0xA3/0x41",
+        "payload": "41 <musicEffect> <count> <R G B>x count",
+        "layout": "multi-packet V1; realtime per-segment music colors",
+        "response": "write result",
+        "family": "hollowlamp",
+        "source": "hollowlamp/ble/MultiMusicController.java"
+      },
+      {
+        "name": "local_color_read",
+        "op": "0xAA/0xA5",
+        "payload": "A5 <page>",
+        "layout": "24-slot table, 4 colors per response; response [0]=page [1]=total [2..]=12 RGB bytes",
+        "response": "0xAA/0xA5",
+        "family": "hollowlamp",
+        "source": "hollowlamp/ble/LocalColorReadControllerV1.java"
+      },
+      {
+        "name": "local_color_write",
+        "op": "0xA3/0xA5",
+        "payload": "A5 <count> <R G B CT_H CT_L> x count",
+        "layout": "24 local colors, 5 bytes each",
+        "response": "write result",
+        "family": "hollowlamp",
+        "source": "hollowlamp/ble/LocalColorSettingMultiControllerV1.java"
+      },
+      {
+        "name": "auto_induction",
+        "op": "0x33/0xA6",
+        "payload": "A6 <0/1>",
+        "layout": "PIR auto on/off (H6059)",
+        "response": "0xAA/0xA6",
+        "family": "hollowlamp",
+        "source": "hollowlamp/ble/OnOffAutoInductionController.java"
+      },
+      {
+        "name": "sensitivity",
+        "op": "0x33/0xA7",
+        "payload": "A7 <value>",
+        "layout": "PIR sensitivity (H6059, soft >= 1.00.12)",
+        "response": "0xAA/0xA7",
+        "family": "hollowlamp",
+        "source": "hollowlamp/ble/SensitiveController.java"
+      },
+      {
+        "name": "mic_realtime_rgb",
+        "op": "0x33/0x83",
+        "payload": "83 R G B",
+        "layout": "realtime mic/segment color",
+        "response": "write result",
+        "family": "hollowlamp group",
+        "source": "base2light/ble/mic/controller/MicSetRgbController.java"
+      },
+      {
+        "name": "color",
+        "op": "0x33/0x05",
+        "payload": "05 0D R G B CT_H CT_L R2 G2 B2",
+        "layout": "same 0x0D color layout",
+        "response": "0xAA/0x05",
+        "family": "H6057",
+        "source": "h6057/origin/ble/SubModeColor.java"
+      },
+      {
+        "name": "scene_with_music",
+        "op": "0x33/0x05",
+        "payload": "05 04 <effLo> <effHi> <musicCode>",
+        "layout": "16-bit LE effect + music code byte; default effect 2800",
+        "response": "0xAA/0x05",
+        "family": "H6057",
+        "source": "h6057/origin/ble/SubModeScenes.java"
+      },
+      {
+        "name": "game",
+        "op": "0x33/0x05",
+        "payload": "05 0B <gameCode>",
+        "layout": "game id",
+        "response": "0xAA/0x05",
+        "family": "H6057",
+        "source": "h6057/origin/ble/SubModeGame.java"
+      },
+      {
+        "name": "music",
+        "op": "0x33/0x05",
+        "payload": "05 13 <musicCode> <sens>",
+        "layout": "sensitivity 0-99; default code 57",
+        "response": "0xAA/0x05",
+        "family": "H6057",
+        "source": "h6057/origin/ble/SubModeMusic.java"
+      },
+      {
+        "name": "diy",
+        "op": "0x33/0x05",
+        "payload": "05 0A <diyLo> <diyHi>",
+        "layout": "16-bit LE DIY code",
+        "response": "0xAA/0x05",
+        "family": "H6057",
+        "source": "h6057/origin/ble/SubModeNewDiy.java"
+      },
+      {
+        "name": "light_switch",
+        "op": "0x33/0x30",
+        "payload": "30 <0/1>",
+        "layout": "main light",
+        "response": "0xAA/0x30",
+        "family": "H6057",
+        "source": "h6057/origin/ble/BleProtocol.java"
+      },
+      {
+        "name": "energy_saving",
+        "op": "0x33/0x16",
+        "payload": "16 <0/1>",
+        "layout": "low energy mode",
+        "response": "0xAA/0x16",
+        "family": "H6057",
+        "source": "h6057/origin/ble/EnergySavingController.java"
+      },
+      {
+        "name": "play_voice",
+        "op": "0x33/0x31",
+        "payload": "31 <index>",
+        "layout": "voice prompt index",
+        "response": "write result",
+        "family": "H6057",
+        "source": "h6057/origin/ble/Controller4PlayVoice.java"
+      },
+      {
+        "name": "pause_voice",
+        "op": "0x33/0x32",
+        "payload": "32 <index>",
+        "layout": "pause voice",
+        "response": "write result",
+        "family": "H6057",
+        "source": "h6057/origin/ble/Controller4PauseVoice.java"
+      },
+      {
+        "name": "preview_effect",
+        "op": "0x33/0x27",
+        "payload": "27 <f> <h> <g> <i> <j> <kHi> <kMid> <kLo>",
+        "layout": "8 bytes; last 3 bytes are a 24-bit color code",
+        "response": "write result",
+        "family": "H6057",
+        "source": "h6057/origin/ble/Controller4PreviewEffect.java"
+      },
+      {
+        "name": "preset_info",
+        "op": "0xAA/0x24",
+        "payload": "24",
+        "layout": "pre-set info",
+        "response": "0xAA/0x24",
+        "family": "H6057",
+        "source": "h6057/origin/ble/PreSetInfoController.java"
+      },
+      {
+        "name": "preset_color",
+        "op": "0x33/0x25",
+        "payload": "25 <index>",
+        "layout": "read/write preset color slot",
+        "response": "0xAA/0x25",
+        "family": "H6057",
+        "source": "h6057/origin/ble/PreSetColorController.java"
+      },
+      {
+        "name": "preset_scene",
+        "op": "0x33/0x26",
+        "payload": "26 <index>",
+        "layout": "read/write preset scene slot",
+        "response": "0xAA/0x26",
+        "family": "H6057",
+        "source": "h6057/origin/ble/PreSetSceneController.java"
+      },
+      {
+        "name": "delete_preset_scene",
+        "op": "0x33/0x28",
+        "payload": "28 <bytes>",
+        "layout": "delete preset",
+        "response": "0xAA/0x28",
+        "family": "H6057",
+        "source": "h6057/origin/ble/DeletePreSetSceneController.java"
+      },
+      {
+        "name": "sort_preset_scene",
+        "op": "0x33/0x29",
+        "payload": "29 <bytes>",
+        "layout": "reorder presets",
+        "response": "0xAA/0x29",
+        "family": "H6057",
+        "source": "h6057/origin/ble/SortPreSetSceneController.java"
+      },
+      {
+        "name": "multi_preset_color",
+        "op": "0x33/0x0B",
+        "payload": "0B <bytes>",
+        "layout": "multi-slot preset color",
+        "response": "write result",
+        "family": "H6057",
+        "source": "h6057/origin/ble/MultiPreSetColorController.java"
+      },
+      {
+        "name": "volume",
+        "op": "0x33/0x33",
+        "payload": "33 <0..N>",
+        "layout": "speaker volume",
+        "response": "0xAA/0x33",
+        "family": "H6057",
+        "source": "h6057/origin/ble/BleProtocol.java"
+      },
+      {
+        "name": "detail_info",
+        "op": "0xAA/0x34",
+        "payload": "34",
+        "layout": "detail data (battery/volume/music)",
+        "response": "0xAA/0x34",
+        "family": "H6057",
+        "source": "h6057/origin/ble/GetDetailInfoController.java"
+      },
+      {
+        "name": "no_disturb",
+        "op": "0x33/0x35",
+        "payload": "35 <0/1>",
+        "layout": "do-not-disturb",
+        "response": "0xAA/0x35",
+        "family": "H6057",
+        "source": "h6057/origin/ble/BleProtocol.java"
+      },
+      {
+        "name": "night_mode",
+        "op": "0x33/0x36",
+        "payload": "36 <0/1>",
+        "layout": "night mode",
+        "response": "0xAA/0x36",
+        "family": "H6057",
+        "source": "h6057/origin/ble/BleProtocol.java"
+      },
+      {
+        "name": "worry_free_night",
+        "op": "0x33/0x36",
+        "payload": "36 01 <a> <b> <c> <d> <e> <f>",
+        "layout": "7-byte night policy, distinguished from night mode by leading 01",
+        "response": "0xAA/0x36",
+        "family": "H6057",
+        "source": "h6057/origin/ble/WorryFreeAtNightController.java"
+      },
+      {
+        "name": "prompt_tone",
+        "op": "0x33/0x37",
+        "payload": "37 <0/1>",
+        "layout": "hint voice",
+        "response": "0xAA/0x37",
+        "family": "H6057",
+        "source": "h6057/origin/ble/PromptToneController.java"
+      },
+      {
+        "name": "indicator_light",
+        "op": "0x33/0x38",
+        "payload": "38 <0/1>",
+        "layout": "indicator LED",
+        "response": "0xAA/0x38",
+        "family": "H6057",
+        "source": "h6057/origin/ble/GuideLightController.java"
+      },
+      {
+        "name": "color_legacy",
+        "op": "0x33/0x05",
+        "payload": "05 14 R G B CT_H CT_L R2 G2 B2 00 <mask>",
+        "layout": "11 bytes; mask bit per segment",
+        "response": "0xAA/0x05 sub-mode 0x14",
+        "family": "straightfloorlamp",
+        "source": "straightfloorlamp/ble/SubModeColor.java"
+      },
+      {
+        "name": "color_v2",
+        "op": "0x33/0x05",
+        "payload": "05 15 <subtype...>",
+        "layout": "subtype 1 RGB+CT+mask, 2 brightness+mask, 3 brightness values, 4 strip group",
+        "response": "0xAA/0x05 sub-mode 0x15",
+        "family": "straightfloorlamp",
+        "source": "straightfloorlamp/ble/SubModeColorV2.java"
+      },
+      {
+        "name": "scene",
+        "op": "0x33/0x05",
+        "payload": "05 04 <effLo> <effHi>",
+        "layout": "16-bit LE; default 2002 / 2099 (H6072,H8072) / 2143 (H6076)",
+        "response": "0xAA/0x05 sub-mode 0x04",
+        "family": "straightfloorlamp",
+        "source": "straightfloorlamp/ble/SubModeScenes.java"
+      },
+      {
+        "name": "music",
+        "op": "0x33/0x05",
+        "payload": "05 0F <effect> <sens> <flag> [R G B]",
+        "layout": "7 bytes; effect 4 uses 8 bytes with extra mode byte",
+        "response": "0xAA/0x05 sub-mode 0x0F",
+        "family": "straightfloorlamp",
+        "source": "straightfloorlamp/ble/SubModeMusic.java"
+      },
+      {
+        "name": "music_v2",
+        "op": "0x33/0x05",
+        "payload": "05 0F <effect> <sens> <flag> [R G B]",
+        "layout": "new music codes; auto/manual",
+        "response": "0xAA/0x05 sub-mode 0x0F",
+        "family": "straightfloorlamp",
+        "source": "straightfloorlamp/ble/SubModeMusicV2.java"
+      },
+      {
+        "name": "abs_music",
+        "op": "0x33/0x05",
+        "payload": "05 16 <...>",
+        "layout": "base SubModeAbsMusic (energy/impact/jet/joy/jump/rhythm)",
+        "response": "0xAA/0x05 sub-mode 0x16",
+        "family": "straightfloorlamp",
+        "source": "base2light/ble/controller/SubModeAbsMusic.java"
+      },
+      {
+        "name": "diy",
+        "op": "0x33/0x05",
+        "payload": "05 0A <diyLo> <diyHi>",
+        "layout": "16-bit LE DIY code",
+        "response": "0xAA/0x05 sub-mode 0x0A",
+        "family": "straightfloorlamp",
+        "source": "straightfloorlamp/ble/SubModeNewDiy.java"
+      },
+      {
+        "name": "gradual_change",
+        "op": "0x33/0xA3",
+        "payload": "A3 <0/1>",
+        "layout": "gradual transition on/off; cmdType is literally 0xA3",
+        "response": "0xAA/0x05",
+        "family": "straightfloorlamp",
+        "source": "straightfloorlamp/ble/Gradual4BleWifiController.java"
+      },
+      {
+        "name": "remote_pair",
+        "op": "0x33/0xA4",
+        "payload": "A4 01",
+        "layout": "start pairing",
+        "response": "0xAA/0xA4",
+        "family": "straightfloorlamp",
+        "source": "straightfloorlamp/ble/RemoteController.java"
+      },
+      {
+        "name": "remote_exit_pair",
+        "op": "0x33/0xA6",
+        "payload": "A6",
+        "layout": "stop pairing",
+        "response": "0xAA/0xA6",
+        "family": "straightfloorlamp",
+        "source": "straightfloorlamp/ble/ExitRemoteController.java"
+      },
+      {
+        "name": "color",
+        "op": "0x33/0x05",
+        "payload": "05 0D R G B CT_H CT_L R2 G2 B2",
+        "layout": "9 bytes, CT big-endian",
+        "response": "0xAA/0x05",
+        "family": "tablelampv1",
+        "source": "tablelampv1/ble/SubModeColor.java"
+      },
+      {
+        "name": "scene",
+        "op": "0x33/0x05",
+        "payload": "05 04 <effLo> <effHi>",
+        "layout": "16-bit LE, default 13",
+        "response": "0xAA/0x05",
+        "family": "tablelampv1",
+        "source": "tablelampv1/ble/SubModeScenes.java"
+      },
+      {
+        "name": "music",
+        "op": "0x33/0x05",
+        "payload": "05 0F <effect> <sens> <flag> [R G B]",
+        "layout": "7 bytes; effect 4 -> 8 bytes",
+        "response": "0xAA/0x05",
+        "family": "tablelampv1",
+        "source": "tablelampv1/ble/SubModeMusic.java"
+      },
+      {
+        "name": "music_v2",
+        "op": "0x33/0x05",
+        "payload": "05 13 <musicCode> <sens>",
+        "layout": "H6078 codes 105/72/85/50/84/98",
+        "response": "0xAA/0x05",
+        "family": "tablelampv1",
+        "source": "tablelampv1/ble/v2/SubModeMusicV2.java"
+      },
+      {
+        "name": "diy",
+        "op": "0x33/0x05",
+        "payload": "05 0A <diyLo> <diyHi>",
+        "layout": "16-bit LE",
+        "response": "0xAA/0x05",
+        "family": "tablelampv1",
+        "source": "tablelampv1/ble/SubModeNewDiy.java"
+      },
+      {
+        "name": "indicator_light",
+        "op": "0x33/0x16",
+        "payload": "16 <enable> <startH> <startM> <endH> <endM>",
+        "layout": "forever = 16 01 FF FF FF FF",
+        "response": "0xAA/0x16",
+        "family": "tablelampv1",
+        "source": "tablelampv1/ble/NewLightIndicatorController.java"
+      }
+    ],
+    "notifications": [
+      {
+        "name": "brightness",
+        "op": "0xEE/0x20",
+        "layout": "[0] brightness 0-100",
+        "family": "all",
+        "source": "*/ble/BrightnessNotifyParse.java"
+      },
+      {
+        "name": "device_status",
+        "op": "0xEE/0x40",
+        "layout": "first 10 bytes forwarded",
+        "family": "hollowlamp/straightfloorlamp",
+        "source": "base2light/ble/DeviceStatusNotifyParse.java"
+      },
+      {
+        "name": "wifi",
+        "op": "0xEE/0x11",
+        "layout": "[0]==0 connected",
+        "family": "all",
+        "source": "*/ble/WifiNotifyParse.java"
+      },
+      {
+        "name": "device_info",
+        "op": "0xEE/0x30",
+        "layout": "sub-command [0]: 1 light status (bit1), 2 energy saving (bit1), 3 battery, 4 music info ([1],[2]), 5 volume, 6 no-disturb (bit1), 7 sleep",
+        "family": "H6057",
+        "source": "h6057/origin/ble/notify/DeviceInfoNotifyParse.java"
+      },
+      {
+        "name": "remote_control",
+        "op": "0xEE/0xA4",
+        "layout": "[0] pairing/remote byte",
+        "family": "straightfloorlamp",
+        "source": "straightfloorlamp/ble/RemoteControlParse.java"
+      },
+      {
+        "name": "movie_feast",
+        "op": "0xEE/0x60",
+        "layout": "movie feast on/off",
+        "family": "straightfloorlamp",
+        "source": "base2light/ble/controller/MovieFeastOnOffNotifyParse.java"
+      }
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite (V0/V1); status is state + op JSON; ptReal tunnels base64 BLE frames",
+    "commands": [
+      {
+        "cmd": "turn",
+        "data": {
+          "val": "0/1"
+        },
+        "response": "status",
+        "source": "hollowlamp/iot/CmdTurn.java; h6057/origin/iot/CmdTurn.java; straightfloorlamp/iot/CmdTurn.java; tablelampv1/iot/CmdTurn.java"
+      },
+      {
+        "cmd": "brightness",
+        "data": {
+          "val": "1..100"
+        },
+        "response": "status",
+        "source": "*/iot/CmdBrightness.java"
+      },
+      {
+        "cmd": "colorwc",
+        "data": {
+          "colorTemInKelvin": "kelvin",
+          "red": "0..255",
+          "green": "0..255",
+          "blue": "0..255"
+        },
+        "response": "status",
+        "source": "*/iot/CmdColorWc.java"
+      },
+      {
+        "cmd": "ptReal",
+        "data": {
+          "command": [
+            "<base64 20-byte frame>"
+          ]
+        },
+        "response": "op.command",
+        "source": "hollowlamp/iot/CmdPtReal.java; h6057/origin/iot/CmdPtReal.java; straightfloorlamp/iot/CmdPtReal.java; tablelampv1/iot/CmdPtReal.java"
+      },
+      {
+        "cmd": "status",
+        "data": {},
+        "response": "state+op",
+        "source": "hollowlamp/iot/CmdStatus.java; h6057/origin/iot/CmdStatus.java; base2light AbsIotManagerV1"
+      },
+      {
+        "cmd": "online",
+        "data": {},
+        "response": "status",
+        "source": "base2light AbsIotManagerV1"
+      }
+    ],
+    "status": {
+      "fields": {
+        "state.onOff": "int 0/1",
+        "state.brightness": "int 1..100",
+        "state.mode": "int",
+        "op.command": "array of base64 20-byte frames",
+        "op frame 0x05": "mode + sub-mode",
+        "op frame 0x23/0x11/0x12": "timers / sleep / wakeup",
+        "op frame 0xA5/0xA6/0xA7": "local color table size / auto induction / sensitivity (hollowlamp)",
+        "op frame 0x16/0x01": "energy saving (hollowlamp V1)",
+        "op frame 0x34": "detail info (H6057)"
+      },
+      "source": "hollowlamp/iot/CmdStatusV0.java; hollowlamp/iot/CmdStatusV1.java; h6057/origin/iot/CmdStatusV1.java"
+    }
+  },
+  "other_protocols": [
+    {
+      "name": "battery",
+      "details": "H6055 heartbeat byte [4]: bit7 charging, bits6..4 grade 1-5 (clamped), bit3 full. H6057 device-info sub-command 3: bit8 charging, bits7..5 grade, bit4, bit3 full, bit1 present.",
+      "source": "hollowlamp/newdetails/h6055/H6055NewDetailVm.java; h6057/origin/ble/notify/DeviceInfoNotifyParse.java"
+    },
+    {
+      "name": "speaker_voice",
+      "details": "H6057: play/pause voice (0x31/0x32), preview effect 0x27, volume 0x33, night 0x36, no-disturb 0x35, prompt 0x37, indicator 0x38, preset slots 0x24-0x29.",
+      "source": "h6057/origin/ble/*Controller.java"
+    },
+    {
+      "name": "group_factor",
+      "details": "H6050/H6051/H6055 group control V1/V2/V3 reinterprets stored color 0x0D/brightness 0x04/music 0x0F frames; mic realtime uses cmdType 0x83.",
+      "source": "hollowlamp/ble/GroupBle*.java; GroupOp*.java; base2light/ble/mic/controller/MicSetRgbController.java"
+    },
+    {
+      "name": "matter_mqtt_lan",
+      "details": "none declared in this split.",
+      "source": "-"
+    }
+  ],
+  "dynamic_effects": [
+    {
+      "name": "color_0x0D",
+      "submode": "0x05/0x0D",
+      "payload": "0D R G B CT_H CT_L R2 G2 B2",
+      "attributes": [
+        "RGB",
+        "CT big-endian",
+        "temperature RGB"
+      ],
+      "family": "hollowlamp/H6057/tablelampv1",
+      "source": "*/ble/SubModeColor.java"
+    },
+    {
+      "name": "scene",
+      "submode": "0x05/0x04",
+      "payload": "04 <effLo> <effHi> [musicCode]",
+      "attributes": [
+        "16-bit LE effect",
+        "default 0x22 hollowlamp / 13 tablelamp / 2002 straightfloorlamp"
+      ],
+      "family": "all",
+      "source": "*/ble/SubModeScenes.java"
+    },
+    {
+      "name": "diy",
+      "submode": "0x05/0x0A",
+      "payload": "0A <diyLo> <diyHi>",
+      "attributes": [
+        "16-bit LE code",
+        "DiyM.EffectCode l=0 m=1 n=2 s=4 t=5 g=255; AI categories 28/29/30"
+      ],
+      "family": "all",
+      "source": "*/ble/SubModeNewDiy.java; base2light/ac/diy/DiyM.java"
+    },
+    {
+      "name": "music_v1",
+      "submode": "0x05/0x0E",
+      "payload": "0E <effect> <sens> <flag> [RGB]",
+      "attributes": [
+        "auto flag 0",
+        "manual color",
+        "sens 0-99"
+      ],
+      "family": "hollowlamp",
+      "source": "hollowlamp/ble/SubModeMusic.java"
+    },
+    {
+      "name": "music_v2",
+      "submode": "0x05/0x0F",
+      "payload": "0F 04 <sens> <effect> <flag> [RGB]",
+      "attributes": [
+        "effect mode id",
+        "auto/manual"
+      ],
+      "family": "hollowlamp/straightfloorlamp/tablelampv1",
+      "source": "hollowlamp/ble/SubModeMusicV2.java; straightfloorlamp/ble/SubModeMusic*.java; tablelampv1/ble/SubModeMusic.java"
+    },
+    {
+      "name": "music_v3",
+      "submode": "0x05/0x13",
+      "payload": "13 <effect> <manual> <sens> 00",
+      "attributes": [
+        "75 Rhythm",
+        "76 Magic",
+        "sens 0-99"
+      ],
+      "family": "hollowlamp/tablelampv1",
+      "source": "hollowlamp/ble/SubModeMusicV3.java; tablelampv1/ble/v2/SubModeMusicV2.java"
+    },
+    {
+      "name": "multi_music_color",
+      "submode": "0xA3/0x41",
+      "payload": "41 <musicEffect> <count> <RGB> x count",
+      "attributes": [
+        "realtime segment colors",
+        "multi-packet"
+      ],
+      "family": "hollowlamp",
+      "source": "hollowlamp/ble/MultiMusicController.java"
+    },
+    {
+      "name": "local_color",
+      "submode": "0xAA/0xA5 read, 0xA3/0xA5 write",
+      "payload": "read A5 <page>; write A5 <count> <R G B CT_H CT_L> x count",
+      "attributes": [
+        "24 slots",
+        "4 colors per read page"
+      ],
+      "family": "hollowlamp",
+      "source": "hollowlamp/ble/LocalColor*.java"
+    },
+    {
+      "name": "auto_induction",
+      "submode": "0x33/0xA6",
+      "payload": "A6 <0/1>",
+      "attributes": [
+        "PIR auto on/off"
+      ],
+      "family": "H6059",
+      "source": "hollowlamp/ble/OnOffAutoInductionController.java"
+    },
+    {
+      "name": "sensitivity",
+      "submode": "0x33/0xA7",
+      "payload": "A7 <value>",
+      "attributes": [
+        "PIR sensitivity",
+        "soft >= 1.00.12"
+      ],
+      "family": "H6059",
+      "source": "hollowlamp/ble/SensitiveController.java"
+    },
+    {
+      "name": "straight_floor_color",
+      "submode": "0x05/0x14 and 0x05/0x15",
+      "payload": "14 R G B CT_H CT_L R2 G2 B2 00 mask / 15 <subtype>",
+      "attributes": [
+        "8/7/3 segments",
+        "mask bits",
+        "part brightness"
+      ],
+      "family": "straightfloorlamp",
+      "source": "straightfloorlamp/ble/SubModeColor.java; SubModeColorV2.java"
+    },
+    {
+      "name": "gradual_change",
+      "submode": "0x33/0xA3",
+      "payload": "A3 <0/1>",
+      "attributes": [
+        "smooth transition"
+      ],
+      "family": "straightfloorlamp",
+      "source": "straightfloorlamp/ble/Gradual4BleWifiController.java"
+    },
+    {
+      "name": "indicator_schedule",
+      "submode": "0x33/0x16",
+      "payload": "16 <enable> <startH> <startM> <endH> <endM>",
+      "attributes": [
+        "forever = 01 FF FF FF FF"
+      ],
+      "family": "tablelampv1",
+      "source": "tablelampv1/ble/NewLightIndicatorController.java"
+    },
+    {
+      "name": "h6057_voice_presets",
+      "submode": "0x30-0x38",
+      "payload": "30 light, 31 play, 32 pause, 33 volume, 34 detail, 35 no-disturb, 36 night, 37 prompt, 38 indicator, 27 preview, 24-29 presets",
+      "attributes": [
+        "speaker lamp",
+        "preset slots",
+        "battery"
+      ],
+      "family": "H6057",
+      "source": "h6057/origin/ble/*Controller.java"
+    }
+  ],
+  "notes": "H6055 is the only BLE-only SKU (AbsBleSku) and the only battery SKU in hollowlamp. H60B3-like multi-zone and H6057 speaker features are documented per family. Scene/DIY catalogues are cloud-driven. straightfloorlamp uses cmdType 0xA3 for gradual change even though 0xA3 is also the multi-packet proType. No Matter/MQTT/LAN protocol in this split."
+}

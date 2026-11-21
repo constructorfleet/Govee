@@ -1,0 +1,56 @@
+{
+  "split": "split_pact_h3a5x",
+  "families": ["H3A51", "R3A51", "H3A52", "H3A53"],
+  "skus": [
+    {"sku": "H3A51", "family": "RGBIC branch light string", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 386, 32 lights default"},
+    {"sku": "R3A51", "family": "RGBIC branch light string", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 386, 32 lights default"},
+    {"sku": "H3A52", "family": "RGBIC branch light string", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 386, 63 lights"},
+    {"sku": "H3A53", "family": "RGBIC branch light string", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "goodsType 386, 84 lights"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write 0x33, read 0xAA, multi V2 0xA4",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "[0]=0|1", "layout": "[0] on/off", "response": "0xAA/0x01 -> [0]!=0", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/scenes/H3A5XSceneCmdBuilders$registerWith$3.java"},
+      {"name": "heartbeat", "op": "0xAA/0x01", "payload": "none", "layout": "read only", "response": "[0]!=0", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/scenes/H3A5XSceneCmdBuilders$registerWith$2.java"},
+      {"name": "brightness", "op": "0x33/0x04", "payload": "[0]=0..100", "layout": "[0] brightness", "response": "0xAA/0x04; notify 0x20 [0]", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/pact/Comm.java"},
+      {"name": "mode", "op": "0x33/0x05", "payload": "[0]=sub-mode block", "layout": "0x15 color, 0x13 music, 0x04 scenes, 0x0A DIY", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/pact/Mode.java"},
+      {"name": "direction", "op": "0x33/0x16", "payload": "[0]=!forward?1:0", "layout": "[0] direction", "response": "read -> [0]==0 forward", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/ble/controller/SettingDirectionController.java"},
+      {"name": "read_segment_info", "op": "0xAA/0x40", "payload": "none", "layout": "read only", "response": "SegmentStyleIcInfo{style,totalBranchCount,totalColorSegmentCount,branchColorSegmentCounts,totalIcCount,branchIcCounts}", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/ble/controller/ReadSegInfoController.java"},
+      {"name": "segment_ic_write", "op": "0xA4/0x43", "payload": "[0]=enable [1..]=IC style bytes; p()=10", "layout": "multi V2 per-IC style", "response": "SetSegmentIcMultiController.t", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/ble/controller/SetSegmentIcMultiController.java"},
+      {"name": "enable_segment_ic", "op": "0x33/0x44", "payload": "[0]=!enable?1:0", "layout": "[0] enable flag", "response": "write result", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/ble/controller/EnableSetSegmentIc4ModeController.java"},
+      {"name": "segment_calibration", "op": "0x33/0x4A", "payload": "branch calibration bytes", "layout": "SegCaliControllerV2", "response": "event", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/ble/controller/SegCaliControllerV2.java"},
+      {"name": "updown_calibration", "op": "0x33/0x4B", "payload": "CaliAction bytes", "layout": "UpDownCaliController", "response": "event", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/ble/controller/UpDownCaliController.java"}
+    ],
+    "notifications": [
+      {"name": "wifi_connect", "op": "0xEE/0x11", "layout": "[0]==0 connected", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/ble/BleNotifyComm.java"},
+      {"name": "brightness", "op": "0xEE/0x20", "layout": "[0] brightness", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/ble/notify/BrightnessNotifyParse.java"},
+      {"name": "movie_feast", "op": "0xEE/0x60", "layout": "[0]==1 [1]==1", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/ble/BleNotifyComm.java"},
+      {"name": "device_status", "op": "0xEE/0x40", "layout": "first 10 bytes", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/ble/BleNotifyComm.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "CmdBuilder.makeCmdStr/AbsCmdWrite; responses parsed as IotMsgProType V2 (IotMsgV2) with transaction match",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "response": "status", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/pact/Comm.java"},
+      {"cmd": "brightness", "data": {"val": "int 0-100"}, "response": "status", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/pact/Comm.java"},
+      {"cmd": "colorwc", "data": {"color": {"red": "int", "green": "int", "blue": "int"}, "colorTemInKelvin": "int"}, "response": "status", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/pact/Comm.java"},
+      {"cmd": "status", "data": {"state": "on/off", "op": "frame bytes"}, "response": "on/off", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/scenes/H3A5XSceneCmdBuilders$registerWith$6.java"}
+    ],
+    "status": {"fields": {"on": "bool from state", "op": "20-byte BLE frames"}, "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/scenes/H3A5XSceneCmdBuilders.java"}
+  },
+  "other_protocols": [
+    {"name": "ptUrl", "details": "graffiti apply uploads base64({0x58,0x00}+payload) as PtUrlDataInfo(sku,device,pactType,pactCode,soft,hard)", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/newdetail/diy/H3A5XDiyAdvancedGraffitiParse.java"},
+    {"name": "wifi", "details": "cloud MQTT via device topic; no LAN/Matter", "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/pact/Model.java"}
+  ],
+  "dynamic_effects": [
+    {"name": "color", "submode": "0x15", "payload": "15 01 R G B [kelvinLE16 R2 G2 B2] <32-bit segment mask> | 15 02 brightness <mask> | 15 03 <per-segment brightness>", "attributes": ["RGB", "kelvin", "per-segment bitmask 0-31", "per-segment brightness"], "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/newdetail/color/SubModeColor.java"},
+    {"name": "scenes", "submode": "0x04", "payload": "04 <effect LE16>", "attributes": ["effect id", "channels 0/1/2/3/5/6"], "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/pact/Comm.java"},
+    {"name": "new_diy", "submode": "0x0A", "payload": "0A <diy LE16>", "attributes": ["diy code 950/953/954/955/973", "prefix 0x62 or 0x82"], "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/newdetail/diy/*"},
+    {"name": "music", "submode": "0x13", "payload": "music effect params", "attributes": ["music feast registration"], "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/pact/MusicFeastOp.java"},
+    {"name": "graffiti_page", "submode": "0x0A", "payload": "displayMode totalPages {pageIndex lenLE16 layerPriority secondaryEffect speed brightness colorGroupCount {icCount RGB icIndices} baseColorGroupCount {...}}", "attributes": ["layers", "per-IC colours", "branch base colours", "0x82 prefix"], "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/bean/GraffitiDataH3A5X.java, GraffitiDataH3A5XKt.java"},
+    {"name": "effect_types", "submode": "0x0A", "payload": "effect byte id in DIY payload", "attributes": ["Fade 1", "Breathing 2", "Flickering 3", "Rainbow 4", "Water 5", "RunningLantern 6", "Diffusion 7", "Flow 8", "Fireworks 9", "Collision 10", "Yuedong 11", "AdvancedBreathing 34", "JiaoCuo 35"], "source": "jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/newdetail/diy/effect/EffectTypeH3A5X.java"}
+  ],
+  "notes": "Gaps: graffiti effect parameter bodies are serialised from UI state; segment-info reply offsets are inside ReadSegInfoController; CaliAction enums partially restored; overlay layer limit server/cache driven."
+}

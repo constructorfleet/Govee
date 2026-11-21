@@ -1,0 +1,633 @@
+{
+ "split": "split_pact_humidifier",
+ "families": [
+  "H7140",
+  "H714E",
+  "H7141",
+  "H7142",
+  "H7143",
+  "H7145",
+  "H7147",
+  "H7148",
+  "H7149",
+  "H7150",
+  "H7151",
+  "H7152",
+  "H7153",
+  "H7160",
+  "H7161",
+  "H7162"
+ ],
+ "skus": [
+  {
+   "sku": "H7140",
+   "family": "humidifier, gear/auto/custom",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 151; alias H7146 constant exists in Support. Protocols (1,1),(1,2),(2,1)."
+  },
+  {
+   "sku": "H714E",
+   "family": "humidifier, gear/auto/custom (new MCU)",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 259; same protocol as H7140; extra version capabilities."
+  },
+  {
+   "sku": "H7141",
+   "family": "humidifier, 3-mode protocol",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 61; own BleProtocolConstants."
+  },
+  {
+   "sku": "H7142",
+   "family": "humidifier, 3-mode protocol",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 81."
+  },
+  {
+   "sku": "H7143",
+   "family": "humidifier, gear/auto",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 2,
+    "code": 1
+   },
+   "notes": "goodsType 126; abnormal info + common switch."
+  },
+  {
+   "sku": "H7145",
+   "family": "humidifier with water tank level / dry",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 170; read-all-info composite controller."
+  },
+  {
+   "sku": "H7147",
+   "family": "humidifier with water tank level / dry",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 232; same as H7145."
+  },
+  {
+   "sku": "H7148",
+   "family": "humidifier with water tank level / dry",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 233; same as H7145."
+  },
+  {
+   "sku": "H7149",
+   "family": "humidifier, gear/auto + light scenes",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 258; protocols (1,1),(1,2),(2,1); UI/pact glue only."
+  },
+  {
+   "sku": "H7150",
+   "family": "dehumidifier + child lock + dry-clothes",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 94; Smart Dehumidifier (source strings h7150_smart_dehumidifier); full-bucket/defrost/compressor protections."
+  },
+  {
+   "sku": "H7151",
+   "family": "dehumidifier + drain/pump/off-dry + device status",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 147; Smart Dehumidifier Max; h7151_* strings, compressor/overtime/high-temp protections."
+  },
+  {
+   "sku": "H7152",
+   "family": "dehumidifier (H7151 hardware, 2-probe timer)",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 308; H7151 dehumidifier hardware with 2-probe timer layout."
+  },
+  {
+   "sku": "H7153",
+   "family": "dehumidifier (H7151 hardware)",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 309; H7151 dehumidifier hardware."
+  },
+  {
+   "sku": "H7160",
+   "family": "humidifier, gear/auto/custom + timer",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 99; custom mode; own timer V2 UI."
+  },
+  {
+   "sku": "H7161",
+   "family": "aroma diffuser (Aroma Diffuser Pro; fog + light + voice)",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 146; h7161_device_name = Aroma Diffuser Pro; atmosphere presets/multi-edit."
+  },
+  {
+   "sku": "H7162",
+   "family": "aroma diffuser (Smart Aroma Diffuser)",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 189; h7162_device_name = Smart Aroma Diffuser; same protocol as H7161."
+  }
+ ],
+ "ble": {
+  "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+  "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+  "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; multi write proType 0xA3 with index in [2]",
+  "commands": [
+   {
+    "name": "power",
+    "op": "0x33/0x01",
+    "payload": "01|00",
+    "layout": "[0] on/off",
+    "response": "0xAA/0x01 -> [0] state",
+    "source": "base2light SwitchController"
+   },
+   {
+    "name": "mode",
+    "op": "0x3A/0x05 (H7140-class) or 0x33/0x05 (H7141/H7142)",
+    "payload": "GEAR: 01 g; CUSTOM: 02 idx 3x5 bytes; AUTO: 03 hum[|0x80] comfortable",
+    "layout": "see dynamic_effects/mode sections",
+    "response": "0xAA/0x05 -> [mode, params]",
+    "source": "h7140/ble/controller/H7140ModeController.java; h7141/ble/controller/Mode*Controller.java"
+   },
+   {
+    "name": "gear position",
+    "op": "0x33/0x1C",
+    "payload": "02 gear (high) | 01 gear (low)",
+    "layout": "[0] high/low selector, [1] gear index",
+    "response": "0xAA/0x1C -> [02,highGear] or [01,lowGear]",
+    "source": "h7140/ble/controller/GearPositionController.java"
+   },
+   {
+    "name": "clean reminder",
+    "op": "0x33/0x27 (H7140 class) or 0x33/0x08 (H7141)",
+    "payload": "open,setCleanHour",
+    "layout": "[0] open (1/2), [1] set hours",
+    "response": "[open,setHour,remainHour]",
+    "source": "base_h71xx CleanReminderController; h7141/Clear72HController.java"
+   },
+   {
+    "name": "delay off",
+    "op": "0x33/0x11",
+    "payload": "open minLo minHi",
+    "layout": "[0] open, [1..2] minutes LE16",
+    "response": "[open,minLo,minHi,leaveLo,leaveMid,leaveHi]",
+    "source": "base_h71xx DelayOffController; DelayOffInfo"
+   },
+   {
+    "name": "do not disturb",
+    "op": "0x33/0x16",
+    "payload": "enable startH startM endH endM",
+    "layout": "forever = 01 01 01 01 01",
+    "response": "same",
+    "source": "base_h71xx NotDisturbController; NotDisturbInfo"
+   },
+   {
+    "name": "time sync",
+    "op": "0x33/0x1B",
+    "payload": "ts[4] 01 tzHour tzMin",
+    "layout": "4-byte little-endian epoch seconds",
+    "response": "ack",
+    "source": "base_h71xx SyncTimeController"
+   },
+   {
+    "name": "device status (H7151/H7152/H7153)",
+    "op": "0xAA/0x19",
+    "payload": "",
+    "layout": "read only",
+    "response": "[0..1] autoStopSec LE, [2] dry, [3..4] dryCountdownSec LE, [5] compressor, [6] fan, [7] pipe, [8] draining",
+    "source": "h7151/ble/controller/DeviceStatusController.java; h7151/DeviceState.java"
+   },
+   {
+    "name": "child lock (H7150/H7151/H7152/H7153)",
+    "op": "0x33/0x1F",
+    "payload": "02 00|01",
+    "layout": "[0] subcmd 0x02, [1] state",
+    "response": "[02,state]",
+    "source": "h7150/ble/controller/LockControllerV1.java"
+   },
+   {
+    "name": "power-on state (H7151)",
+    "op": "0x33/0x1F",
+    "payload": "09 00|01",
+    "layout": "[0] subcmd 0x09",
+    "response": "[09,state]",
+    "source": "h7151/ble/controller/PowerOnController.java"
+   },
+   {
+    "name": "off-dry switch (H7151)",
+    "op": "0x33/0x1F",
+    "payload": "0A 00|01",
+    "layout": "[0] subcmd 0x0A",
+    "response": "[0A,state]",
+    "source": "h7151/ble/controller/OffDrySwitchController.java"
+   },
+   {
+    "name": "off water-pump switch (H7151)",
+    "op": "0x33/0x1F",
+    "payload": "0B 00|01",
+    "layout": "[0] subcmd 0x0B",
+    "response": "[0B,state]",
+    "source": "h7151/ble/controller/OffWaterPumpSwitchController.java"
+   },
+   {
+    "name": "start drainage (H7151)",
+    "op": "0x33/0xAA",
+    "payload": "00 00 01",
+    "layout": "drainage trigger",
+    "response": "ack",
+    "source": "h7151/ble/controller/OffDrainageController.java"
+   },
+   {
+    "name": "start dry (H7151)",
+    "op": "0x33/0xAA",
+    "payload": "00 01",
+    "layout": "dry trigger",
+    "response": "ack",
+    "source": "h7151/ble/controller/OffDryController.java"
+   },
+   {
+    "name": "read switch (H7145)",
+    "op": "0xAA/0x1A",
+    "payload": "",
+    "layout": "read only",
+    "response": "[0] on/off",
+    "source": "h7145/ble/controller/ReadSwitchController.java"
+   },
+   {
+    "name": "water tank level (H7145)",
+    "op": "0xAA/0x22",
+    "payload": "",
+    "layout": "read only",
+    "response": "[0] percent, [1..2] endurance minutes LE16",
+    "source": "h7145/ble/controller/WaterVieldController.java; h7145/adjust/bean/WaterBean.java"
+   },
+   {
+    "name": "temperature/humidity calibration (H7145)",
+    "op": "0x33/0x1C",
+    "payload": "V1 01 deviceFlag tempFlag calLE16; V2 deviceFlag tempFlag calLE16; V3 tempFlag deviceFlag calLE16",
+    "layout": "signed int16, 0.01C / 0.01%RH",
+    "response": "deviceFlag + tempFlag + calLE16",
+    "source": "h7145/ble/DevCommReportParse.java; base_h71xx TempHumCaliCtler"
+   },
+   {
+    "name": "timer add/update",
+    "op": "0x33/0x01",
+    "payload": "group enableSwitch hour min repeat mode modeValue [targetHum autoGear]",
+    "layout": "see TimerInfoV2",
+    "response": "0xAA/0x01 -> timer record",
+    "source": "base_h71xx TimerGroupControllerV2; h7151/H7152TimerGroupController.java"
+   },
+   {
+    "name": "timer delete",
+    "op": "0x33/0x1E",
+    "payload": "",
+    "layout": "read/delete",
+    "response": "[group]",
+    "source": "base_h71xx TimerCountController"
+   },
+   {
+    "name": "abnormal info",
+    "op": "0x33/0xAA",
+    "payload": "01",
+    "layout": "[0] request",
+    "response": "[fault,code,flag2,...,flag3]",
+    "source": "h7140/h7143/h7145/h7150/h7151/h7160/h7161 AbnormalInfoController"
+   },
+   {
+    "name": "atmosphere list (H7161/H7162)",
+    "op": "0xAA/0x05",
+    "payload": "03",
+    "layout": "read preset list",
+    "response": "one-byte atmosphere codes after first byte",
+    "source": "h7161/ble/controller/AtmosphereListController.java"
+   },
+   {
+    "name": "atmosphere edit (H7161/H7162)",
+    "op": "0xA3/0x05",
+    "payload": "count, per-edit index,length,onOffFog,onOffVoice,voiceCode,voiceVolume,atmosphereCode,onOffLight,brightness,subMode,[color/scene/diy]",
+    "layout": "see AtmosphereEdit.getWriteBytes",
+    "response": "ack",
+    "source": "h7161/ble/controller/AtmosphereEditMultipleControl.java; base_h71xx AtmosphereEdit"
+   },
+   {
+    "name": "uncovering remind (H7161)",
+    "op": "0x33/0x1F",
+    "payload": "01 00|01",
+    "layout": "[0]=1, [1]=state",
+    "response": "ack",
+    "source": "h7161/ble/controller/UncoveringRemindController.java"
+   }
+  ],
+  "notifications": [
+   {
+    "name": "device report",
+    "op": "0xEE/<cmdType>",
+    "layout": "[1]=cmdType, [2..] payload; 0x05=mode, 0xAA=abnormal, 0xB0=light, 0x1C=gear, 0x22=water, 0x19=status",
+    "source": "h71*/ble/DevCommReportParse.java; h71*/ble/BleNotifyComm.java"
+   },
+   {
+    "name": "IoT/WiFi status",
+    "op": "0xEE",
+    "layout": "handled by WifiNotifyParse",
+    "source": "h71*/ble/WifiNotifyParse.java"
+   }
+  ]
+ },
+ "iot": {
+  "envelope": "Write/AbsCmdWrite V2 (IotMsgProType.V2); CmdPtReal base64 20-byte BLE frames",
+  "commands": [
+   {
+    "cmd": "online",
+    "data": {},
+    "example": "{\"msg\":{\"cmd\":\"online\"}}",
+    "response": "subscription",
+    "source": "h7140/v1/IotPactV1.java"
+   },
+   {
+    "cmd": "turn",
+    "data": {
+     "val": "0|1"
+    },
+    "example": "{\"cmd\":\"turn\",\"data\":{\"val\":1}}",
+    "response": "status",
+    "source": "h7141/iot/CmdTurn.java"
+   },
+   {
+    "cmd": "status",
+    "data": {},
+    "example": "{\"cmd\":\"status\"}",
+    "response": "{onOff,result} + op frames",
+    "source": "h7141/iot/CmdStatus.java; CmdStatusParseV1$State"
+   },
+   {
+    "cmd": "ptReal",
+    "data": {
+     "command": [
+      "<base64 20-byte frame>"
+     ]
+    },
+    "example": "{\"cmd\":\"ptReal\",\"data\":{\"command\":[\"M...\"]}}",
+    "response": "op",
+    "source": "h7141/iot/CmdPtReal.java"
+   },
+   {
+    "cmd": "op",
+    "data": {
+     "command": [
+      "<base64 20-byte frame>"
+     ]
+    },
+    "example": "{\"cmd\":\"op\",\"data\":{\"command\":[\"...\"]}}",
+    "response": "ResultPt.getPtBytes -> same BLE parsers",
+    "source": "h7141/iot/{Cmd,ResultPt}.java; h7140/iot/CmdStatusParseV1.java"
+   }
+  ],
+  "status": {
+   "fields": {
+    "state.onOff": "int 0|1",
+    "state.result": "int",
+    "op.command[]": "base64 20-byte BLE frames (0x05 mode, 0x01 timer, 0x1C gear, 0x11 delay, 0x16 DND, 0x19 status, 0x22 water, 0xAA abnormal)"
+   },
+   "source": "h7140/iot/CmdStatusParseV1.java; h7141/iot/CmdStatusParseV1.java"
+  }
+ },
+ "other_protocols": [
+  {
+   "name": "ble-broadcast",
+   "details": "Pairing only: 62-byte Govee advert parsed by GoodsType.parseBleBroadcastPactInfo; no humidifier telemetry in advert.",
+   "source": "h71*/add/BleBroadcastProcessor.java"
+  },
+  {
+   "name": "chart-gatt",
+   "details": "service 00010203-0405-0607-0809-0a0b0c0d2d00 / char ...2d20; 16-byte temp/humidity history records; head 2 bytes = relative minute stamp.",
+   "source": "base_h71xx AbsChartDataComm; BaseThDataComm"
+  },
+  {
+   "name": "rest",
+   "details": "water-shortage push switch {sku,device,waterShortageOnOff}; device detail, OTA, analytics.",
+   "source": "h7140/net/DeviceWaterShortageSwitchRequest.java"
+  }
+ ],
+ "dynamic_effects": [
+  {
+   "name": "mode gear",
+   "submode": "0x01",
+   "payload": "01 <gear>",
+   "attributes": [
+    "gear index"
+   ],
+   "source": "h7140/model/ModeInfo.java"
+  },
+  {
+   "name": "mode custom",
+   "submode": "0x02",
+   "payload": "02 <(cur<<4)|set> <5B child0> <5B child1> <5B child2>",
+   "attributes": [
+    "setIndex 0-2",
+    "curIndex 0-2",
+    "gearIndex",
+    "set/leave minutes 0-65535"
+   ],
+   "source": "h7140/model/ModeCustom.java; ModeCustomChild.java"
+  },
+  {
+   "name": "mode auto",
+   "submode": "0x03",
+   "payload": "03 <target 0-100 | 0x80 autoClose> <comfortable 0|1>",
+   "attributes": [
+    "target humidity",
+    "auto close",
+    "comfortable"
+   ],
+   "source": "h7140/model/ModeAuto.java"
+  },
+  {
+   "name": "dry clothes",
+   "submode": "0x04",
+   "payload": "04",
+   "attributes": [],
+   "source": "h7150/adjust/Mode.java"
+  },
+  {
+   "name": "atmosphere preset read",
+   "submode": "0x05",
+   "payload": "03",
+   "attributes": [
+    "preset code list"
+   ],
+   "source": "h7161/ble/controller/AtmosphereListController.java"
+  },
+  {
+   "name": "atmosphere edit",
+   "submode": "0x05 (0xA3)",
+   "payload": "count index len onOffFog onOffVoice voiceCode voiceVol atmosphereCode onOffLight brightness lightSubMode [...mode bytes]",
+   "attributes": [
+    "fog on/off",
+    "voice code 0-255",
+    "voice volume 0-100",
+    "atmosphere code",
+    "light on/off",
+    "brightness 0-100",
+    "light submode 1=color/2=scene/3=diy",
+    "diy speed 0-100"
+   ],
+   "source": "base_h71xx/network/bean/AtmosphereEdit.java; h7161 AtmosphereEditMultipleControl"
+  },
+  {
+   "name": "custom fog",
+   "submode": "0x01 0x01",
+   "payload": "01 01 <onOff> <min LE16>",
+   "attributes": [
+    "on/off",
+    "minutes"
+   ],
+   "source": "h7161/ble/controller/model/CustomFog.java"
+  },
+  {
+   "name": "custom lighting",
+   "submode": "0x01 0x02",
+   "payload": "01 02 <onOff> <min LE16>",
+   "attributes": [
+    "on/off",
+    "minutes"
+   ],
+   "source": "h7161/ble/controller/model/CustomLighting.java"
+  },
+  {
+   "name": "custom voice",
+   "submode": "0x01 0x03",
+   "payload": "01 03 <onOff> <voiceCode> <voiceVolume> <min LE16>",
+   "attributes": [
+    "on/off",
+    "voice code",
+    "volume",
+    "minutes"
+   ],
+   "source": "h7161/ble/controller/model/CustomVoice.java"
+  }
+ ],
+ "notes": "All SKUs are ble+iot. Mode constants: GEAR=1, CUSTOM=2, AUTO=3; H7150/H7151/H7152/H7153 add DRY_CLOTHES=4. H7141/H7142 use a family-local constant table but identical values. H7149/H7152/H7153 are UI/pact glue and inherit base_h71xx controllers. Read responses are stripped by 2 bytes (0xAA class) or 3 bytes (write echo). Chart data is TH-sensor data, not humidifier telemetry. Exact 0xAA fault-code enumerations, H7141 clear-72h ACK path, and H7161 parse start offsets are not fully recoverable from the decompiled sources (see md gaps).",
+ "status_properties": [
+  {
+   "property": "waterShortageOnOff",
+   "kind": "setting",
+   "meaning": "Push-notification enable for the water-shortage condition; 1 = notify me, NOT 'water is short'.",
+   "carrier": "REST DeviceWaterShortageSwitchRequest {sku,device,waterShortageOnOff}; pact/Ext field",
+   "source": "jadx-splits/split_pact_humidifier/sources/com/govee/h7142/net/DeviceWaterShortageSwitchRequest.java; .../h7142/pact/Ext.java"
+  },
+  {
+   "property": "waterVield / enduranceMinute",
+   "kind": "reading",
+   "meaning": "Water tank level 0-100 % and estimated remaining minutes.",
+   "carrier": "BLE read 0xAA/0x22 (cmdType 34); IoT status/op frame 34",
+   "source": ".../h7145/adjust/bean/WaterBean.java; .../h7145/ble/controller/WaterVieldController.java; .../h7145/iot/CmdStatusParseV1.java"
+  },
+  {
+   "property": "tankEmpty",
+   "kind": "ui-derived",
+   "meaning": "No code property. Only the string/layout id tv_water_tank_empty_remind exists; UI derives 'empty' from waterVield/enduranceMinute plus warning state.",
+   "carrier": "UI header (not a wire field)",
+   "source": ".../h7141/adjust/header/CurHeaderUI.java; .../h7142/adjust/header/CurHeaderUI.java; .../govee/humidifier/R.java"
+  }
+ ]
+}

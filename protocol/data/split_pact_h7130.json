@@ -1,0 +1,88 @@
+{
+  "split": "split_pact_h7130",
+  "families": ["H7130", "H713A", "H7131", "H7132", "H7133", "H7134", "H7135", "H7136", "H7137", "H7138", "H7139", "H713B", "H713C", "H713D", "H713E"],
+  "skus": [
+    {"sku": "H7130", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 60; V1 UI + V2 UI above soft 1.00.31; base protocol"},
+    {"sku": "H713A", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 164; H713A timer/pair UI"},
+    {"sku": "H7131", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 115 (H7131/H7132 share); mode/auto UI"},
+    {"sku": "H7132", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 115; mode GEAR/AUTO/FAN"},
+    {"sku": "H713B", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 165"},
+    {"sku": "H7135", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 153; V3 settings; swing leaf"},
+    {"sku": "H7133", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 174; swing leaf / stove mode"},
+    {"sku": "H7134", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 179 (BLE/WiFi heater variant); also listed as 174 group"},
+    {"sku": "H713C", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 166"},
+    {"sku": "H7136", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 214"},
+    {"sku": "H713D", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 215"},
+    {"sku": "H7137", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 222"},
+    {"sku": "H713E", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 237"},
+    {"sku": "H7138", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 252; temperature-unit change 0x1F"},
+    {"sku": "H7139", "family": "Smart heater", "transports": ["ble", "iot"], "pact": {"type": null, "code": null}, "notes": "SKU constant exists in base SkuCons; no dedicated config found in this split"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType (0x33 write / 0xAA read) [1]=cmdType [2..18]=payload [19]=XOR BCC",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "<0|1>", "layout": "[0] on/off", "response": "0xAA/0x01 -> [0] on, [1] product flag, [2] mode, [3] state-change", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/SwitchControllerV1.java"},
+      {"name": "gear", "op": "0x33/0x05", "payload": "<gear>", "layout": "[0] gear index", "response": "0xAA/0x05 -> [0] gear", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/GearController.java"},
+      {"name": "mode-gear-auto-fan", "op": "0x33/0x05", "payload": "01|03|09", "layout": "h7132/3/5 mode: 0x01 gear, 0x03 auto, 0x09 fan (+mode params)", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7132/ble/controller/ModeController.java; h7132/adjust/Mode.java"},
+      {"name": "constant-temperature-v1", "op": "0x33/0x1A", "payload": "<on><unit><tempLE16>", "layout": "[0] enable [1] unit/flag [2..3] target centi-degree LE16", "response": "0xAA/0x1A -> [0] on [1] unit [2] bit7 F [2..3]&0x7FFF temp", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/ConstantTemperatureController.java"},
+      {"name": "constant-temperature-v3", "op": "0x33/0x1A", "payload": "<on><mode><tempLE16 bit7=F>", "layout": "[0] on [1] mode [2..3] temp LE16; bit7 of [2] = Fahrenheit", "response": "0xAA/0x1A", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/ConstantTemperatureControllerV3.java; v3/bean/ConstantTempInfo.java"},
+      {"name": "child-lock", "op": "0x33/0x10", "payload": "<0|1>", "layout": "[0] 1 lock", "response": "0xAA/0x10 -> [0]", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/ChildLockController.java"},
+      {"name": "oscillation", "op": "0x33/0x18", "payload": "<0|1>", "layout": "[0] 1 on", "response": "0xAA/0x18 -> [0]", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/RotateController.java"},
+      {"name": "timer-write", "op": "0x33/0x13", "payload": "<group><enable|on><hour><min><repeat><gear>", "layout": "[0] group [1] enable<<7|on [2] hour [3] min [4] repeat bitmask [5] gear", "response": "0xAA/0x13 -> same 6 bytes", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/TimerGroupController.java; adjust/timer/TimerInfo.java"},
+      {"name": "timer-count-read", "op": "0xAA/0x13 or 0xAA/0xFF", "payload": "", "layout": "empty; 0xFF denotes end of timer list", "response": "[0] count", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/TimerCountController.java"},
+      {"name": "timer-delete", "op": "0x33/0x15", "payload": "<group>", "layout": "[0] group", "response": "write result", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/TimerGroupDeleteController.java"},
+      {"name": "timer-protected", "op": "0xAA/0x19", "payload": "", "layout": "empty read", "response": "[0..1] int16 LE minutes", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/TimerProtectedController.java"},
+      {"name": "no-disturb", "op": "0x33/0x16", "payload": "<enable><startH><startM><endH><endM>", "layout": "forever uses [1..4]=FF", "response": "0xAA/0x16 -> 5 bytes", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/NotDisturbController.java"},
+      {"name": "delay-off-v2", "op": "0x33/0x11", "payload": "<open><minLE16>", "layout": "[0] open [1..2] minutes LE16", "response": "0xAA/0x11 -> [0] open [1..2] totalMin [3..5] leaveSec", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/DelayOffController.java"},
+      {"name": "delay-off-v1", "op": "0x33/0x26", "payload": "<open><minLE16>", "layout": "as delay-off-v2", "response": "0xAA/0x26", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/DelayOffControllerV1.java"},
+      {"name": "sync-time", "op": "0x33/0xB5", "payload": "<epochLE32><01><tzHour><tzMin>", "layout": "7 bytes", "response": "write result", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/SyncTimeController.java"},
+      {"name": "bind-thermometer", "op": "0x33/0x08", "payload": "<6-byte MAC reversed>", "layout": "MAC little-endian address bytes", "response": "0xAA/0x08 -> MAC; all zero = unbound", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/BindTemperatureController.java"},
+      {"name": "unbind-thermometer", "op": "0x33/0x09", "payload": "", "layout": "empty", "response": "write result", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/UnbindTemperatureController.java"},
+      {"name": "mcu-version-read", "op": "0xAA/0x07", "payload": "0A soft | 0B hard", "layout": "p() = {0x0A} or {0x0B}", "response": "ASCII version string", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/McuSoftVersionController.java; McuHardVersionController.java"},
+      {"name": "temp-calibration", "op": "0x33/0x1E", "payload": "<02|01><signed centi-degree LE16>", "layout": "[0] 0x02 write / 0x01 read [1..2] offset", "response": "0xAA/0x1E -> [0] result [1..2] offset", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/TemperatureCaliController.java"},
+      {"name": "abnormal-info", "op": "0xAA/0x17", "payload": "", "layout": "empty read", "response": "[0] code", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7132/ble/controller/AbnormalInfoController.java"},
+      {"name": "common-switch", "op": "0x33/0x1F", "payload": "<0|1>", "layout": "[0]", "response": "0xAA/0x1F -> [0]", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7132/ble/controller/CommonSwitchController.java"},
+      {"name": "power-saving-read", "op": "0xAA/0x23", "payload": "", "layout": "empty read", "response": "PowerSavingControllerKt.parse4PowerSaving(validBytes)", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7132/ble/controller/PowerSavingController.java"},
+      {"name": "swing-leaf", "op": "0x33/0x2A", "payload": "<on|off>[<speed<<4|angle>]", "layout": "on=0x01 off=0x16; optional [1] speed high nibble, angle low nibble", "response": "0xAA/0x2A", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7133/ble/controller/SwingLeafController.java"},
+      {"name": "work-status", "op": "0x33/0x22", "payload": "01", "layout": "[0]=1", "response": "[0] status", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7133/ble/controller/WorkStatusController.java"},
+      {"name": "temperature-unit", "op": "0x33/0x1F", "payload": "<0|1>", "layout": "[0] 1=C 0=F (call passes !z)", "response": "0xAA/0x1F", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7133/ble/controller/H7138TempUnitChangeController.java"},
+      {"name": "heart", "op": "0xAA/0x01", "payload": "", "layout": "empty; base HeartController", "response": "0xEE/0x01 -> [0] power [1] 0=running [2] mode [3] gear", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/HeartControllerV1.java"}
+    ],
+    "notifications": [
+      {"name": "gear-report", "op": "0xEE/0x05", "layout": "[0] gear", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/DevCommReportParse.java"},
+      {"name": "child-lock-report", "op": "0xEE/0x10", "layout": "[0] != 0", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/DevCommReportParse.java"},
+      {"name": "rotate-report", "op": "0xEE/0x18", "layout": "[0] != 0", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/DevCommReportParse.java"},
+      {"name": "not-disturb-report", "op": "0xEE/0x16", "layout": "[0] enable [1] forever/startH [2] startM [3] endH [4] endM", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/DevCommReportParse.java"},
+      {"name": "bind-temperature-report", "op": "0xEE/0x08", "layout": "6-byte MAC; zero = unbound", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/DevCommReportParse.java"},
+      {"name": "delay-off-report", "op": "0xEE/0x03 or 0x11", "layout": "[0] open [1..2] totalMin [3..5] leaveSec", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/DevCommReportParse.java"},
+      {"name": "client-lock", "op": "0xEE/0x17", "layout": "[0]==0 lock [1] level", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/ClientLockEvent.java"},
+      {"name": "wifi-connect", "op": "0x11", "layout": "[0]==0 connected", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/WifiNotifyParse.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "IotMsgV2 (write type=1, read type=0, origin=32, cmdVersion runtime, transaction generated)",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{\"msg\":{\"type\":1,\"origin\":32,\"cmd\":\"turn\",\"data\":{\"val\":1}}}", "response": "state.onOff", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/iot/CmdTurn.java"},
+      {"cmd": "status", "data": {}, "example": "{\"msg\":{\"type\":0,\"origin\":32,\"cmd\":\"status\"}}", "response": "state/op/warn", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/iot/CmdStatus.java"},
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte frame>", "..."]}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"ptReal\",\"data\":{\"command\":[\"M...\"]}}}", "response": "op.pt[] base64 frames", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/iot/CmdPtReal.java"},
+      {"cmd": "online", "data": {}, "example": "{\"msg\":{\"cmd\":\"online\"}}", "response": "state", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/iot/Cmd.java"}
+    ],
+    "status": {"fields": {"state.onOff": "int 0|1", "state.result": "int", "op.pt": "array of base64 20-byte BLE frames", "warn": "int bitfield: 0x40 dump mode, 0x80 over-temperature", "timer groups": "parsed from op.pt frames with cmdType 0x13", "constant temp": "parsed from frame 0x1A", "thermometer sensor": "parsed from V3 status frames"}, "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/iot/CmdStatusParseV1.java; v3/CmdStatusParseV3.java"}
+  },
+  "other_protocols": [
+    {"name": "ble-advertisement", "details": "scanRecord parsed by BleUtil.parseBleBroadOnOff; [0]==1 then [1] on/off and optional [2] warn bitfield (0x40 dump, 0x80 high temp)", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/pact/Model.java"},
+    {"name": "http", "details": "support-device/SKU queries and thermometer bind APIs", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/net/IHumidifyNet.java"},
+    {"name": "thermometer-sensor", "details": "separate bound BLE thermometer; MAC bind 0x08, calibration 0x1E, readings via ThermometerInfo/ThermometerSensorInfo", "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/adjust/thermometer/*"}
+  ],
+  "dynamic_effects": [
+    {"name": "gear", "submode": null, "payload": "05 <gear>", "attributes": ["gear index"], "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/GearController.java"},
+    {"name": "mode", "submode": null, "payload": "05 <01 gear|03 auto|09 fan>", "attributes": ["gear", "auto", "fan"], "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7132/adjust/Mode.java"},
+    {"name": "constant-temperature", "submode": null, "payload": "1A <on><mode><tempLE16>", "attributes": ["target 1..100", "C/F flag"], "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/controller/ConstantTemperatureControllerV3.java"},
+    {"name": "swing-leaf", "submode": null, "payload": "2A <on|off>[<speed<<4|angle>]", "attributes": ["on/off", "speed 0..15", "angle 0..15 (runtime UI bounds)"], "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7133/ble/controller/SwingLeafController.java"},
+    {"name": "power-saving", "submode": null, "payload": "23 (read)", "attributes": ["power-saving state"], "source": "jadx-splits/split_pact_h7130/sources/com/govee/h7132/ble/controller/PowerSavingController.java"},
+    {"name": "sleep-schedule", "submode": null, "payload": "timer/time frames built from per-hour curve", "attributes": ["hourly temperature curve", "runtime points"], "source": "jadx-splits/split_pact_h7130/sources/com/govee/baseh7130/sleep/*"}
+  ],
+  "notes": "Heater family: no colour/scene/DIY/music/segment engine. All cloud control is turn/status/ptReal (BLE frames base64). The split-local BleProtocolConstants is a partially initialised mutable duplicate; 7132/7133/7135 controllers import base_h71xx.sku_base.BleProtocolConstants. Gear count and temperature bounds are runtime/UI values. PowerSaving parse layout not fully expanded; repeat bit order follows base BleUtil.parseBytes4Bit. H7139 only appears as a base SkuCons constant; no dedicated config in this split."
+}

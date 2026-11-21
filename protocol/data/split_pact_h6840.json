@@ -1,0 +1,867 @@
+{
+  "split": "split_pact_h6840",
+  "families": [
+    "H6840",
+    "H6841",
+    "H6842",
+    "H6843",
+    "H6609",
+    "H70C1",
+    "H70C2",
+    "H70CB",
+    "H70C9",
+    "H70C4",
+    "H70C5",
+    "H70C6",
+    "H70C7",
+    "H70C8",
+    "H6870",
+    "H6871",
+    "R6871",
+    "H6860",
+    "H6861",
+    "H6350",
+    "H6351",
+    "H6850",
+    "H6250",
+    "H6175"
+  ],
+  "skus": [
+    {
+      "sku": "H6840",
+      "family": "hexa/glide panel",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 278; also (1,2),(2,1),(2,2)"
+    },
+    {
+      "sku": "H6841",
+      "family": "hexa/glide panel",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 325; also (1,2)"
+    },
+    {
+      "sku": "H6842",
+      "family": "hexa panel",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 381; DIY effect codes 927-930"
+    },
+    {
+      "sku": "H6843",
+      "family": "hexa panel",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 382; DIY effect codes 931-934"
+    },
+    {
+      "sku": "H6609",
+      "family": "gaming light strip",
+      "transports": [
+        "ble",
+        "iot",
+        "matter"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 173; MatterSupport"
+    },
+    {
+      "sku": "H70C1",
+      "family": "RGBIC string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 181; also (2,1)"
+    },
+    {
+      "sku": "H70C2",
+      "family": "RGBIC string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 181 alias"
+    },
+    {
+      "sku": "H70CB",
+      "family": "RGBIC string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 181 alias"
+    },
+    {
+      "sku": "H70C9",
+      "family": "RGBIC string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 181 alias"
+    },
+    {
+      "sku": "H6175",
+      "family": "light strip",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": null,
+        "code": null
+      },
+      "notes": "goodsType 187; item registered but no explicit pact.a in this split"
+    },
+    {
+      "sku": "H70C4",
+      "family": "RGBIC string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 260; also (1,2),(2,1),(2,2)"
+    },
+    {
+      "sku": "H70C5",
+      "family": "RGBIC string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 260"
+    },
+    {
+      "sku": "H70C6",
+      "family": "RGBIC string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 260"
+    },
+    {
+      "sku": "H70C7",
+      "family": "RGBIC string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 260"
+    },
+    {
+      "sku": "H70C8",
+      "family": "RGBIC string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 260"
+    },
+    {
+      "sku": "H6870",
+      "family": "RGBIC string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 260; isH687 special path"
+    },
+    {
+      "sku": "H6871",
+      "family": "RGBIC string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 260; isH687"
+    },
+    {
+      "sku": "R6871",
+      "family": "RGBIC string light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 260; isH687"
+    },
+    {
+      "sku": "H6860",
+      "family": "RGBIC strip",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 362; also (2,1)"
+    },
+    {
+      "sku": "H6861",
+      "family": "RGBIC strip",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 362"
+    },
+    {
+      "sku": "H6350",
+      "family": "light bar",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 374; 1 segment"
+    },
+    {
+      "sku": "H6351",
+      "family": "light bar",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 392; 1 segment"
+    },
+    {
+      "sku": "H6850",
+      "family": "panel light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 378; 4 segments"
+    },
+    {
+      "sku": "H6250",
+      "family": "panel light",
+      "transports": [
+        "ble",
+        "iot"
+      ],
+      "pact": {
+        "type": 1,
+        "code": 1
+      },
+      "notes": "goodsType 398; 11 segments; new music mode"
+    }
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; 0x33 write, 0xAA read, 0xA3 multi",
+    "commands": [
+      {
+        "name": "power",
+        "op": "0x33/0x01",
+        "payload": "01|00",
+        "layout": "[0] state",
+        "response": "0xAA/0x01",
+        "source": "base2light/ble/controller/SwitchController.java, h6609/ble/controller/compose/ControllerSwitch.java"
+      },
+      {
+        "name": "brightness",
+        "op": "0x33/0x04",
+        "payload": "0..100",
+        "layout": "[0]",
+        "response": "0xAA/0x04",
+        "source": "base2light/ble/controller/BrightnessController.java"
+      },
+      {
+        "name": "modeH6840",
+        "op": "0x33/0x05",
+        "payload": "sub-mode",
+        "layout": "0x0D colour, 0x04 scene, 0x0A DIY, 0x13 music",
+        "response": "0xAA/0x05",
+        "source": "h6840/ble/Mode.java, h6840/ble/ModeController.java"
+      },
+      {
+        "name": "positionCalibrationH6840",
+        "op": "0x33/0x42",
+        "payload": "opaque",
+        "layout": "BleProtocol.positionCalibration=0x42",
+        "response": "0xAA/0x42",
+        "source": "h6840/pact/BleProtocol.java, h6840/ble/controller/PositionCalibration.java"
+      },
+      {
+        "name": "installNumberH6840",
+        "op": "0x33/0x40",
+        "payload": "01 …",
+        "layout": "device install/IC count",
+        "response": "0xEE/0x40",
+        "source": "h6840/pact/BleProtocol.device_install_num"
+      },
+      {
+        "name": "secretKeyH6840",
+        "op": "0x33/0xB2 / 0xAA/0xB1",
+        "payload": "key",
+        "layout": "16-byte secret",
+        "response": "0xAA/0xB1",
+        "source": "h6840/pact/BleProtocol.SECRET_KEY_*"
+      },
+      {
+        "name": "gradualH6609",
+        "op": "0x33/0xA3",
+        "payload": "01|00",
+        "layout": "fade on/off",
+        "response": "0xEE/0xA3",
+        "source": "h6609/ble/controller/compose/GradualController.java"
+      },
+      {
+        "name": "modeH6609",
+        "op": "0x33/0x05",
+        "payload": "sub-mode",
+        "layout": "0x15 colour, 0x04 scene, 0x0A DIY, 0x13 music, 0x14 interactive, 0x00 video, 0x05 mic",
+        "response": "0xAA/0x05",
+        "source": "h6609/ble/Mode.java, h6609/ble/v1/ModeV1.java"
+      },
+      {
+        "name": "icNumberH6609",
+        "op": "0xAA/0x40",
+        "payload": "",
+        "layout": "read IC count",
+        "response": "0xEE/0x40",
+        "source": "h6609/ble/controller/compose/ControllerIcNum.java"
+      },
+      {
+        "name": "directionH6609",
+        "op": "0x33/0x30",
+        "payload": "dir",
+        "layout": "[0] direction",
+        "response": "0xAA/0x30",
+        "source": "h6609/ble/controller/compose/DirectionController.java"
+      },
+      {
+        "name": "calibrationH6609",
+        "op": "0x33/0x44",
+        "payload": "02 01 into / 02 00 exit",
+        "layout": "[0]=2 [1]=1|0",
+        "response": "0xAA/0x44",
+        "source": "h6609/ble/controller/compose/CalibrationController.java"
+      },
+      {
+        "name": "onOffMemoryH6609",
+        "op": "0x33/0x41",
+        "payload": "opaque",
+        "layout": "on/off memory",
+        "response": "0xEE/0x41",
+        "source": "h6609/ble/controller/Controller4OnOffMemory.java"
+      },
+      {
+        "name": "cameraPositionH6609",
+        "op": "0x33/0x31",
+        "payload": "opaque",
+        "layout": "MSG_TYPE_CAMERA_POSITION=49",
+        "response": "0xEE/0x31",
+        "source": "h6609/ble/BleProtocol.java"
+      },
+      {
+        "name": "readInstallCameraH6609",
+        "op": "0xAA/0x32",
+        "payload": "",
+        "layout": "MSG_TYPE_READ_INSTALL_CAMERA=50",
+        "response": "0xEE/0x32",
+        "source": "h6609/ble/BleProtocol.java"
+      },
+      {
+        "name": "readInstallLightH6609",
+        "op": "0xAA/0xAA",
+        "payload": "",
+        "layout": "MSG_TYPE_READ_INSTALL_LIGHT=-86",
+        "response": "0xEE/0xAA",
+        "source": "h6609/ble/BleProtocol.java"
+      },
+      {
+        "name": "startTimeH6609",
+        "op": "0xAA/0x35",
+        "payload": "",
+        "layout": "MSG_TYPE_READ_START_TIME=53",
+        "response": "0xEE/0x35",
+        "source": "h6609/ble/BleProtocol.java"
+      },
+      {
+        "name": "whiteBalanceH6609",
+        "op": "0x33/0xA9",
+        "payload": "opaque",
+        "layout": "value_white_balance=-87",
+        "response": "0xEE/0xA9",
+        "source": "h6609/ble/BleProtocol.java"
+      },
+      {
+        "name": "usbCheckH6609",
+        "op": "0x33/0x38",
+        "payload": "val",
+        "layout": "value_check_usb=56",
+        "response": "0xEE/0x38",
+        "source": "h6609/ble/BleProtocol.java"
+      },
+      {
+        "name": "usbCheckStateH6609",
+        "op": "0x33/0x37",
+        "payload": "val",
+        "layout": "value_check_usb_state=55",
+        "response": "0xEE/0x37",
+        "source": "h6609/ble/BleProtocol.java"
+      },
+      {
+        "name": "composeLightSwitchH6609",
+        "op": "0x33/0x36",
+        "payload": "val",
+        "layout": "value_compose_light_switch=54",
+        "response": "0xEE/0x36",
+        "source": "h6609/ble/BleProtocol.java"
+      },
+      {
+        "name": "swapLightH6609",
+        "op": "0x33/0x34",
+        "payload": "",
+        "layout": "value_swap_light_pos=52",
+        "response": "0xEE/0x34",
+        "source": "h6609/ble/BleProtocol.java"
+      }
+    ],
+    "notifications": [
+      {
+        "name": "wifiH6840",
+        "op": "0x00",
+        "layout": "DefParser.makeWifiNotifyParser(0)",
+        "source": "h6840/ble/Ble$generateNotify$1.java"
+      },
+      {
+        "name": "wifiH6609",
+        "op": "0x11",
+        "layout": "[0]==0 connected",
+        "source": "h6609/ble/WifiNotifyParse.java"
+      },
+      {
+        "name": "deviceStatus",
+        "op": "0x40",
+        "layout": "first 10 bytes",
+        "source": "base2light/ble/DeviceStatusNotifyParse.java"
+      },
+      {
+        "name": "lightAndHdmiH6609",
+        "op": "0x30",
+        "layout": "[0]==1: light-bar presence bits from [1]",
+        "source": "h6609/ble/LightAndHdmiNotifyParse.java"
+      },
+      {
+        "name": "movieFeast",
+        "op": "0x60",
+        "layout": "[0]==1, [1] on/off",
+        "source": "base2light/ble/controller/MovieFeastOnOffNotifyParse.java"
+      },
+      {
+        "name": "interactiveGame",
+        "op": "0x35",
+        "layout": "[0] status, if 2 signed24 at [1..3]",
+        "source": "base2light/ble/InteractiveGameNotifyParse.java"
+      },
+      {
+        "name": "videoRecognitionH6609",
+        "op": "0xED",
+        "layout": "[0] recognition state",
+        "source": "h6609/ble/VideoRecognitionNotifyParse.java"
+      }
+    ]
+  },
+  "iot": {
+    "envelope": "Write/AbsCmdWrite; H6840 uses base2light iot Cmd*; H6609 uses its own Cmd with state/op",
+    "commands": [
+      {
+        "cmd": "turn",
+        "data": {
+          "val": "0|1"
+        },
+        "example": "{\"msg\":{\"type\":1,\"cmd\":\"turn\",\"data\":{\"val\":1}}}",
+        "response": "state",
+        "source": "base2light/iot/CmdTurn.java, h6609/iot/Cmd.java"
+      },
+      {
+        "cmd": "brightness",
+        "data": {
+          "val": "0..100"
+        },
+        "example": "{\"msg\":{\"type\":1,\"cmd\":\"brightness\",\"data\":{\"val\":50}}}",
+        "response": "state",
+        "source": "base2light/iot/CmdBrightness.java"
+      },
+      {
+        "cmd": "colorwc",
+        "data": {
+          "color": {
+            "r": "0..255",
+            "g": "0..255",
+            "b": "0..255"
+          },
+          "colorTemInKelvin": "int"
+        },
+        "example": "{\"msg\":{\"type\":1,\"cmd\":\"colorwc\",\"data\":{\"color\":{\"r\":255,\"g\":0,\"b\":0},\"colorTemInKelvin\":0}}}",
+        "response": "state",
+        "source": "base2light/iot/CmdColorWc.java, h6609/iot/CmdColorWc.java"
+      },
+      {
+        "cmd": "ptReal",
+        "data": {
+          "command": [
+            "<base64 20-byte frame>"
+          ]
+        },
+        "example": "{\"msg\":{\"type\":1,\"cmd\":\"ptReal\",\"data\":{\"command\":[\"...\"]}}}",
+        "response": "op.pt[]",
+        "source": "base2light/pact/iot/CmdPtReal.java, h6609/iot/CmdPtReal.java"
+      },
+      {
+        "cmd": "status",
+        "data": {},
+        "example": "{\"msg\":{\"type\":0,\"cmd\":\"status\"}}",
+        "response": "state + op",
+        "source": "h6840/pact/Cmd.java, h6609/iot/Cmd.java"
+      },
+      {
+        "cmd": "online",
+        "data": {},
+        "example": "{}",
+        "response": "online",
+        "source": "h6840/pact/Cmd.java, h6609/iot/Cmd.java"
+      },
+      {
+        "cmd": "state",
+        "data": {},
+        "example": "{}",
+        "response": "read reply key",
+        "source": "h6840/pact/Cmd.java"
+      },
+      {
+        "cmd": "op",
+        "data": {},
+        "example": "{}",
+        "response": "pt reply key",
+        "source": "h6840/pact/Cmd.java"
+      },
+      {
+        "cmd": "color",
+        "data": {
+          "r": "int",
+          "g": "int",
+          "b": "int"
+        },
+        "example": "{}",
+        "response": "state",
+        "source": "h6609/iot/Cmd.java"
+      },
+      {
+        "cmd": "colorTem",
+        "data": {
+          "colorTemInKelvin": "int",
+          "color": {
+            "r": "int",
+            "g": "int",
+            "b": "int"
+          }
+        },
+        "example": "{}",
+        "response": "state",
+        "source": "h6609/iot/Cmd.java"
+      },
+      {
+        "cmd": "snapshot",
+        "data": {},
+        "example": "{}",
+        "response": "camera snapshot",
+        "source": "h6609/iot/Cmd.java"
+      },
+      {
+        "cmd": "dewarpsnapshot",
+        "data": {},
+        "example": "{}",
+        "response": "de-warped camera snapshot",
+        "source": "h6609/iot/Cmd.java (sibling pattern)"
+      },
+      {
+        "cmd": "points",
+        "data": {
+          "points": [
+            "..."
+          ]
+        },
+        "example": "{}",
+        "response": "calibration point list",
+        "source": "h6609/iot/Cmd.java"
+      },
+      {
+        "cmd": "IoTConnected",
+        "data": {},
+        "example": "{}",
+        "response": "link state",
+        "source": "h6609/iot/Cmd.java"
+      },
+      {
+        "cmd": "camera",
+        "data": {},
+        "example": "{}",
+        "response": "camera on/off",
+        "source": "h6609/iot/Cmd.java"
+      },
+      {
+        "cmd": "swap",
+        "data": {},
+        "example": "{}",
+        "response": "swap light position",
+        "source": "h6609/iot/Cmd.java"
+      },
+      {
+        "cmd": "ptIot",
+        "data": {},
+        "example": "{}",
+        "response": "IoT-channel passthrough",
+        "source": "h6609/iot/Cmd.java"
+      }
+    ],
+    "status": {
+      "fields": {
+        "state.onOff": "int 0|1",
+        "state.brightness": "int 0..100",
+        "state.wifiSoftVersion": "string",
+        "state.wifiHardVersion": "string",
+        "op.pt": "array of base64 20-byte BLE frames"
+      },
+      "source": "h6609/iot/State.java, h6840/pact/Cmd.java"
+    }
+  },
+  "other_protocols": [
+    {
+      "name": "matter",
+      "details": "H6609 (goodsType 173) via h6609/newdetail/config/MatterSupport; H6840/H6841 via MatterInterceptor in ConfigH6840.",
+      "source": "h6609/newdetail/config/MatterSupport.java, h6840/ConfigH6840.java"
+    },
+    {
+      "name": "http-calibration",
+      "details": "H6609 camera calibration point get/upload and snapshot handling.",
+      "source": "h6609/adjust/new_detail/network/ApiService.java, PointListInfo.java"
+    },
+    {
+      "name": "local-assets",
+      "details": "H6840 GIF/graffiti transform pipeline (GifTransformVM, CellGraffitiProtocolInfo) is local, not network.",
+      "source": "h6840/diy/gif/GifTransformVM.java, h6840/diy/cell_graffiti/CellGraffitiProtocolInfo.java"
+    }
+  ],
+  "dynamic_effects": [
+    {
+      "name": "colorH6840",
+      "submode": "0x0D",
+      "payload": "0D R G B kLo kHi R2 G2 B2",
+      "attributes": [
+        "RGB",
+        "colour temperature LE16",
+        "temperature RGB"
+      ],
+      "source": "h6840/ble/SubModeColor.java"
+    },
+    {
+      "name": "sceneH6840",
+      "submode": "0x04",
+      "payload": "04 effectLo effectHi param",
+      "attributes": [
+        "16-bit effect id",
+        "extra param byte",
+        "0xA3/0x5B layer blob"
+      ],
+      "source": "h6840/ble/SubModeScenes.java, h6840/pact/Comm.java"
+    },
+    {
+      "name": "diyH6840",
+      "submode": "0x0A",
+      "payload": "0A codeLo codeHi",
+      "attributes": [
+        "16-bit DIY code",
+        "DIY groups 1..14",
+        "H6842/43 codes 927..934"
+      ],
+      "source": "h6840/ble/SubModeNewDiy.java, h6840/diy/*"
+    },
+    {
+      "name": "musicH6840",
+      "submode": "0x13",
+      "payload": "13 code sens",
+      "attributes": [
+        "music codes 160..167",
+        "sensitivity 0..99"
+      ],
+      "source": "h6840/ble/SubModeMusic.java, h6840/pact/BleProtocol.java"
+    },
+    {
+      "name": "colorH6609",
+      "submode": "0x15",
+      "payload": "15 opType … mask*",
+      "attributes": [
+        "wire opTypes 0,1,2,3,6,7 only",
+        "mask 2 or 3 bytes",
+        "kelvin",
+        "per-group brightness/RGB"
+      ],
+      "source": "h6609/ble/v1/SubModeColorV1.java"
+    },
+    {
+      "name": "sceneH6609",
+      "submode": "0x04",
+      "payload": "04 effectLo effectHi",
+      "attributes": [
+        "16-bit effect id"
+      ],
+      "source": "h6609/ble/v1/SubModeScenesV1.java"
+    },
+    {
+      "name": "diyH6609",
+      "submode": "0x0A",
+      "payload": "0A codeLo codeHi",
+      "attributes": [
+        "16-bit DIY code",
+        "graffiti layer parsers"
+      ],
+      "source": "h6609/ble/Sub4Diy.java, h6609/ble/SubModeNewDiy.java"
+    },
+    {
+      "name": "musicH6609",
+      "submode": "0x13",
+      "payload": "13 code sens | 13 code sens dyn auto 00 00 R G B",
+      "attributes": [
+        "codes 64,65,66,67,72,80,82,83 + new 3,4,5,6",
+        "sensitivity 0..99",
+        "dynamic/auto flags, RGB"
+      ],
+      "source": "h6609/ble/v1/SubModeMusicV1.java"
+    },
+    {
+      "name": "videoH6609",
+      "submode": "0x00",
+      "payload": "00 drama part vividness voiceOpen 02 voice",
+      "attributes": [
+        "drama flag",
+        "part 8/9",
+        "vividness 0..100",
+        "voice code"
+      ],
+      "source": "h6609/ble/v1/SubModeVideoV1.java"
+    },
+    {
+      "name": "interactiveH6609",
+      "submode": "0x14",
+      "payload": "14 01 sens level soundLevel timeLo timeHi | 14 01 sens 01 twoLevel difficulty",
+      "attributes": [
+        "level 0/1",
+        "sound level 1..7",
+        "difficulty",
+        "timer 14..126"
+      ],
+      "source": "h6609/ble/v1/SubModeInteractive.java"
+    },
+    {
+      "name": "micH6609",
+      "submode": "0x05",
+      "payload": "05 01",
+      "attributes": [
+        "enter mic mode"
+      ],
+      "source": "h6609/ble/BleProtocol.java"
+    }
+  ],
+  "notes": "Two generations share the standard GATT pair. H6840 panels use 0x0D colour and 0x04+param scenes; the H6609 library uses 0x15 colour with op-type dispatch and 0x04 scenes. H6175 (187) lacks explicit protocol registration. Scene/DIY blobs are cloud/local assets; only containers are static. H6840 WiFi notify proType is 0 while H6609 uses 0x11."
+}

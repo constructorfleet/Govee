@@ -1,0 +1,690 @@
+{
+ "split": "split_pact_tvlightv4",
+ "families": [
+  "H6199/H6198 (v2)",
+  "H6053/H6056/H6046 (v3)",
+  "H6054/H6049 (v4)"
+ ],
+ "skus": [
+  {
+   "sku": "H6199",
+   "family": "DreamView T1 (TV backlight, camera)",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 24; H6199/H6198 sub-family; pact_tvlightv2"
+  },
+  {
+   "sku": "H6198",
+   "family": "DreamView T1S (TV backlight, camera)",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 24; pact_tvlightv2"
+  },
+  {
+   "sku": "H6053",
+   "family": "RGBIC TV Light Bars",
+   "transports": [
+    "ble"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 23; BLE-only EffectOp4Ble(23); 12 segments"
+  },
+  {
+   "sku": "H6056",
+   "family": "RGBIC TV Light Bars",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 2,
+    "code": 1
+   },
+   "notes": "goodsType 52; pact registers 2/1 and 3/1; EffectOp4BleIot({52,112})"
+  },
+  {
+   "sku": "H6046",
+   "family": "RGBIC TV Light Bars",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 112; protocols 1/1, 2/1, 2/2; 10 segments (Support.getBulbStringMaxNum returns 10 for 112)"
+  },
+  {
+   "sku": "H6054",
+   "family": "DreamView P1 (TV backlight, camera)",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 1,
+    "code": 1
+   },
+   "notes": "goodsType 25; 12 segments, 2+6 layout for colour UI; H6054 old-TL mode is 2 segments"
+  },
+  {
+   "sku": "H6049",
+   "family": "DreamView P1S (TV backlight, camera)",
+   "transports": [
+    "ble",
+    "iot"
+   ],
+   "pact": {
+    "type": 2,
+    "code": 1
+   },
+   "notes": "goodsType 25; same v4 protocol; 12 segments"
+  }
+ ],
+ "ble": {
+  "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+  "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+  "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write proType 0x33, read 0xAA",
+  "commands": [
+   {
+    "name": "power",
+    "op": "0x33/0x01",
+    "payload": "00|01",
+    "layout": "[0] 0=off 1=on",
+    "response": "0xAA/0x01 -> [0] state",
+    "source": "base2light/ble/controller/SwitchController via pact_tvlightv*/pact/Comm.java"
+   },
+   {
+    "name": "brightness",
+    "op": "0x33/0x04",
+    "payload": "<level>",
+    "layout": "[0] level; v4 range 20..254 raw; v2 may remap via NumUtil.calculateProgress when pact V1",
+    "response": "0xAA/0x04 -> [0]",
+    "source": "pact_tvlightv4/pact/Comm.java#makeBrightness4BleComm; pact_tvlightv2/pact/Support.java#getBrightnessRange"
+   },
+   {
+    "name": "heart/status",
+    "op": "0x33/0x01 (write); 0xAA/0x01 (read)",
+    "payload": "00|01",
+    "layout": "write on/off; read valid bytes [0] state (0x11 both,0x01 main,0x10 background,0x00 none), [1] feast flag (v3/v4)",
+    "response": "0xAA/0x01",
+    "source": "pact_tvlightv4/ble/TvHeartController.java; pact_tvlightv3/ble/TvHeartController.java"
+   },
+   {
+    "name": "mode container",
+    "op": "0x33/0x05",
+    "payload": "<submode payload>",
+    "layout": "[0]=sub-mode id, [1..] payload; see dynamic_effects",
+    "response": "0xAA/0x05 with p()={1} -> [0]=submode, [1..] payload",
+    "source": "base2light/ble/controller/AbsModeController + pact_tvlightv*/ble/ModeController.java"
+   },
+   {
+    "name": "all-light switch",
+    "op": "0x33/0x33",
+    "payload": "00|01|10|11",
+    "layout": "[0] 0=both off,1=main on,0x10=background on,0x11=both on",
+    "response": "read same",
+    "source": "pact_tvlightv4/ble/SingleLightController.java"
+   },
+   {
+    "name": "swap light position",
+    "op": "0x33/0x34",
+    "payload": "",
+    "layout": "no payload",
+    "response": "write ack",
+    "source": "pact_tvlightv4/ble/SwapLightController.java"
+   },
+   {
+    "name": "light direction",
+    "op": "0x33/0x30",
+    "payload": "<dir>",
+    "layout": "[0] 0/1 direction",
+    "response": "0xAA/0x30 -> [0]",
+    "source": "pact_tvlightv4/ble/LightDirectionController.java"
+   },
+   {
+    "name": "camera position",
+    "op": "0x33/0x31",
+    "payload": "<pos>",
+    "layout": "[0] cameraPos",
+    "response": "0xAA/0x31 -> [0]",
+    "source": "pact_tvlightv4/ble/CameraPosController.java"
+   },
+   {
+    "name": "check camera",
+    "op": "0x33/0x32",
+    "payload": "",
+    "layout": "no payload",
+    "response": "[0] 0/1",
+    "source": "pact_tvlightv4/ble/CheckCameraController.java"
+   },
+   {
+    "name": "start time (v4)",
+    "op": "0xAA/0x35",
+    "payload": "",
+    "layout": "read",
+    "response": "[0] 0..255",
+    "source": "pact_tvlightv4/ble/StartTimeController.java"
+   },
+   {
+    "name": "start time (v2)",
+    "op": "0xAA/0x34",
+    "payload": "",
+    "layout": "read (StartTimeControllerV1 uses 0x35)",
+    "response": "[0]",
+    "source": "pact_tvlightv2/ble/StartTimeController.java"
+   },
+   {
+    "name": "gradual switch (v2)",
+    "op": "0xA3/0xA3",
+    "payload": "00|01",
+    "layout": "[0] gradual on/off",
+    "response": "[0]",
+    "source": "pact_tvlightv2/ble/GradualController.java"
+   },
+   {
+    "name": "multi-frame DIY/scene chunk",
+    "op": "0xA3 or 0xA4 or 0xA5 / <idx>",
+    "payload": "<chunk>",
+    "layout": "MultipleBleBytes / MultipleControllerCommV1: [2]=index, [3..18]=chunk, last frame carries 0x05 mode cmd",
+    "response": "per-chunk ack",
+    "source": "base2light/ble/comm/MultipleBleBytes; pact_tvlightv4/iot/CmdPt.java"
+   },
+   {
+    "name": "white balance (base parser)",
+    "op": "0x33/0xA9",
+    "payload": "00 03 auto R B / 06 01 progress / 0F 03 R G B",
+    "layout": "valid bytes [2]=enabled, [3..5]=first RGB, [6..7]=second RGB",
+    "response": "0xAA/0xA9",
+    "source": "pact_tvlightv4/detail/Info4Detail.java#n0"
+   },
+   {
+    "name": "whole-RL brightness (base parser)",
+    "op": "0x33/0xA9",
+    "payload": "02 01 value",
+    "layout": "valid byte [2] level",
+    "response": "0xAA/0xA9 02",
+    "source": "pact_tvlightv4/detail/Info4Detail.java#o0"
+   },
+   {
+    "name": "black-border remove (base parser)",
+    "op": "0x33/0xA9",
+    "payload": "0B 01 flag",
+    "layout": "valid byte [3] 1=on",
+    "response": "0xAA/0xA9 0B",
+    "source": "pact_tvlightv4/detail/Info4Detail.java#c0"
+   },
+   {
+    "name": "DSP version read",
+    "op": "0xAA/0x07",
+    "payload": "",
+    "layout": "[1]=7 [2]=7, bytes 3..4 low/high count",
+    "response": "0xAA/0x07",
+    "source": "pact_tvlightv4/pact/Comm.java#parseDspVersion"
+   },
+   {
+    "name": "whiteBalanceClassic",
+    "op": "0x33/0xA9",
+    "payload": "00 03 auto R B",
+    "layout": "[0]=0 [1]=3 [2]=auto?0:1 [3]=R [4]=B; read 00 -> valid[2]=defaultAuto valid[3]=defaultR valid[4]=defaultB valid[5]=auto valid[6]=R valid[7]=B",
+    "response": "0xAA/0xA9 00",
+    "source": "base2light/videomode/newdetail/funtion/WhiteBalanceVmInterface.java"
+   },
+   {
+    "name": "whiteBalanceAdvanced",
+    "op": "0x33/0xA9",
+    "payload": "0F 03 R G B",
+    "layout": "[0]=0x0F [1]=3 [2..4]=R,G,B; read 0F -> valid[2..5]=R,G,B,type",
+    "response": "0xAA/0xA9 0F",
+    "source": "base2light/videomode/newdetail/funtion/WhiteBalanceVmInterface.java"
+   },
+   {
+    "name": "autoWhiteBalance",
+    "op": "0x33/0xA9",
+    "payload": "12",
+    "layout": "trigger auto white balance (old path)",
+    "response": "ack",
+    "source": "base2light/videomode/newdetail/controller/VideoAutoWbController.java"
+   },
+   {
+    "name": "checkWhiteBalanceCali",
+    "op": "0xAA/0xA9",
+    "payload": "13",
+    "layout": "read; valid[2]==1 means calibrated",
+    "response": "0xAA/0xA9 13",
+    "source": "base2light/videomode/newdetail/controller/VideoCheckWbCaliController.java"
+   },
+   {
+    "name": "exitWhiteBalanceCali",
+    "op": "0x33/0xA9",
+    "payload": "14",
+    "layout": "exit calibration",
+    "response": "ack",
+    "source": "base2light/videomode/newdetail/controller/VideoAutoWbController.java"
+   },
+   {
+    "name": "sensitivity",
+    "op": "0x33/0xA9",
+    "payload": "01 01 value",
+    "layout": "[0]=1 [1]=1 [2]=value; read 01 -> valid[2]",
+    "response": "0xAA/0xA9 01",
+    "source": "base2light/videomode/newdetail/controller/VideoSensitivityController.java"
+   },
+   {
+    "name": "videoBrightness",
+    "op": "0x33/0xA9",
+    "payload": "02 01 value",
+    "layout": "[0]=2 [1]=1 [2]=whole-RL brightness; read 02",
+    "response": "0xAA/0xA9 02",
+    "source": "base2light/videomode/newdetail/funtion/WholeRLBrightnessVmInterface.java"
+   },
+   {
+    "name": "colorCalibration",
+    "op": "0x33/0xA9",
+    "payload": "05 03 R G B | 05 04 R G B extra",
+    "layout": "[0]=5 [1]=3|4 [2..]=RGB[+extra]; read 05 -> valid[2..5]",
+    "response": "0xAA/0xA9 05",
+    "source": "base2light/videomode/newdetail/controller/ColorCaliController.java; pact_h6099/ble/controller/compose/Controller4ColorCalibration.java"
+   },
+   {
+    "name": "blackScreen",
+    "op": "0x33/0xA9",
+    "payload": "0A 06 enable mode startLo startHi endLo endHi",
+    "layout": "[0]=0x0A [1]=6 [2]=enable [3]=mode 1|2 [4..5]=start LE16 [6..7]=end LE16; read 0A",
+    "response": "0xAA/0xA9 0A",
+    "source": "pact_h6099/ble/controller/compose/BlackScreenController.java; base2light/balckscreen/controller/BlackScreenController.java"
+   },
+   {
+    "name": "hdrCalibration",
+    "op": "0x33/0xA9",
+    "payload": "0D",
+    "layout": "write triggers HDR calibration; read 0D polls result",
+    "response": "0xAA/0xA9 0D",
+    "source": "base2light/videomode/newdetail/controller/HDRCaliController.java"
+   },
+   {
+    "name": "saturation",
+    "op": "0x33/0xA9",
+    "payload": "0E 01 value",
+    "layout": "[0]=0x0E [1]=1 [2]=value; read 0E -> valid[2]",
+    "response": "0xAA/0xA9 0E",
+    "source": "base2light/videomode/newdetail/controller/VideoSaturationController.java"
+   },
+   {
+    "name": "aiFilter",
+    "op": "0x33/0xA9",
+    "payload": "10 0F enable R G B saturation codeLo codeHi autoCloseLo autoCloseHi timeLo timeHi tz0 tz1 tz2 tz3",
+    "layout": "[2]=enable [3]=R [4]=G [5]=B [6]=saturation [7..8]=filter code LE16 [9..10]=auto-close minutes LE16 [11..12]=expiry time-of-day LE16 [13..16]=timezone; read 10 -> valid[2..16]",
+    "response": "0xAA/0xA9 10",
+    "source": "base2light/videomode/newdetail/controller/AiFilterController.java"
+   },
+   {
+    "name": "hdrEffect",
+    "op": "0x33/0xA9",
+    "payload": "11 02 enable level",
+    "layout": "[0]=0x11 [1]=2 [2]=enable [3]=level; read 11 -> valid[2]==1,valid[3]",
+    "response": "0xAA/0xA9 11",
+    "source": "base2light/videomode/newdetail/controller/VideoHdrEffectController.java"
+   },
+   {
+    "name": "soundEffectMic",
+    "op": "0x33/0xAC",
+    "payload": "micIndex",
+    "layout": "[0]=selected mic index",
+    "response": "ack",
+    "source": "base2light/videomode/newdetail/funtion/SoundEffectVmInterface.java"
+   },
+   {
+    "name": "relativeBrightness",
+    "op": "0x33/0xAE",
+    "payload": "01 04|06 v0 v1 v2 v3 [v4 v5]",
+    "layout": "[0]=1 [1]=segment count (4|6) then segment levels; read AE 01",
+    "response": "0xAA/0xAE 01",
+    "source": "base2light/relativebrightness/controller/RelativeBrightnessController.java"
+   }
+  ],
+  "notifications": [
+   {
+    "name": "wifi connected",
+    "op": "0xEE/0x11 (notify)",
+    "layout": "[0]==0 -> connected",
+    "source": "pact_tvlightv4/ble/WifiNotifyParse.java"
+   },
+   {
+    "name": "brightness",
+    "op": "notify 0x20",
+    "layout": "[0] level",
+    "source": "pact_tvlightv3/ble/BrightnessNotifyParse.java"
+   },
+   {
+    "name": "device/switch status",
+    "op": "notify 0x30",
+    "layout": "[0]==1, [1] bitfield",
+    "source": "base2light/ble/DeviceStatusNotifyParse (registered in v3/v4 BleNotifyComm)"
+   },
+   {
+    "name": "check camera response",
+    "op": "0xAA/0x32",
+    "layout": "[0] 0/1",
+    "source": "pact_tvlightv4/ble/CheckCameraController.java"
+   },
+   {
+    "name": "heart/power",
+    "op": "0xAA/0x01",
+    "layout": "[0] state, [1] feast flag",
+    "source": "pact_tvlightv4/ble/TvHeartController.java"
+   },
+   {
+    "name": "mode read-back",
+    "op": "0xAA/0x05",
+    "layout": "[0]=submode then payload",
+    "source": "pact_tvlightv4/ble/Mode.java"
+   },
+   {
+    "name": "white balance / whole brightness / border",
+    "op": "0xAA/0xA9 (0x00/0x02/0x0B)",
+    "layout": "read replies for white balance (0), whole-RL brightness (2), black-border (11)",
+    "source": "pact_tvlightv4/detail/Info4Detail.java"
+   }
+  ]
+ },
+ "iot": {
+  "envelope": "CmdBuilder.makeCmdStr -> Write.getWriteMsg4Transaction (type=1, origin=32); responses parsed as IotMsgProType.V2 (IotMsgV2)",
+  "commands": [
+   {
+    "cmd": "turn",
+    "data": {
+     "val": "0|1",
+     "subVal": "[v1,v2] (v4)"
+    },
+    "example": "{\"msg\":{\"cmd\":\"turn\",\"data\":{\"val\":1,\"subVal\":[1,1]}}}",
+    "response": "status/state",
+    "source": "pact_tvlightv4/iot/CmdTurn.java"
+   },
+   {
+    "cmd": "brightness",
+    "data": {
+     "val": "int"
+    },
+    "example": "{\"msg\":{\"cmd\":\"brightness\",\"data\":{\"val\":100}}}",
+    "response": "state.brightness",
+    "source": "pact_tvlightv4/iot/CmdBrightness.java"
+   },
+   {
+    "cmd": "colorwc",
+    "data": {
+     "color": {
+      "red": "0-255",
+      "green": "0-255",
+      "blue": "0-255"
+     },
+     "colorTemInKelvin": "int (0 for RGB)"
+    },
+    "example": "{\"msg\":{\"cmd\":\"colorwc\",\"data\":{\"color\":{\"red\":255,\"green\":0,\"blue\":0},\"colorTemInKelvin\":0}}}",
+    "response": "state",
+    "source": "pact_tvlightv4/iot/v2/CmdColorWc.java"
+   },
+   {
+    "cmd": "pt",
+    "data": {
+     "op": "mode|gradual|sleep|timer|wakeup",
+     "value": [
+      "<base64 20-byte frame>"
+     ]
+    },
+    "example": "{\"msg\":{\"cmd\":\"pt\",\"data\":{\"op\":\"mode\",\"value\":[\"WjMB...\"]}}}",
+    "response": "op",
+    "source": "pact_tvlightv4/iot/CmdPt.java"
+   },
+   {
+    "cmd": "ptReal",
+    "data": {
+     "command": [
+      "<base64 20-byte frame>"
+     ]
+    },
+    "example": "{\"msg\":{\"cmd\":\"ptReal\",\"data\":{\"command\":[\"WjMB...\"]}}}",
+    "response": "op",
+    "source": "pact_tvlightv4/iot/v2/CmdPtReal.java"
+   },
+   {
+    "cmd": "camera",
+    "data": {
+     "cameraPos": "int",
+     "cameraDirection": "int (v2)"
+    },
+    "example": "{\"msg\":{\"cmd\":\"camera\",\"data\":{\"cameraPos\":1}}}",
+    "response": "state",
+    "source": "pact_tvlightv4/iot/CmdCameraPos.java; pact_tvlightv2/iot/CmdDirection.java"
+   },
+   {
+    "cmd": "points",
+    "data": {
+     "points": [
+      {
+       "pointX": "int",
+       "pointY": "int"
+      }
+     ]
+    },
+    "example": "{\"msg\":{\"cmd\":\"points\",\"data\":{\"points\":[{\"pointX\":10,\"pointY\":20}]}}}",
+    "response": "status",
+    "source": "pact_tvlightv4/iot/CmdCalibrationPoints.java"
+   },
+   {
+    "cmd": "IoTConnected",
+    "data": {
+     "value": [
+      "<base64>"
+     ]
+    },
+    "example": "legacy v2 bulb passthrough",
+    "response": "state",
+    "source": "pact_tvlightv2/iot/CmdBulb.java"
+   },
+   {
+    "cmd": "snapshot (read)",
+    "data": {},
+    "example": "response only",
+    "response": "snapshotUrl",
+    "source": "pact_tvlightv4/iot/ResultSnapShot.java"
+   }
+  ],
+  "status": {
+   "fields": {
+    "on": "bool (StateWithSubOnOff.onOff)",
+    "brightness": "int",
+    "subOnOff": "int[2] main/background",
+    "mode": "sub-mode byte + payload",
+    "video": "screenState,drama,vivid,voiceOn,voice,rlBrightness",
+    "timer/sleep/wakeup": "base TimerConfig payloads",
+    "whiteBalance": "enabled,r,g,b,r2,g2"
+   },
+   "source": "pact_tvlightv4/detail/Info4Detail.java"
+  }
+ },
+ "other_protocols": [
+  {
+   "name": "http-calibration",
+   "details": "GET appco/v1/calibration/point?device&sku; POST appco/v1/calibration/point {device,sku,imgUrl,points}; POST bi/rest/v1/calibrationPoints {device,sku,deviceVersion,appVersion,url,points}; POST device/rest/devices/v1/settings",
+   "source": "pact_tvlightv4/add/net/INet.java"
+  },
+  {
+   "name": "ble-broadcast",
+   "details": "add-flow advertisement parse into AddInfo (sku,goodsType,protocol,bleName,MAC)",
+   "source": "pact_tvlightv4/add/BleBroadcastProcessor.java"
+  },
+  {
+   "name": "movie-feast-rest",
+   "details": "Movie/Music/Scenes feast CRUD + snapshots: POST/DELETE /appsku/v1/moment/feasts; PUT /appsku/v1/moment/feasts/names; GET /bff-app/v1/moment/feasts/details|main-devices|sub-devices; POST /appsku/v1/moment/feasts/region {gId,deviceAreaConfigs[{sku,device,areaConfigs,switchConfigs,extStr}]}; GET /bff-app/v1/scene/music-feast; POST /bff-app/v1/scene/music-feast/effect; PUT /bff-app/v1/music-feast/voice[/btn]; POST /bff-app/v1/scene-feast[/iot-control]; POST /bff-app/v1/feast/mute; POST /bff-app/v1/feast/snapshot/cmd-refactor (feastId,feastType,mainSku,mainDevice,mainVersionHard,mainGoodsType,mainPactType,mainPactCode,newSubDevices,oldSubDevices).",
+   "source": "base com/govee/home/main/device/moment/net/IMomentNet.java; net/request/Feast*Request.java; com/govee/home/compose/feast/SnapshotCmdService.java"
+  }
+ ],
+ "dynamic_effects": [
+  {
+   "name": "legacy color v2",
+   "submode": "0x0B",
+   "payload": "0B R G B kelLo kelHi mask0 mask8",
+   "attributes": [
+    "15 segments",
+    "mask0 bits 0-7",
+    "mask8 bits 8-14"
+   ],
+   "source": "pact_tvlightv2/ble/SubModeColor.java"
+  },
+  {
+   "name": "color v3/v4",
+   "submode": "0x0D",
+   "payload": "0D sel R G B kelLo kelHi R2 G2 B2",
+   "attributes": [
+    "sel 0/1/16/17",
+    "kelvin signed LE16",
+    "R2G2B2 temperature colour"
+   ],
+   "source": "pact_tvlightv3/ble/SubModeColor.java; pact_tvlightv4/ble/SubModeColor.java"
+  },
+  {
+   "name": "color V2 15-seg",
+   "submode": "0x15",
+   "payload": "15 01 R G B kelLo kelHi R2 G2 B2 mask0 mask8",
+   "attributes": [
+    "15 segments",
+    "12 bytes"
+   ],
+   "source": "pact_tvlightv2/ble/SubModeColorV2.java"
+  },
+  {
+   "name": "color V2 12-seg",
+   "submode": "0x15",
+   "payload": "15 01 R G B kelLo kelHi R2 G2 B2 mask0 mask1 (17B)",
+   "attributes": [
+    "12 segments",
+    "mask0 bits0-7",
+    "mask1 bits8-11",
+    "mode 02 = per-segment brightness",
+    "mode 03 = raw RGB list"
+   ],
+   "source": "pact_tvlightv4/ble/SubModeColorV2.java; pact_tvlightv3/ble/SubModeColorV2.java"
+  },
+  {
+   "name": "music old",
+   "submode": "0x0C",
+   "payload": "0C effect sens [dynFlag [R G B]]",
+   "attributes": [
+    "sensitivity 0..99",
+    "effect 0 Energic/2 Rolling/3 Spectrum/5 Rhythm (v2)",
+    "v3/v4 0/5/6/7 + 73 Beat + 80 Torch + 81 Rainbow Circle + 82 Shiny"
+   ],
+   "source": "pact_tvlightv2/ble/SubModeMusic.java; pact_tvlightv3/ble/SubModeMusic.java; pact_tvlightv4/ble/SubModeMusic.java"
+  },
+  {
+   "name": "music new",
+   "submode": "0x13",
+   "payload": "13 effect sens [10] [dyn] [sel R G B]",
+   "attributes": [
+    "3 Rhythm/5 Energic/8 Rolling/9 Spectrum",
+    "9B for effect 3, 8B for 5/8/9, 3B otherwise",
+    "sel 0/1/16/17"
+   ],
+   "source": "pact_tvlightv4/ble/SubModeMusicV2.java"
+  },
+  {
+   "name": "music new v2",
+   "submode": "0x13",
+   "payload": "13 effect sens 10 dyn R G B",
+   "attributes": [
+    "default effect 5",
+    "fixed 0x10"
+   ],
+   "source": "pact_tvlightv2/ble/SubModeMusicV2.java"
+  },
+  {
+   "name": "music new v3",
+   "submode": "0x13",
+   "payload": "same as v4 new",
+   "attributes": [
+    "ParamsSubMode4Music selects V2 vs V3 parser by version"
+   ],
+   "source": "pact_tvlightv3/adjust/ParamsSubMode4Music.java; pact_tvlightv3/ble/SubModeMusicV3.java"
+  },
+  {
+   "name": "scene",
+   "submode": "0x04",
+   "payload": "04 effectLo effectHi",
+   "attributes": [
+    "16-bit LE scene code",
+    "static TV set 13,4,9,7,24,10,16,15,29,30,21,22",
+    "may expand to multi-frame A3/A4 chunks"
+   ],
+   "source": "pact_tvlightv4/ble/SubModeScenes.java; pact_tvlightv4/adjust/ui/ScenesV0.java"
+  },
+  {
+   "name": "DIY",
+   "submode": "0x0A",
+   "payload": "0A diyLo diyHi",
+   "attributes": [
+    "16-bit LE DIY code",
+    "multi-frame body first"
+   ],
+   "source": "pact_tvlightv4/ble/SubModeNewDiy.java; pact_tvlightv4/iot/v2/CmdPtReal.java"
+  },
+  {
+   "name": "video (new)",
+   "submode": "0x00",
+   "payload": "00 screenState drama vivid voiceOn voice rlBrightness",
+   "attributes": [
+    "screenState 0 part/1 all/2 full",
+    "drama 0 movie/1 game",
+    "vivid 1..100",
+    "voiceOn 0/1",
+    "voice 0..100",
+    "rlBrightness 0..100"
+   ],
+   "source": "pact_tvlightv4/ble/SubModeVideoV2.java"
+  },
+  {
+   "name": "video (old v4)",
+   "submode": "0x00",
+   "payload": "00 00 drama vivid 00 00 rlBrightness",
+   "attributes": [
+    "legacy 7-byte form"
+   ],
+   "source": "pact_tvlightv4/ble/SubModeVideo.java"
+  },
+  {
+   "name": "video (v2)",
+   "submode": "0x00",
+   "payload": "00 allBars drama vivid voiceOn voice rlBrightness",
+   "attributes": [
+    "allBars 0/1"
+   ],
+   "source": "pact_tvlightv2/ble/SubModeVideo.java"
+  },
+  {
+   "name": "gradient / multi-layer",
+   "submode": "0x15/0x04",
+   "payload": "per-segment colour via 0x15 + multi-frame scene chunks",
+   "attributes": [
+    "12 segment masks (v3/v4), 15 (v2)"
+   ],
+   "source": "pact_tvlightv4/ble/SubModeColorV2.java"
+  }
+ ],
+ "notes": "Scene ids beyond the 12 static TV ids come from cloud ScenesM data. Brightness range is pact-dependent (20..254 raw or 0..100 progress). TvHeartController parse was partly reconstructed by jadx. 0xAB white-balance/whole-brightness/black-border controllers live in base app; only notify parsing is in this split."
+}

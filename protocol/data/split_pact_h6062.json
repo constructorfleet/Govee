@@ -1,0 +1,67 @@
+{
+  "split": "split_pact_h6062",
+  "families": ["H6062", "H606A", "H610A", "H610B"],
+  "skus": [
+    {"sku": "H6062", "family": "RGBIC strip light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 41; V1 colour 33 segments; pact (3,1)/(4,1) raise bulb max to 28/33; scene ops {0,1,2,3}"},
+    {"sku": "H606A", "family": "RGBIC strip light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 41; alias of H6062 family"},
+    {"sku": "H610A", "family": "RGBIC strip / Glide Music Wall Light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 80; V2 colour/ModeV2; scene ops {0,1,6}; default name for H610B is Glide Music Wall Light"},
+    {"sku": "H610B", "family": "Light-wall / matrix strip", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 114; V3 colour; 14 bulbs; scene ops {0,5}; DIY protocol 4, share code 41"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType (0x33/0xAA) [1]=cmdType [2..18]=payload [19]=XOR BCC; 0xA3/0xA4 multi-packet for long colour-strip writes",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "<0|1>", "layout": "[0]", "response": "0xAA/0x01", "source": "base2light SwitchController"},
+      {"name": "brightness", "op": "0x33/0x04", "payload": "<1..100>", "layout": "[0]", "response": "0xAA/0x04", "source": "pact/Comm.makeBrightnessController4BleComm"},
+      {"name": "color-mode-1-rgb", "op": "0x33/0x05 sub 0x15", "payload": "15 01 R G B kelLo kelHi R2 G2 B2 m0..m4", "layout": "17 bytes; 5-byte mask up to 33 segments", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h6062/sources/com/govee/striplight/ble/SubModeColor.java"},
+      {"name": "color-mode-2-brightness", "op": "0x33/0x05 sub 0x15", "payload": "15 02 brightness m0..m4", "layout": "brightness + 5-byte mask", "response": "0xAA/0x05", "source": "same"},
+      {"name": "color-mode-3-segment-brightness", "op": "0x33/0x05 sub 0x15", "payload": "15 03 idx b0..b13", "layout": "14 brightness bytes", "response": "0xAA/0x05", "source": "same"},
+      {"name": "color-mode-4-group-rgb", "op": "0x33/0x05 sub 0x15", "payload": "15 04 idx R G B R G B R G B R G B", "layout": "4 RGB triplets", "response": "0xAA/0x05", "source": "same"},
+      {"name": "color-v2/v3", "op": "0x33/0x05 sub 0x15", "payload": "<15> <01|02> <zone/segment bytes>", "layout": "H610A/H610B compact OpColor encoding; sub 2 gradual/segment, sub 1 all/temp", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h6062/sources/com/govee/striplight/ble/SubModeColorV2.java; SubModeColorV3.java"},
+      {"name": "music", "op": "0x33/0x05 sub 0x13", "payload": "13 <code> <sens> <dynamic> <auto> [R G B]", "layout": "rhythm code 4 uses 8 bytes; sens 0..99", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h6062/sources/com/govee/striplight/ble/SubModeMusic.java; SubModeMusicV2.java; SubModeMusicV3.java"},
+      {"name": "scene", "op": "0x33/0x05 sub 0x04", "payload": "04 effectLo effectHi", "layout": "16-bit LE", "response": "0xAA/0x05", "source": "jadx-splits/split_pact_h6062/sources/com/govee/striplight/ble/SubModeScenes.java; SubModeScenesV1/V2"},
+      {"name": "diy", "op": "0x33/0x05 sub 0x0A", "payload": "0A diyLo diyHi", "layout": "16-bit LE", "response": "0xAA/0x05", "source": "ble/SubModeNewDiy.java"},
+      {"name": "ic-piece-num", "op": "0xAA/0x40", "payload": "", "layout": "empty read", "response": "IC/piece data", "source": "jadx-splits/split_pact_h6062/sources/com/govee/striplight/ble/IcAndPieceController.java"},
+      {"name": "ic-segment-num", "op": "0xAA/0x41", "payload": "", "layout": "empty read", "response": "[0..1] IC LE16, [2] segment", "source": "ble/IcSegmentNumController.java"},
+      {"name": "check-ic", "op": "0x33/0x42", "payload": "", "layout": "empty write", "response": "notify 0x21", "source": "BleProtocol.SINGLE_WRITE_CHECK_IC=66"},
+      {"name": "light-position", "op": "0xAA/0x31", "payload": "<pos>", "layout": "read p()={pos}; write [0] 0/1", "response": "[0] pos", "source": "ble/LightPosController.java"},
+      {"name": "lr-switch", "op": "0x33/0x33", "payload": "<0|1|16|17>", "layout": "op type", "response": "0xAA/0x33", "source": "ble/SwitchLRController.java"},
+      {"name": "special-calibration-position", "op": "0x33/0xA6", "payload": "01 <0|1>", "layout": "p()={1} read; write {1, !flag}", "response": "0xAA/0xA6", "source": "ble/Special4PositionCalibrationController.java"},
+      {"name": "gradual-change", "op": "0x33/0xA3", "payload": "<0|1>", "layout": "[0]", "response": "0xAA/0xA3", "source": "ble/Gradual4BleWifiController.java"},
+      {"name": "bulb-string-color-read", "op": "0xAA/0xA5", "payload": "<index>", "layout": "p() = {index}", "response": "BulbGroupColor.parseBytes -> 4-bulb RGB", "source": "ble/BulbStringColorController.java"},
+      {"name": "color-strip-segment", "op": "0x33/0x05", "payload": "15 01 ... or 15 02 brightness mask", "layout": "per-segment/zone colour", "response": "0xAA/0x05", "source": "ble/ColorStripController.java"},
+      {"name": "multi-music", "op": "0x41 multi", "payload": "<index><length><data>", "layout": "per-piece music data", "response": "0xAA/0x41", "source": "BleProtocol.value_multiple_set_music=65"},
+      {"name": "new-abstract-music", "op": "0x33/0x05 sub 0x16", "payload": "SubModeAbsMusic body", "layout": "b==22 dispatch in Mode", "response": "0xAA/0x05", "source": "ble/Mode.java; base SubModeAbsMusic"}
+    ],
+    "notifications": [
+      {"name": "ic-count", "op": "0x21", "layout": "[0..1] IC LE16, [2] segment", "source": "ble/CheckIcNumParse.java"},
+      {"name": "ic-and-piece", "op": "0x22", "layout": "[0] sub_ic_1, [2] sub_ic_2", "source": "ble/IcAndPieceNotifyParse.java"},
+      {"name": "brightness", "op": "0x20", "layout": "[0]", "source": "ble/BrightnessNotifyParse.java"},
+      {"name": "device-status", "op": "0x30", "layout": "base DeviceStatusNotifyParse", "source": "ble/BleNotifyComm.java"},
+      {"name": "movie-feast", "op": "0x54", "layout": "[0]==1, [1] on/off", "source": "base MovieFeastOnOffNotifyParse"},
+      {"name": "wifi", "op": "0x11", "layout": "[0]==0 connected", "source": "ble/WifiNotifyParse.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "IotMsgV2",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"turn\",\"data\":{\"val\":1}}}", "response": "state", "source": "jadx-splits/split_pact_h6062/sources/com/govee/striplight/iot/CmdTurn.java"},
+      {"cmd": "brightness", "data": {"val": "1..100"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"brightness\",\"data\":{\"val\":50}}}", "response": "state", "source": "iot/CmdBrightness.java"},
+      {"cmd": "colorwc", "data": {"color": {"r": "int", "g": "int", "b": "int"}, "colorTemInKelvin": "int"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"colorwc\",\"data\":{\"color\":{\"r\":255,\"g\":0,\"b\":0},\"colorTemInKelvin\":0}}}", "response": "state", "source": "iot/CmdColorWc.java"},
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte>"], "musicCode": "int", "musicSensitivity": "int", "opVersion": "int"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"ptReal\",\"data\":{\"command\":[\"M...\"]}}}", "response": "op.pt[]", "source": "jadx-splits/split_pact_h6062/sources/com/govee/striplight/iot/CmdPtReal.java"}
+    ],
+    "status": {"fields": {"on": "bool", "brightness": "int 1-100", "color": "r/g/b", "colorTemInKelvin": "int", "pt": "base64 20-byte frames", "ic": "int", "segment": "int"}, "source": "base state/op parser + family controllers"}
+  },
+  "other_protocols": [
+    {"name": "ble-broadcast-add", "details": "advertisement-based discovery/add with V2/V3 connect dialogs and WiFi choose", "source": "jadx-splits/split_pact_h6062/sources/com/govee/striplight/add/*"},
+    {"name": "local-scene-speed", "details": "H610B saves per-scene speed/direction locally via ScenesSpeedManager and builds local scene controllers", "source": "pact/Support.supportScenesSpeedSave; SubModeScenesV2"}
+  ],
+  "dynamic_effects": [
+    {"name": "color", "submode": "0x15", "payload": "15 01/02/03/04 ... or V2/V3 compact", "attributes": ["RGB", "Kelvin 2700-6500", "33-segment mask", "14 brightness", "4x group RGB"], "source": "ble/SubModeColor.java; SubModeColorV2.java; SubModeColorV3.java"},
+    {"name": "music", "submode": "0x13", "payload": "13 <code> <sens> <dynamic> <auto> [R G B]", "attributes": ["codes 0/1/2/4/6/7/8 plus H6062 new codes", "sens 0..99"], "source": "ble/SubModeMusic.java; SubModeMusicV2.java; SubModeMusicV3.java"},
+    {"name": "scene", "submode": "0x04", "payload": "04 <effect LE16>", "attributes": ["41 {0,1,2,3}", "80 {0,1,6}", "114 {0,5}"], "source": "ble/SubModeScenes.java; SubModeScenesV1/V2"},
+    {"name": "diy", "submode": "0x0A", "payload": "0A <diy LE16>", "attributes": ["H610B protocol 4 / share code 41", "H610A NewConfigManager4H610A", "H6062 base DIY"], "source": "newdetail/newdiy/DiyParse4H610B.java; newdetail/newdiy/NewConfigManager4H610A.java"}
+  ],
+  "notes": "Three generations share one package: H6062 (goodsType 41, V1 33-seg), H610A (80, V2 ModeV2), H610B (114, V3). Bulb max 19/28/33 by pact. Colour sizes are runtime IC-derived. H610B DIY protocol code 4 and share code 41 are explicit; H610A/H6062 effect lists are base DIY-new config driven. Local scene speed/direction for H610B are persisted transient values, not a wire layout."
+}

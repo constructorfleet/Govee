@@ -1,0 +1,539 @@
+# Readings and notifications catalog
+
+Device-to-app data: BLE notify/read parsers and IoT status/telemetry schemas. Sensor-specific scaling (×100, 0.01 units, invalid sentinels) is recorded in the layout column where the code declares it.
+
+**Status properties are not commands.** Flags such as `waterLack`, `iceFull` and `doorNotClosed` are parsed from status frames or cloud device-list beans; `waterShortageOnOff` is a user setting. See `STATUS-PROPERTIES.md` for the full classification. The collected status properties are listed below; they are also in `status-properties.csv` and `data/ALL.json` (`status_properties`).
+
+## Status properties (not opcodes)
+
+| Split | Property | Kind | Meaning | Carrier | Source |
+|---|---|---|---|---|---|
+| `split_pact_h5901` | waterShortageOnOff | setting | Push-notification enable for water shortage; user preference, not the status flag. | pact/Ext.java | `jadx-splits/split_pact_h5901/sources/com/govee/h5901/pact/Ext.java` |
+| `split_pact_h7172` | waterShortageOnOff | setting | Push-notification enable for water shortage; user preference, not the status flag. | pact/Ext.java | `jadx-splits/split_pact_h7172/sources/com/govee/h7172/pact/Ext.java` |
+| `split_pact_humidifier` | waterShortageOnOff | setting | Push-notification enable for the water-shortage condition; 1 = notify me, NOT 'water is short'. | REST DeviceWaterShortageSwitchRequest {sku,device,waterShortageOnOff}; pact/Ext field | `jadx-splits/split_pact_humidifier/sources/com/govee/h7142/net/DeviceWaterShortageSwitchRequest.java; .../h7142/pact/Ext.java` |
+| `split_pact_humidifier` | waterVield / enduranceMinute | reading | Water tank level 0-100 % and estimated remaining minutes. | BLE read 0xAA/0x22 (cmdType 34); IoT status/op frame 34 | `.../h7145/adjust/bean/WaterBean.java; .../h7145/ble/controller/WaterVieldController.java; .../h7145/iot/CmdStatusParseV1.java` |
+| `split_pact_humidifier` | tankEmpty | ui-derived | No code property. Only the string/layout id tv_water_tank_empty_remind exists; UI derives 'empty' from waterVield/enduranceMinute plus warning state. | UI header (not a wire field) | `.../h7141/adjust/header/CurHeaderUI.java; .../h7142/adjust/header/CurHeaderUI.java; .../govee/humidifier/R.java` |
+| `split_pact_iceMachine` | waterLack | status | Water-shortage state flag. | H8131DeviceListStatus bytes[2]&0x01; H8150 run-state frame 0x19 [5]&0x10; H8120 state code 3 / H8121 state code 6 in 0x17 | `.../h8131/bean/H8131DeviceListStatus.java; .../h8150/bean/H8150RunStateInfo.java; .../h8120/bean/H8120DeviceState.java; .../h8121/bean/H8121DeviceState.java` |
+| `split_pact_iceMachine` | outerTankLow | status | Outer/lower tank water level low. | H8131DeviceListStatus bytes[1]&0x40 | `.../h8131/bean/H8131DeviceListStatus.java` |
+| `split_pact_iceMachine` | iceFull | status | Ice basket full. | H8131DeviceListStatus bytes[1]&0x80; H8120 state code 2; H8121 state code 4 | `.../h8131/bean/H8131DeviceListStatus.java; .../h8120/bean/H8120DeviceState.java; .../h8121/bean/H8121DeviceState.java` |
+| `split_pact_iceMachine` | doorNotClosed / isLidOpen | status | Lid/door open. | H8131DeviceListStatus bytes[2]&0x02; H8150 run-state frame 0x19 [5] bit 7 | `.../h8131/bean/H8131DeviceListStatus.java; .../h8150/bean/H8150RunStateInfo.java` |
+| `split_pact_iceMachine` | waterShortageOnOff | setting | Push-notification enable, not the water-shortage state. | pact/Ext + bind ext | `.../h8120/pact/H8120BindExt.java; .../h8121/pact/H8121BindExt.java; .../h8131/pact/H8131BindExt.java; .../h8150/pact/H8150BindExt.java` |
+
+## split_pact_bbqnew
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | heart | `0xAA/0x03` | COMMON: [0..1] temp BE16, [2..3] hum BE16, [4..5] third temp BE16, [6] battery, [7] flags; WITH_THIRD: same + bitmask; DUAL_PROBE: [0..1] temp, [2..3] hum, [4] battery, [5] flags; H5220/BBQ: + [5] switch | `Controller4BbqHeartV1` |
+| ble-notify | heart H5055 legacy | `0xAA/0x01` | [0..1] probe1 temp BE16, [2..3] probe1 hum BE16 (JADX stub) | `Controller4BbqHeart.w` |
+| ble-notify | heart H5199 | `0xAA/0x03` | bitmask + 6x int16 BE temperatures, battery/unit byte (JADX stub) | `pact_h5199 Controller4Heart.l` |
+| ble-notify | history data | `0x2b12 chunks` | 16-byte records: relative time + per-probe temperature | `BLeDataComm` |
+| iot-status | status | `status` | {"probeInfoMap[probeId].probeInnerCurrTemp":"float degC x100","probeInfoMap[probeId].probeAmbientCurrTemp":"float degC x100","probeInfoMap[probeId].battery":"int 0-100","probeInfoMap[probeId].probeConnected":"bool","probeInfoMap[probeId].probeInnerAlarm":"bool","probeInfoMap[probeId].probeError":"bool","tempUnit":"Celsius\|Fahrenheit"} | `IotDeviceInfo; BleNotifyProbeInfo` |
+
+## split_pact_bulblightstringv1
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi-connect | `0xEE/0x11` | [0]==0 means WiFi connected | `com/govee/bulblightstringv1/ble/WifiNotifyParse.java; com/govee/bulblightstringv2/ble/WifiNotifyParse.java; com/govee/bulblightv3/ble/WifiNotifyParse.java; com/govee/h7022/ble/WifiNotifyParse.java` |
+| ble-notify | brightness | `0xEE/0x20` | [0] brightness | `com/govee/bulblightstringv1/bulblightv2/ble/BrightnessNotifyParse.java; com/govee/bulblightstringv2/ble/BrightnessNotifyParse.java` |
+| ble-notify | movie-feast | `0xEE/0x60` | [0]==1 valid; [1]==1 on | `base:com/govee/base2light/ble/controller/MovieFeastOnOffNotifyParse.java` |
+| ble-notify | mode-read-reply | `0xAA/0x05` | validBytes[0]=sub-mode id; remaining -> Mode.parseSubMode | `base:com/govee/base2light/ble/controller/AbsMode.java` |
+| ble-notify | bulb-group-color-reply | `0xAA/0xA2` | [0]=groupIndex; [1..12]=4xRGB | `com/govee/bulblightstringv1/ble/BulbGroupColor.java` |
+| iot-status | status | `status` | {"state.onOff":"0\|1","state.brightness":"int","state.mode":"int","state.stringNum":"int (stringv1 only)","state.color":"{r,g,b} (bulblightv1)","state.colorTemInKelvin":"int (bulblightv1)","config.modeValue":"{mode,code}","config.sleep":"{enable,startBri,closeTime,curTime}","config.wakeup":"{enable,endBri,wakeHour,wakeMin,repeat,wakeTime}","config.time":"[NewTimerV1 x4]","h7022.turn":"0\|1","h7022.lightColorBunch":"int","h7022.softversion":"string","h7022.wifiSoftVersion":"string","h7022.modeValue":"[base64 20-byte frame]","h7022.sleepValue":"[base64 20-byte frame]","h7022.wakeupValue":"[base64 20-byte frame]","h7022.timer":"{enable,group,isGroup,timeOffset,timeOffsetMinute,time:[{enable,repeat,openHour,openMin,closeHour,closeMin}]}"} | `com/govee/bulblightstringv1/iot/CmdStatusV0.java; com/govee/bulblightstringv1/bulblightv1/iot/CmdStatusV1.java; com/govee/h7022/iot/CmdStatusV0.java` |
+
+## split_pact_fanlight
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | light_switches | `0xEE/0x30` | [1] overall switch, [2] main light, [3] back light | `base2light/kt/general_parser/DefParser.java makeFanlightSwitchNotifyParser` |
+| ble-notify | fan_info | `0xEE/0x31` | [0] sub-type 0=fan on [1]==1, 1=gear [1], 2=reverse [1]==1, 3=shake int16 LE [1..2], 4=auto/standby [1]==1 | `base2light/kt/general_parser/DefParser.java makeFanlightInfoNotifyParser` |
+| ble-notify | brightness | `0xEE/0x20` | [0] brightness 0-100 | `base2light/kt/general_parser/DefParser.java makeBrightnessNotifyParser` |
+| ble-notify | device_status | `0xEE/0x40` | first 10 payload bytes forwarded to EventDeviceStatus | `base2light/ble/DeviceStatusNotifyParse.java` |
+| ble-notify | remote_control | `0xEE/0xA4` | [0] remote pairing/status byte | `base2light/kt/general_parser/DefParser.java makeRemoteControlNotifyParser` |
+| ble-notify | wifi | `0xEE/0x11` | [0]==0 -> WiFi connected | `jadx-splits/split_pact_fanlight/sources/com/govee/fanlight/ble/BleNotifyComm.java` |
+| ble-notify | music | `0xEE/0x70+` | OnlineSound MusicNotifyParse frames | `jadx-splits/split_pact_fanlight/sources/com/govee/fanlight/ble/BleNotifyComm.java` |
+| iot-status | status | `status` | {"state.onOff":"int 0/1","state.brightness":"int 1..100","state.colorTemInKelvin":"int kelvin","state.mode":"int","op.command":"array of base64 20-byte BLE frames (0x31 fan, 0x05 mode, 0x41 color strip, 0x11/0x12/0x23 timers)"} | `jadx-splits/split_pact_fanlight/sources/com/govee/fanlight/adjust/VM4Light.java F1/A1 + base2light Info4Detail` |
+
+## split_pact_floorlamp
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | brightness | `0xEE/0x20` | [0] brightness | `jadx-splits/split_pact_floorlamp/sources/com/govee/h6071/ble/BrightnessNotifyParse.java` |
+| ble-notify | color_tem | `0xEE/0x30` | [0..1] unsigned 16-bit big-endian kelvin | `jadx-splits/split_pact_floorlamp/sources/com/govee/h6071/ble/ColorTemNotifyParse.java` |
+| ble-notify | wifi | `0xEE/0x11` | [0]==0 connected | `h6071/ble/WifiNotifyParse.java; h60b0/ble/Ble$generateNotify$1.java; h60b1/ble/WifiNotifyParse.java` |
+| ble-notify | device_status | `0xEE/0x40` | first 10 bytes | `base2light/ble/DeviceStatusNotifyParse.java` |
+| ble-notify | switch_status | `0xEE/0x30` | [0]==1, [1]==1 main switch, [2]==1 second switch | `jadx-splits/split_pact_floorlamp/sources/com/govee/h60b1/ble/DeviceSwitchStatusNotifyParse.java` |
+| ble-notify | movie_feast | `0xEE/0x60` | [0]==1 then [1] on/off | `base2light/ble/controller/MovieFeastOnOffNotifyParse.java` |
+| ble-notify | music | `0xEE/0x70+` | OnlineSound music frames | `jadx-splits/split_pact_floorlamp/sources/com/govee/h60b1/ble/BleNotifyComm.java` |
+| iot-status | status | `status` | {"state.onOff":"int 0/1","state.brightness":"int 1..100","state.mode":"int","state.colorTemInKelvin":"int (H6071/H6075)","op.command":"array of base64 20-byte frames","op frame 0x05":"mode + sub-mode (0x04 scene / 0x0A DIY / 0x0D color / 0x13 music / 0x15 color / 0x2C operate)","op frame 0x41/0x42":"switch bits / splicing value (H60B0 group)","op frame 0x23/0x11/0x12":"timers / sleep / wakeup"} | `h6071/iot/CmdStatusV0.java; h60b0/adjust/h60b0/Info4Detail.java; base2light AbsIotManagerV1` |
+
+## split_pact_h1161
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | brightness | `0xEE/0x20` | [0] 0-100 | `pickupbox/ble/BrightnessNotifyParse.java` |
+| ble-notify | device status | `0xEE/0x40` | 5 raw bytes -> EventDeviceStatus | `pickupbox/ble/DeviceStatusNotifyParse.java` |
+| ble-notify | factory reset | `0xEE/0x41` | no payload | `pickupbox/ble/ResetDeviceNotifyParse.java` |
+| ble-notify | mode | `0xEE/0x05` | [0] submode; 0x0F music fields | `pickupbox/ble/ModeController.java` |
+| ble-notify | open state | `0xEE/0x10` | [0] on/off | `pickupbox/ble/OpenController.java` |
+| iot-status | status | `status` | {} | `n/a` |
+
+## split_pact_h3a5x
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi_connect | `0xEE/0x11` | [0]==0 connected | `jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/ble/BleNotifyComm.java` |
+| ble-notify | brightness | `0xEE/0x20` | [0] brightness | `jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/ble/notify/BrightnessNotifyParse.java` |
+| ble-notify | movie_feast | `0xEE/0x60` | [0]==1 [1]==1 | `jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/ble/BleNotifyComm.java` |
+| ble-notify | device_status | `0xEE/0x40` | first 10 bytes | `jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/ble/BleNotifyComm.java` |
+| iot-status | status | `status` | {"on":"bool from state","op":"20-byte BLE frames"} | `jadx-splits/split_pact_h3a5x/sources/com/govee/h3a5x/scenes/H3A5XSceneCmdBuilders.java` |
+
+## split_pact_h512x
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | H5127 heartbeat | `0xEE/0x01` | [0] check status,[1..2] distance BE16,[6..9] duration BE32 | `h5127/ble/notify/NotifyParse4BleHeart.java; H5127ParseUtils.d` |
+| ble-notify | H5127 te range | `0xEE/0x24` | [0]=1,[3..4] start BE16,[5..6] end BE16 | `h5127/ble/notify/NotifyParse4TeRange.java` |
+| ble-notify | H5130 current pressure | `0xEE/0x05` | [0] pressure level | `h5121/ble/other/NotifyParse4CurPressure.java` |
+| ble-notify | H5127 wifi set result | `0xEE/0x??` | onboarding result | `h5127/ble/notify/NotifyParse4WifiSetResult.java` |
+| iot-status | status | `status` | {"checkStatus":"enum/int presence state","distance":"BE16","statusDuration":"BE32 seconds","installWay":"0/1/2/3","checkDistance":"config","nhJudgeTime":"seconds BE16","hhJudgeTime":"seconds BE16","teStart":"target-exclusion start","teEnd":"target-exclusion end","radarSensitivity":"level","onlyIdfHuman":"bool","bleSv/bleHv/wifiSv/wifiHv/wifiMac":"version strings"} | `h5127/pact/itemmodel/H5127LastDeviceData.java; H5127ParseUtils.java` |
+
+## split_pact_h5901
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | sub_device_status | `0xAA/0x04 or 0xEE/0x32 or 0xEE/0x34` | [0]=sno [1]=5 [2]=status(0 online,2 offline) [3]=battery [6]=signal [7..10]=timestamp LE32 [11]=flags(bit0 longBattery,bit1 switchRemind,bit2 flowAlarm,bit3 lowPower,bit4 smartWater) [12]=errorState [13..14]=remaining LE16 (FFFF none) [15]=bit0 switchStatus,bits1..4 runModel,bit6 gwWarning,bits7 planPause [16]=pauseDuration | `jadx-splits/split_pact_h5901/sources/com/govee/h5901/utils/H5901Utils.java` |
+| ble-notify | last_data_protobuf | `0x37` | LastDataDTO: 1 nextTime(int64), 2 nextDuration(int32), 3 percentage(int32), 4 duration(int32), 5 volume(int64), 6 lastTime(int64) | `jadx-splits/split_pact_h5901/sources/com/govee/h5901/proto/H5901Proto.java` |
+| iot-status | status | `status` | {"onOff":"int 0/1","battery":"percent","semaphore":"signal","gwTimestamp":"epoch seconds","longBatteryLife":"bool","deviceSwitchRemind":"bool","flowExceptionAlarm":"bool","lowPowerRemind":"bool","smartWaterEnable":"bool","switchStatus":"bool","runModel":"0-15","errorState":"byte","remainingTime":"minutes, 0xFFFF none","planPauseEnable":"bool","gwWarningEnable":"bool","pauseDuration":"byte"} | `jadx-splits/split_pact_h5901/sources/com/govee/h5901/utils/H5901Utils.java` |
+
+## split_pact_h6047
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi_connect | `0xEE/0x11` | [0]==0 -> connected | `jadx-splits/split_pact_h6047/sources/com/govee/h6047/ble/WifiNotifyParse.java` |
+| ble-notify | device_status | `0xEE/0x40` | first 10 bytes forwarded as EventDeviceStatus | `jadx-base-7.7.10/sources/com/govee/base2light/ble/DeviceStatusNotifyParse.java` |
+| ble-notify | movie_feast | `0xEE/0x60` | [0]==1 [1]==1 -> on | `jadx-base-7.7.10/sources/com/govee/base2light/ble/controller/MovieFeastOnOffNotifyParse.java` |
+| ble-notify | h6048_bar_switch | `0x30` | raw 20B [2],[3] booleans | `jadx-splits/split_pact_h6047/sources/com/govee/h6047/ble/H6048OnOffNotifyParse.java` |
+| iot-status | status | `status` | {"on":"bool from ms.status/state","op":"device frame bytes (base64 in op.command)","podsInstalled":"op.command[0][2]==1","checkInstall":"op.command[0][0]==0xEE && [1]==0x24"} | `jadx-splits/split_pact_h6047/sources/com/govee/h6047/iot/ResultPodsInstall.java, scenes/IotSwitchCmdBuilderV1.java` |
+
+## split_pact_h604a
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | check-light | `0x23` | [0]==1 light OK, [1]==1 status | `jadx-splits/split_pact_h604a/sources/com/govee/h604a/ble/CheckLightParse.java` |
+| ble-notify | check-pods | `0x24` | [0]==1 pods OK | `jadx-splits/split_pact_h604a/sources/com/govee/h604a/ble/CheckPodsParse.java` |
+| ble-notify | calibration-timeout | `0x25` | event only | `jadx-splits/split_pact_h604a/sources/com/govee/h604a/ble/CaliLightParse.java` |
+| ble-notify | wifi | `0x11` | [0]==0 connected | `ble/WifiNotifyParse.java` |
+| ble-notify | device-status | `0x30` | base DeviceStatusNotifyParse | `ble/BleNotifyComm.java` |
+| ble-notify | bulb-string-colors | `0xAA/0xA5` | index + 4-bulb RGB groups | `adjust/v1/BulbGroupColorV2.java` |
+| iot-status | status | `status` | {"state.onOff":"0\|1","op.pt":"base64 20-byte frames","snapshotUrl":"string","points":"calibration point list","IoTConnected":"cloud connection state"} | `iot/Cmd.java; iot/ResultPt.java; iot/ResultSnapShot.java` |
+
+## split_pact_h6061
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi/ble state | `notify cmdType 0x11` | [0]==0 connected | `cubelight/ble/WifiNotifyParse.java, h6067/ble/WifiNotifyParse.java` |
+| ble-notify | brightness | `notify cmdType 0x20` | [0] | `cubelight/ble/BrightnessNotifyParse.java, h6067 equivalent` |
+| ble-notify | device status | `notify cmdType 0x40` | 10-byte block | `base2light/ble/DeviceStatusNotifyParse.java` |
+| ble-notify | movie feast | `notify cmdType 0x60` | [0]==1 [1]==1 | `base2light/ble/controller/MovieFeastOnOffNotifyParse.java` |
+| iot-status | status | `status` | {"onOff":"int","brightness":"int 1..100","mode":"int","color":"object","wifiHardVersion":"string","wifiSoftVersion":"string","modeValue":"string[] base64","gradualValue":"string[] base64"} | `base2light/pact/newdetail/iot/State.java, base2light/iot/common/ResultPt.java` |
+
+## split_pact_h6062
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | ic-count | `0x21` | [0..1] IC LE16, [2] segment | `ble/CheckIcNumParse.java` |
+| ble-notify | ic-and-piece | `0x22` | [0] sub_ic_1, [2] sub_ic_2 | `ble/IcAndPieceNotifyParse.java` |
+| ble-notify | brightness | `0x20` | [0] | `ble/BrightnessNotifyParse.java` |
+| ble-notify | device-status | `0x30` | base DeviceStatusNotifyParse | `ble/BleNotifyComm.java` |
+| ble-notify | movie-feast | `0x54` | [0]==1, [1] on/off | `base MovieFeastOnOffNotifyParse` |
+| ble-notify | wifi | `0x11` | [0]==0 connected | `ble/WifiNotifyParse.java` |
+| iot-status | status | `status` | {"on":"bool","brightness":"int 1-100","color":"r/g/b","colorTemInKelvin":"int","pt":"base64 20-byte frames","ic":"int","segment":"int"} | `base state/op parser + family controllers` |
+
+## split_pact_h6079
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi/ble state | `notify cmdType 0x11` | [0]==0 connected | `…/h6079/ble/WifiNotifyParse.java, …/h6020/ble/WifiNotifyParse.java` |
+| ble-notify | brightness | `notify cmdType 0x20` | h6079 [0]=brightness [1]=aux; h6020 [0]=brightness | `…/h6079/ble/BrightnessNotifyParse.java, …/h6020/ble/BrightnessNotifyParse.java` |
+| ble-notify | remote pairing | `notify cmdType 0xA4` | [0] state | `…/h6079/ble/RemoteControlParse.java` |
+| ble-notify | switch status | `notify cmdType 0x30` | h6079 [1]=switch id [2]==1 on; h6020 [0]==1 -> [1] on/[2]; [0]==0x30 -> [1] battery | `…/h6079/ble/DeviceSwitchStatusNotifyParse.java, …/h6020/ble/DeviceSwitchStatusNotifyParse.java` |
+| ble-notify | device status | `notify cmdType 0x40` | 10-byte block | `base2light/ble/DeviceStatusNotifyParse.java` |
+| ble-notify | movie feast | `notify cmdType 0x60` | [0]==1, [1]==1 on | `base2light/ble/controller/MovieFeastOnOffNotifyParse.java` |
+| iot-status | status | `status` | {"onOff":"int 0\|1","brightness":"int 1..100","color":"object {r,g,b}","colorTemInKelvin":"int","mode":"int","modeValue":"string[] base64 frames","sleepValue":"string[]","wakeupValue":"string[]","timer":"object","softVersion":"string","wifiSoftVersion":"string"} | `base2light/pact/newdetail/iot/State.java, StateV0.java, base2light/iot/common/ResultPt.java` |
+
+## split_pact_h6092
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi_connect | `0xEE/0x11` | [0]==0 connected | `jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/WifiNotifyParse.java` |
+| ble-notify | brightness | `0xEE/0x20` | [0] brightness | `jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/BrightnessNotifyParse.java` |
+| ble-notify | auto_off | `0xEE/0x24` | AutoOffInfo.parse | `jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/AutoOffNotifyParse.java` |
+| ble-notify | child_switch | `0xEE/0x30` | [0] seq/type, [1]==1 switch | `jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/DeviceStatusNotifyParse.java` |
+| ble-notify | music_info | `0xEE/0x31` | base MusicNotifyParse | `jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/BleNotifyComm.java` |
+| ble-notify | sleep_info | `0xEE/0x32` | sleep state | `jadx-splits/split_pact_h6092/sources/com/govee/h6092/ble/BleProtocol.java` |
+| iot-status | status | `status` | {"state":"on/off and result for non-ptReal commands","op":"ResultPt frame bytes for ptReal","childSwitch":"0x30 notify byte[1]==1"} | `jadx-splits/split_pact_h6092/sources/com/govee/h6092/iot/Cmd.java` |
+
+## split_pact_h6099
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi | `0x11` | [0]==0 connected | `pact_h605b/ble/WifiNotifyParse.java, pact_h6099/ble/WifiNotifyParse.java` |
+| ble-notify | usbOvertime | `0x50` | USB check timeout | `pact_h605b/ble/UsbCheckOvertimeParse.java` |
+| ble-notify | deviceStatus | `0x40` | first 10 bytes | `base2light/ble/DeviceStatusNotifyParse.java` |
+| ble-notify | lightInstall | `0x23` | [0] installed, [1] variant | `pact_h605b/ble/LightInstallNotifyParse.java` |
+| ble-notify | caliLightOvertime | `0x25` | calibration light timeout | `pact_h605b/ble/CaliLightParse.java` |
+| ble-notify | lightAndHdmi | `0x30` | [0]=1 light-bar bits; [0]=3 HDMI port+bits; [0]=8 AI model LE16; [0]=9 other | `pact_h605b/ble/LightAndHdmiNotifyParse.java, pact_h6099/ble/LightAndHdmiNotifyParse.java` |
+| ble-notify | soundSource | `0x32` | [0]==1 HDMI else DEVICE | `pact_h605b/ble/SoundSourceNotifyParse.java` |
+| ble-notify | movieFeast | `0x60` | [0]==1, [1] on/off | `base2light/ble/controller/MovieFeastOnOffNotifyParse.java` |
+| iot-status | status | `status` | {"state.onOff":"int 0\|1","state.brightness":"int 0..100","state.wifiSoftVersion":"string","state.wifiHardVersion":"string","op.pt":"array of base64 20-byte BLE frames","op.snapshot":"camera calibration image payload"} | `pact_h6099/iot/State.java, pact_h605b/iot/ResultPt.java, pact_h6099/iot/ResultPt.java` |
+
+## split_pact_h60ax
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | brightness | `0x20` | [0] | `ble/BrightnessParse.java` |
+| ble-notify | light-child-status | `0x30` | [0]==1, [1..3] child bools | `ble/LightChildStatusNotifyParse.java` |
+| ble-notify | wifi | `0x11` | [0]==0 connected | `ble/WifiNotifyParse.java` |
+| ble-notify | device-status | `0x30` | base DeviceStatusNotifyParse | `ble/BleNotifyComm.java` |
+| ble-notify | ic-segment | `0x21` | base CheckIcNumParse | `base` |
+| ble-notify | colour-brightness | `0xAA/0xA5` | [3] type, [4..5] LE16 index/count + RGB/brightness | `compose/ParserMultiColorStrip.java` |
+| ble-notify | timer-all-info | `0xAA/0x23` | ParserTimers | `compose/ParserTimers.java` |
+| ble-notify | gradual | `0xAA/0xA3` | [0] | `compose/ParserGradual.java` |
+| iot-status | status | `status` | {"on":"bool","brightness":"int 1-100","color":"r/g/b","colorTemInKelvin":"int","pt":"base64 20-byte frames"} | `base state/op parser` |
+
+## split_pact_h61d3
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi | `0x11` | [0]==0 connected | `ble/WifiNotifyParse.java` |
+| ble-notify | light-status | `0x30` | [0]==1, [1] bit1 = on | `ble/DeviceInfoNotifyParse.java` |
+| ble-notify | take-photo-exit | `0x26` | event | `ble/TakePhotoNotifyParse.java` |
+| ble-notify | video-recognition-state | `0xED` | [0] state code | `ble/VideoRecognitionNotifyParse.java` |
+| ble-notify | check-ic | `0x46` | IC result | `ble/controller/CheckIcController` |
+| ble-notify | read-ic-point | `0x24` | [0]==1 | `ble/controller/ReadIcPointController` |
+| iot-status | status | `status` | {"on":"bool","brightness":"int 1-100","color":"r/g/b","pt":"base64 20-byte frames","recognition":"cloud point-list state"} | `base state/op parser + network entities` |
+
+## split_pact_h6630
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi state | `0xEE/0x11` | [0]==0 connected | `h6630/ble/WifiNotifyParse.java` |
+| ble-notify | brightness | `0xEE/0x20` | [0] 0-100 | `h6630/ble/BrightnessNotifyParse.java` |
+| ble-notify | device switch status | `0xEE/0x30` | [1] sub-index, [2] state | `h6630/ble/DeviceSwitchStatusNotifyParse.java` |
+| ble-notify | device status | `0xEE/0x40` | 10 bytes (alarm/display fields partially decoded) | `base DeviceStatusNotifyParse; Info4Detail.U` |
+| ble-notify | device info/switch config | `0xEE/0x41` | total/light/indicator bits, white-noise/DND/tone bits, C,D,E, indicator forever/start/end | `Info4Detail.d0` |
+| ble-notify | online music | `0xEE/0x70` | OnlineMusicPares.parse(sku, bytes) | `base onlinesound MusicNotifyParse` |
+| ble-notify | movie feast | `0xEE/0x60` | [0]=1,[1]=on | `base MovieFeastOnOffNotifyParse` |
+| ble-notify | alarm clock | `0xEE/0x85` | alarm enable/h/m/repeat fields | `Info4Detail.U` |
+| ble-notify | custom GIF result | `0xEE/0x7A` | [0]=2 -> reload DIY data | `Info4Detail.W` |
+| ble-notify | tone settings read | `0xEE/0x30` | [1]=toneSwitch, [2]=power, [3]=screenOff, [4]=key, [5]=countdown | `Info4Detail.g0` |
+| iot-status | status | `status` | {"state.onOff":"0\|1","state.brightness":"0-100","op.command":"base64 20-byte frames (same dispatch as BLE: 0x19/0x27/0x30/0x40/0x41/0x70/0x85)","online":"bool"} | `h6630/iot/Cmd.java; Info4Detail.Y` |
+
+## split_pact_h6660
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | device_status | `0xEE/0x80` | byte[0] bit1..7 flags: child lock, overheat, high temp, human, electric | `jadx-splits/split_pact_h6660/sources/com/govee/h6660/entity/DeviceStatusInfo.java` |
+| ble-notify | battery | `0xEE/0x42` | bit8 charging, bits5..3 battery level, bits4/3/2/1 flags | `jadx-splits/split_pact_h6660/sources/com/govee/h6660/entity/BatteryInfo.java` |
+| ble-notify | brightness | `0xEE/0x20` | [0] 0..100 | `jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/LaserDetailViewModel.java` |
+| ble-notify | wifi | `0xEE/0x11` | connected bool | `jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/LaserDetailViewModel.java` |
+| ble-notify | laser_def | `0xEE/0x7F` | raw bytes | `jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/LaserDefParser.java` |
+| ble-notify | laser_def_2 | `0xEE/0x81` | raw bytes | `jadx-splits/split_pact_h6660/sources/com/govee/h6660/detail/LaserDefParser.java` |
+| iot-status | status | `status` | {"op":"20-byte frames; [1]==0x80 -> DeviceStatusInfo([2]); [1]==0x42 -> BatteryInfo([2])","on":"switch state"} | `jadx-splits/split_pact_h6660/sources/com/govee/h6660/pact/Model.java` |
+
+## split_pact_h682021
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | brightness | `0xEE/0x20` | [0] 0..100 | `jadx-splits/split_pact_h682021/sources/com/govee/h682021/ble/BleProtocol.java` |
+| ble-notify | device_status | `0xEE/0x80 or 0xEE/0x81` | status frames | `jadx-splits/split_pact_h682021/sources/com/govee/h682021/ble/GattCallbackImp.java` |
+| iot-status | status | `status` | {"on":"bool","op":"20-byte frames"} | `jadx-splits/split_pact_h682021/sources/com/govee/h682021/pact/Model.java` |
+
+## split_pact_h6840
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifiH6840 | `0x00` | DefParser.makeWifiNotifyParser(0) | `h6840/ble/Ble$generateNotify$1.java` |
+| ble-notify | wifiH6609 | `0x11` | [0]==0 connected | `h6609/ble/WifiNotifyParse.java` |
+| ble-notify | deviceStatus | `0x40` | first 10 bytes | `base2light/ble/DeviceStatusNotifyParse.java` |
+| ble-notify | lightAndHdmiH6609 | `0x30` | [0]==1: light-bar presence bits from [1] | `h6609/ble/LightAndHdmiNotifyParse.java` |
+| ble-notify | movieFeast | `0x60` | [0]==1, [1] on/off | `base2light/ble/controller/MovieFeastOnOffNotifyParse.java` |
+| ble-notify | interactiveGame | `0x35` | [0] status, if 2 signed24 at [1..3] | `base2light/ble/InteractiveGameNotifyParse.java` |
+| ble-notify | videoRecognitionH6609 | `0xED` | [0] recognition state | `h6609/ble/VideoRecognitionNotifyParse.java` |
+| iot-status | status | `status` | {"state.onOff":"int 0\|1","state.brightness":"int 0..100","state.wifiSoftVersion":"string","state.wifiHardVersion":"string","op.pt":"array of base64 20-byte BLE frames"} | `h6609/iot/State.java, h6840/pact/Cmd.java` |
+
+## split_pact_h7050
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi | `0x11` | [0]==0 connected | `h7050/ble/WifiNotifyParse.java` |
+| ble-notify | brightness | `0x20` | [0] 0..100 | `h7050/ble/BrightnessNotifyParse.java` |
+| ble-notify | deviceStatus | `0x40` | first 10 bytes | `base2light/ble/DeviceStatusNotifyParse.java` |
+| iot-status | status | `status` | {"state.onOff":"int 0\|1","state.brightness":"int 0..100","op.pt":"array of base64 20-byte BLE frames re-dispatched to controllers","color.r/g/b":"int 0..255","colorTemInKelvin":"int (0 when colour mode)"} | `h7050/iot/Cmd.java, h7050/split NewDetailVM parse paths` |
+
+## split_pact_h705a
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | ic-segment | `0x21` | [0..1] IC LE16, [2] segment | `jadx-splits/split_pact_h705a/sources/com/govee/h705a/ble/CheckIcNumParse.java` |
+| ble-notify | light-status | `0x30` | [0]==1, [1] bit1 = on | `jadx-splits/split_pact_h705a/sources/com/govee/h705a/ble/notify/DeviceInfoNotifyParse.java` |
+| ble-notify | wifi | `0x11` | [0]==0 connected | `base WifiNotifyParse` |
+| ble-notify | check-ic-result | `0x43` | [0..1] IC, [2] segment | `CheckIcController` |
+| ble-notify | cut-cali-result | `0x44` | [0] result,[1] index,[2] count | `CutCaliController` |
+| iot-status | status | `status` | {"on":"bool","brightness":"int 1-100","color":"r/g/b","colorTemInKelvin":"int","pt":"base64 20-byte frames"} | `base state/op parser` |
+
+## split_pact_h7075
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | brightness | `0x20` | [0] brightness | `base BrightnessNotifyParse` |
+| ble-notify | ic-segment | `0x21` | [0..1] IC LE16, [2] segment count | `base CheckIcNumParse` |
+| ble-notify | device-status | `0x30` | [0]==1, [1] bit1 = on | `base DeviceStatusNotifyParse` |
+| ble-notify | splice-state | `0x4B` | [0]==1 | `Controller4ReadSpliceState` |
+| ble-notify | motion-devices | `0x05` | groupCount + 6-byte records | `MotionReadInfoController` |
+| ble-notify | brightness-sensor | `0x4B` | BrightnessInfo | `h7072/sensor/BrightnessInfo.java` |
+| ble-notify | light-sense | `0x24` | [0] enable,[1] min,[2] max,[3] allDay,[4..5] time LE16 | `R3352LightSenseInfo` |
+| ble-notify | auto-dimming | `0x25` | [0] enable,[1] min,[2] max,[3] effectTime | `R3352AutoDimmingInfo` |
+| iot-status | status | `status` | {"on":"bool","brightness":"int 1-100","color":"r/g/b","colorTemInKelvin":"int","pt":"base64 20-byte frames","ic":"int","segment":"int","motion":"group records"} | `base state/op parser + family controllers` |
+
+## split_pact_h70b1
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi connected | `0x11` | [0]==0 | `h70b1/origin/ble/WifiNotifyParse.java` |
+| ble-notify | brightness | `0x20` | [0] level | `h70b1/origin/ble/BrightnessNotifyParse.java` |
+| ble-notify | device info / light status | `0x30` | [0]==1, [1] bit1 = light status | `h70b1/origin/ble/notify/DeviceInfoNotifyParse.java` |
+| ble-notify | display countdown | `0x7F` | [0]==0x81 (-127), [1]==6 -> countdown active | `h70b6/adjust/VM4H70B6.java#Y5` |
+| ble-notify | feast switch | `0x01` | [0]==1, [1]==1 feast on; H70B6 Z5 | `h70b6/adjust/VM4H70B6.java#Z5` |
+| ble-notify | feast switch (H70B3) | `0x60` | [0]==1, [1]==1 feast on | `h70b3/pact/BleProtocol.java#m; h70b3/adjust/vm/VM4H70B345.java#q6` |
+| ble-notify | secret key / SN | `0xAA/0xB1, 0xAA/0x07` | as commands | `h70b3/adjust/controller/SecretController.java; SnController.java` |
+| iot-status | status | `status` | {"onOff":"bool","brightness":"int","color":"rgb / colorTemInKelvin","mode":"submode byte + payload","diy":"diyCode/group","splicing":"device count/versions","matter":"commissioning info only","display":"H70B6 countdown/clock"} | `h70b1/origin + h70b3 Info4Detail` |
+
+## split_pact_h7111
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi/ble state | `notify 0x11` | [0]==0 connected | `all ble/WifiNotifyParse.java` |
+| ble-notify | device report | `header 0xEE, subcmd byte1` | 0x05 mode / 0x1F switches / 0x16 not-disturb / 0x26 delay-off / 0x17 abnormal / 0x1B light / 0x1D shake | `h7100/ble/BleNotifyComm.java, h7105/ble/DevCommReportParse.java` |
+| ble-notify | heart | `read 0x01` | see command table | `h7111/h7100/h7105/HeartController*.java` |
+| ble-notify | beep/temp unit | `0x1F notify` | [id][0/1] | `h7111/iot/CmdStatusParseV1.java, h7105/iot/CmdStatusParseV1.java` |
+| ble-notify | light subcommand | `0x1B` | brightness/mode | `h7105/ble/DevCommReportParse.java` |
+| iot-status | status | `status` | {"onOff":"int 0\|1","result":"int","op.command":"string[] base64 frames","mode":"0x05 frame","temp":"0x10 frame","equipment":"0x19","shake":"0x1D","sensor":"H7112 0x10 int24 temp + type","timer":"0x13","delayOff":"0x26","notDisturb":"0x16"} | `h7111/iot/CmdStatusParseV1/V2, h7100/iot/CmdStatusParseV1, h7105/iot/CmdStatusParseV1, h7112 shared H71xx CmdStatusParse` |
+
+## split_pact_h7120
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi | `0x11` | [0]==0 means Wi-Fi connected | `h7120/ble/WifiNotifyParse.java` |
+| ble-notify | heartbeat | `0x01` | carries device state + error byte | `h7120/ble/HeartControllerV1.java` |
+| ble-notify | mode | `0x05` | [0] mode id, [1] gear/extra | `h7126/ble/ModeNotifyParse.java` |
+| ble-notify | airQuality | `0x19` | [0..1] value LE16, [2] level, [3] extra | `h7126/ble/StateInfoNotifyParse.java` |
+| ble-notify | abnormal | `0x17` | [0] code, [1] sub-code | `h7126/ble/AbnormalNotifyParse.java` |
+| ble-notify | delayOff | `0x11` | [0] on, [1..2] min LE16, [3..5] remaining sec LE24 | `h7126/ble/DelayOffNotifyParse.java` |
+| ble-notify | notDisturb | `0x16` | DND window | `h7126/ble/NotDisturbNotifyParse.java` |
+| ble-notify | deviceStatus | `0x40` | first 10 bytes of status frame | `base2light/ble/DeviceStatusNotifyParse.java` |
+| iot-status | status | `status` | {"state.onOff":"int 0\|1","state.result":"int","op.pt":"array of base64 20-byte BLE frames","airQuality.value":"int signed16 LE from frame bytes 2..3","airQuality.level":"int 0..5 (AirQualityInfo [2])","airQuality.extra":"int (AirQualityInfo [3])"} | `h7120/iot/CmdStatusParseV1.java, base_h71xx/sku_base/adjust/component/bean/AirQualityInfo.java` |
+
+## split_pact_h7130
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | gear-report | `0xEE/0x05` | [0] gear | `jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/DevCommReportParse.java` |
+| ble-notify | child-lock-report | `0xEE/0x10` | [0] != 0 | `jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/DevCommReportParse.java` |
+| ble-notify | rotate-report | `0xEE/0x18` | [0] != 0 | `jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/DevCommReportParse.java` |
+| ble-notify | not-disturb-report | `0xEE/0x16` | [0] enable [1] forever/startH [2] startM [3] endH [4] endM | `jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/DevCommReportParse.java` |
+| ble-notify | bind-temperature-report | `0xEE/0x08` | 6-byte MAC; zero = unbound | `jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/DevCommReportParse.java` |
+| ble-notify | delay-off-report | `0xEE/0x03 or 0x11` | [0] open [1..2] totalMin [3..5] leaveSec | `jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/DevCommReportParse.java` |
+| ble-notify | client-lock | `0xEE/0x17` | [0]==0 lock [1] level | `jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/ClientLockEvent.java` |
+| ble-notify | wifi-connect | `0x11` | [0]==0 connected | `jadx-splits/split_pact_h7130/sources/com/govee/h7130/ble/WifiNotifyParse.java` |
+| iot-status | status | `status` | {"state.onOff":"int 0\|1","state.result":"int","op.pt":"array of base64 20-byte BLE frames","warn":"int bitfield: 0x40 dump mode, 0x80 over-temperature","timer groups":"parsed from op.pt frames with cmdType 0x13","constant temp":"parsed from frame 0x1A","thermometer sensor":"parsed from V3 status frames"} | `jadx-splits/split_pact_h7130/sources/com/govee/h7130/iot/CmdStatusParseV1.java; v3/CmdStatusParseV3.java` |
+
+## split_pact_h7170
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi/ble state | `notify 0x11` | [0]==0 connected | `all four ble/WifiNotifyParse.java` |
+| ble-notify | equipment status | `notify 0x19` | [0]=WorkStatus | `h7170/ble/EquipmentStatusParse.java, h7175 equivalent` |
+| ble-notify | device report | `header 0xEE, subcmd byte1` | 0x05 mode / 0x1F switches / 0x16 not-disturb / 0x26 delay-off / 0x17 abnormal / 0x1B water light | `h7173/ble/DevCommReportParse.java, h7175/ble/DevCommReportParse.java` |
+| ble-notify | heart/state | `read reply 0x01` | [0] on, [1] modeChange, [3..4] temp signed BE16, [5] keep flag, [6] WorkStatus | `h7170/ble/HeartControllerV1.java, h7173/h7175` |
+| ble-notify | mode read events | `0x05 reads` | temp x100 / custom 10-byte records | `h7173/ble/controller/ModeRead*.java` |
+| iot-status | status | `status` | {"onOff":"int 0\|1","result":"int","op.command":"string[] base64 BLE frames","WorkStatus":"0..6 via 0x19 frame","mode":"0x05 frame","keepWarm":"0x22 frame","delayStart":"0x23 frame","waterLight":"0x1B frame (H7173)"} | `h7170/iot/CmdStatusParseV1.java, base_h71xx/sku_base/iot/ResultPt.java` |
+
+## split_pact_h7172
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi | `0xEE/0x11` | connected bool | `jadx-splits/split_pact_h7172/sources/com/govee/h7172/ble/WifiNotifyParse.java` |
+| ble-notify | heart | `0xAA/0x01` | read only | `jadx-splits/split_pact_h7172/sources/com/govee/h7172/ble/HeartControllerV1.java` |
+| iot-status | status | `status` | {"onOff":"int 0/1 from state","result":"int","workStatus":"0 idle,1 making,2 finish,3 washing,4 wash finish,5 reservation","iceSize":"1 big,2 middle,3 small","clear72h":"bool","abnormalStatus":"byte","delayStart":"enable + minutes + epoch + mode","switches":"ids 6/7/8/9 booleans"} | `jadx-splits/split_pact_h7172/sources/com/govee/h7172/iot/CmdStatusParseV1.java` |
+
+## split_pact_h7180
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | mode | `0xEE/0x05` | mode payload (0x3A write-ack ignored) | `jadx-splits/split_pact_h7180/sources/com/govee/h7180/iot/CmdStatusParseV1.java` |
+| ble-notify | not_disturb | `0xEE/0x16` | enable + start/end + forever flag | `jadx-splits/split_pact_h7180/sources/com/govee/h7180/iot/CmdStatusParseV1.java` |
+| ble-notify | work_status | `0xEE/0x17` | work status/abnormal byte | `jadx-splits/split_pact_h7180/sources/com/govee/h7180/iot/CmdStatusParseV1.java` |
+| ble-notify | keep_temp | `0xEE/0x22` | KeepTempBean | `jadx-splits/split_pact_h7180/sources/com/govee/h7180/iot/CmdStatusParseV1.java` |
+| ble-notify | weigh | `0xEE/0x23` | WeighBean | `jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/WeighNotifyParse.java` |
+| ble-notify | recipe_making | `0xEE/0x24` | RecipeMakingBean | `jadx-splits/split_pact_h7180/sources/com/govee/h7180/ble/RecipeMakingNotifyParse.java` |
+| ble-notify | collect_water_remind | `0xEE/0x25` | [0]==1 | `jadx-splits/split_pact_h7180/sources/com/govee/h7180/iot/CmdStatusParseV1.java` |
+| ble-notify | mode_state | `0xEE/0x19` | [0]=Mode [1]=DeviceState | `jadx-splits/split_pact_h7180/sources/com/govee/h7180/iot/CmdStatusParseV1.java` |
+| iot-status | status | `status` | {"onOff":"int 0/1 from state","mode":"0 none,1 rice,2 saute,3 steam,4 slowcook,5 diy","deviceState":"enum","keepTemp":"type,start,temp*100,sumTime","weigh":"start,weight,unit","recipe":"start,flagFinish,menuCode,index,mode,gear,workMinute,leaveMinute","notDisturb":"enable,start/end,forever","collectWaterRemind":"bool"} | `jadx-splits/split_pact_h7180/sources/com/govee/h7180/iot/CmdStatusParseV1.java` |
+
+## split_pact_hollowlamp
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | brightness | `0xEE/0x20` | [0] brightness 0-100 | `*/ble/BrightnessNotifyParse.java` |
+| ble-notify | device_status | `0xEE/0x40` | first 10 bytes forwarded | `base2light/ble/DeviceStatusNotifyParse.java` |
+| ble-notify | wifi | `0xEE/0x11` | [0]==0 connected | `*/ble/WifiNotifyParse.java` |
+| ble-notify | device_info | `0xEE/0x30` | sub-command [0]: 1 light status (bit1), 2 energy saving (bit1), 3 battery, 4 music info ([1],[2]), 5 volume, 6 no-disturb (bit1), 7 sleep | `h6057/origin/ble/notify/DeviceInfoNotifyParse.java` |
+| ble-notify | remote_control | `0xEE/0xA4` | [0] pairing/remote byte | `straightfloorlamp/ble/RemoteControlParse.java` |
+| ble-notify | movie_feast | `0xEE/0x60` | movie feast on/off | `base2light/ble/controller/MovieFeastOnOffNotifyParse.java` |
+| iot-status | status | `status` | {"state.onOff":"int 0/1","state.brightness":"int 1..100","state.mode":"int","op.command":"array of base64 20-byte frames","op frame 0x05":"mode + sub-mode","op frame 0x23/0x11/0x12":"timers / sleep / wakeup","op frame 0xA5/0xA6/0xA7":"local color table size / auto induction / sensitivity (hollowlamp)","op frame 0x16/0x01":"energy saving (hollowlamp V1)","op frame 0x34":"detail info (H6057)"} | `hollowlamp/iot/CmdStatusV0.java; hollowlamp/iot/CmdStatusV1.java; h6057/origin/iot/CmdStatusV1.java` |
+
+## split_pact_humidifier
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | device report | `0xEE/<cmdType>` | [1]=cmdType, [2..] payload; 0x05=mode, 0xAA=abnormal, 0xB0=light, 0x1C=gear, 0x22=water, 0x19=status | `h71*/ble/DevCommReportParse.java; h71*/ble/BleNotifyComm.java` |
+| ble-notify | IoT/WiFi status | `0xEE` | handled by WifiNotifyParse | `h71*/ble/WifiNotifyParse.java` |
+| iot-status | status | `status` | {"state.onOff":"int 0\|1","state.result":"int","op.command[]":"base64 20-byte BLE frames (0x05 mode, 0x01 timer, 0x1C gear, 0x11 delay, 0x16 DND, 0x19 status, 0x22 water, 0xAA abnormal)"} | `h7140/iot/CmdStatusParseV1.java; h7141/iot/CmdStatusParseV1.java` |
+
+## split_pact_iceMachine
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | op frame batch | `cloud op or GATT notify` | each 20-byte frame: [1]=0x17 abnormal, 0x19 state, 0x16 DND, 0x25 remind, 0x1B light, 0x29 buzzer gear | `H8120/H8121/H8122/H8131/H8150 Model.k0` |
+| iot-status | status | `status` | {"status":"scene/switch result marker","op.command[]":"20-byte frames decoded as in ble.notifications"} | `H81*Model.k0; IceApplicationImp` |
+
+## split_pact_leaknew
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | sub-device report (H5058 short) | `gateway notify -> cmd 0x08` | [0..7]=name, [8]=sno, [9]=type(12/13/4), [10]=bit0 leak + bits1-7 battery/status, [11]=unused, [12]=signal; [3..5] raw leak bytes, [6..9] LE32 timestamp | `base2newth ParseUtils4H5058.e` |
+| ble-notify | sub-device report (long) | `gateway notify -> cmd 0x08` | [0]=sno, [1]=type, [2]=bitfield(bit0 leak), [3..5]=state, [6..9]=timestamp, [10]/[11]=versions, [12]=signal, [13..16]=time LE32 | `ParseUtils4H5058.c` |
+| ble-notify | legacy leak report | `gateway notify -> cmd 0x08` | [0]=sno, [1]=type, [2]=leakState, [3]=bitfield, [4]=softVer, [5]=hardVer, [6]=battery, [7..10]=time LE32, [11]=mute, [12]=signal, [13]=?, [14]=?, [15]=switch bits | `ParseUtils4H5044SubLeak.a` |
+| iot-status | status | `status` | {"probe":"int 0 top / 1 shortBot / 2 bot","probesState":"JSON {top,shortBot,bot}","status":"1 normal / 2 gateway error / 3 sub-device error","typeCode":"31101 leak alarm, 31102 leak clear, 31124 water-level alarm, 31125 water-level clear","createTime":"epoch ms","read":"bool","sno":"int","deviceType":"12 H5058 / 13 H5059 / 4 legacy","battery":"int 0-100","signal":"int dBm","leakMode":"10 water-level / 11 leak"} | `net/RespWarnMessageData; base2newth LeakSubInfo` |
+
+## split_pact_outdoorlight
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi connected | `0x11` | [0]==0 | `h7056/ble/WifiNotifyParse.java; h7086/ble/WifiNotifyParse.java` |
+| ble-notify | brightness | `0x20` | [0] level | `h7056/ble/BrightnessNotifyParse.java; h7086/ble/BrightnessNotifyParse.java` |
+| ble-notify | switch status | `0x30` | [0]==1, [1] on/off, [2] secondary | `h7056/ble/DeviceSwitchStatusNotifyParse.java; h7086/ble/DeviceSwitchStatusNotifyParse.java` |
+| ble-notify | cap calibration status | `0x32` | any payload -> callback | `h7086/adjust/controller/CapCalibrationStatusParse.java` |
+| ble-notify | H7040 heart/battery | `0xAA/0x01` | [0] power, [1] work-mode flags, [2] battery byte (bit7 charging, bits6..4 bars 1..5, bit0/bit3 flags) | `h7040/ble/HeartController.java; h7040/detail/BatteryInfo.java` |
+| ble-notify | H7040 WiFi | `0x11` | [0]==0 | `h7040/ble (no WifiNotifyParse; shared base notify)` |
+| iot-status | status | `status` | {"on":"bool","brightness":"int","color":"rgb","colorTemInKelvin":"int","mode":"submode byte + payload","capCalibration":"H7086 only, notify 0x32"} | `base Info4Detail/StateWithSubOnOff for H7056/H7086` |
+
+## split_pact_plugnew
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi state | `0xEE/0x11` | [0]==0 -> connected | `h5080/ble/WifiNotifyParse.java; h5086/ble/WifiNotifyParse.java` |
+| ble-notify | switch/heart | `0xEE/0x01 or 0xAA/0x01` | 8-bit socket mask | `HeartControllerV2; SwitchControllerV2` |
+| ble-notify | brightness (H5086) | `0xEE/0x20` | [0]=0-100 | `h5086/ble/BrightnessNotifyParse.java` |
+| ble-notify | device electric (H5086) | `0xEE/0x19` | runtime BE24/60, kWh BE24/10000, V BE16/100, A BE16/100, W BE24/100 | `h5086/ble/DeviceStateNotifyParse.java` |
+| ble-notify | time monitor (H5086) | `0xEE/0x1A` | id BE32,state,h,m,remain BE24,electUse BE24 | `h5086/ble/TimeMonitorNotifyParse.java` |
+| ble-notify | read-all done (H5086) | `0xEE/0xAA` | event only | `h5086/ble/ReadAllNotifyParse.java` |
+| ble-notify | night light (H5089) | `0xEE/0x1B` | [0]=1 -> [1]=on,[2]=brightness; [0]=5 -> LightModeInfo from [1..] | `h5080/ble/controller/h5089/Notify4NightLight.java` |
+| ble-notify | chart state (H5086) | `0xEE/0x01 on service ...4857` | [0]=1 done (total packets BE16 at [1..2]); [0]=2 querying | `h5086/ble/ChartStateNotifyParser.java` |
+| ble-notify | chart data (H5086) | `0xAC/0x03 on char ...2015` | startHour BE16, then 5*(runMin, kWh BE16/10000) | `h5086/ble/AbsBleWithChartDataComm.java` |
+| iot-status | status | `status` | {"state.onOff":"int bitmask (bit0 socket0, bit1 socket1, bit2 night light/H5089)","state.brightness":"int 0-100 (night light/H5086)","state.mode":"int","op.command":"list<base64 20-byte frame>; cmdType 0xB0 delay, 0xB4 timer V1, 0x12 timer count, 0x13 timer V2, 0x1F child lock, 0x1B night light, 0x16 DND, 0x28/0x29 night timers","electricData.runtime":"minutes (BE24/60)","electricData.electricUse":"kWh (BE24/10000)","electricData.volts":"V (BE16/100)","electricData.amps":"A (BE16/100)","electricData.activePower":"W (BE24/100)","timeMonitor":"{id BE32,state,hour,minute,remainSeconds BE24,electUse BE24}","powerWarning":"{warningOpen,warningValue, warningIsSet, offOpen, offValue, offIsSet}"} | `h5080/iot/CmdStatusV0/V3/V4; h5086/iot/CmdStatus; h5086/network/entity/ReadInfo.java` |
+
+## split_pact_plugv1
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| iot-status | status | `status` | {"state.onOff":"0\|1","state.nightMode":"0\|1 (H5001)","config.delay.enable":"bool","config.delay.minutes":"int","config.delay.leftMinutes":"int","config.timer[]":"NewTimerV1 {enable,type,hour,minute,repeat}","H7014.turn":"0\|1","H7014.softversion":"string","H7014.delayClose":"{enable,minutes,leftMinutes}","H7014.timer.enable":"bool","H7014.timer.time[0]":"{openHour,openMin,closeHour,closeMin}"} | `plugv1/iot/CmdStatusV0.java; CmdStatusV1.java; h7014/iot/CmdStatusV0.java` |
+
+## split_pact_rgbiclight
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | heartbeat state | `0xAA/0x01` | [0] state (0/1) | `base HeartController.parseValidBytes` |
+| ble-notify | power state | `0x33/0x01 reply` | [0] on/off | `base SwitchController.parseValidBytes` |
+| ble-notify | brightness | `0xAA/0x04` | [0] brightness 0..254 | `base BrightnessController.parseValidBytes` |
+| ble-notify | mode sub-mode | `0xAA/0x05` | [0]=subMode id, [1..]=sub payload; dispatched to SubMode*.parse | `base AbsModeController.parseValidBytes` |
+| ble-notify | color (generic) | `0xAA/0x05 sub 0x02` | [1..3]=RGB, [4]=tempFlag, [5..7]=temp/bg RGB | `h6102/ble/SubModeColor.java` |
+| ble-notify | color V2 type | `0xAA/0x05 sub 0x15` | [1]=type/segment count | `h6119/ble/SubModeColorV2.java` |
+| ble-notify | limit flag | `0xAA/0x0E` | [0]==1 means limited | `h6102/ble/LimitController.java` |
+| ble-notify | bulb string groups | `0xAA/0xA5 or 0xA2` | [0]=count, then count x (index? + R,G,B); H6119 uses 4-byte groups with index byte | `h6119/ble/BulbGroupColor.java, h6160/ble/v1/BulbGroupColor.java` |
+| ble-notify | light position | `0xAA/0x31` | [0] position 0/1 | `h7090/ble/LightPosController.java` |
+| ble-notify | LR switch / compose | `0xAA/0x33` | [0] LR state, [1]==1 festive/compose open | `h7090/ble/ComposeHeartController.java` |
+| ble-notify | wifi-ble notify | `0xEE / WifiNotifyParse` | IoT envelope over BLE notify characteristic for ble+iot SKUs | `rgbiclight/ble/BleNotifyComm.java` |
+| iot-status | status | `status` | {"on":"bool (turn==1)","brightness":"int 0-100 (BLE maps to 6-254/20-254)","mode":"int: 2 = color/color-temp","color":"red,green,blue 0-255","colorTemInKelvin":"int (valid set from Constant.getColorTemKelvinSet)","softversion":"string","wifiSoftVersion":"string","timer":"enable + up to 4 time slots (openHour/openMin/closeHour/closeMin/repeat)","segmentColors":"per-segment RGB arrays via op/ptReal (CmdStatusV1.parseIc)"} | `decompiled/jadx-splits/split_pact_rgbiclight/sources/com/govee/rgbiclight/h6160/iot/CmdStatusV0.java; dreamcolorlightv1/iot/CmdStatusV0.java, CmdStatusV1.java` |
+
+## split_pact_rgblight
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi_connect | `0xEE/0x11` | [0]==0 -> connected; 0x11 is notify type after proType 0xEE | `jadx-splits/split_pact_rgblight/sources/com/govee/h6159/ble/WifiNotifyParse.java` |
+| iot-status | status | `status` | {"turn":"0\|1","brightness":"int (family absolute range)","mode":"2 colour/colourTem \| 4 scene \| 10 DIY \| 0 video","color":{"red":"0-255","green":"0-255","blue":"0-255"},"colorTemInKelvin":"int (2000-9000 typical)","softversion":"string","wifiSoftVersion":"string","modeValue":["base64 20-byte BLE frame (frame[1]==0x05)"],"timer":{"enable":"0\|1","time":[{"openHour":"int","openMin":"int","closeHour":"int","closeMin":"int"}]},"state (V1)":{"onOff":"0\|1","brightness":"0-100","mode":"int","color":{"red":"int","green":"int","blue":"int"},"colorTemInKelvin":"int"},"op (V1)":{"opcode":"mode\|sleep\|wakeup\|timer","modeValue":["b64"],"sleepValue":["b64"],"wakeupValue":["b64"],"timerValue":["b64"],"command":["b64 20B frame"]}} | `jadx-splits/split_pact_rgblight/sources/com/govee/h6159/iot/CmdStatusV0.java; .../homelightv1/iot/CmdStatusV0.java; .../stringlightv2/iot/CmdStatusV1.java` |
+
+## split_pact_security_health
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | H5026 wifi notify | `pairing` | WifiNotifyParse | `h5026/add/BleNotifyComm.java` |
+| ble-notify | H5010 scale data | `QN callback` | QNScaleDataListener | `scalev1/manager/ScaleApi.java` |
+| ble-notify | H5020 jump data | `native callback` | SkipData fields | `skipv1/adjust/DetailAc.java` |
+| iot-status | status | `status` | {"bat":"int 1-100","bri":"int 1-100","hum":"int %RH","lig":"int 0\|1","sta":"int 0\|1","tmp":"int degC","cnt":"int sensor connected","spvol":"int 1-100","minT/maxT":"int degC","minH/maxH":"int %RH","sensitivity/stv":"0-2","moveSensitivity/mstv":"0-2"} | `doorbell/h721214/communication/ResultStatus.java; ResultSetting.java; ResultLullaby.java` |
+
+## split_pact_tcsocket
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | device state | `0xEE/0x19` | status, todayRuntime BE24, todayKwh BE24/10000, currentRuntimeMin BE16, lastStartTs BE32 | `H5770DeviceStateCmd.java` |
+| ble-notify | heartbeat | `0xEE/0x00` | see commands; 0x7FFF invalid | `H5770HeartbeatCmd.java` |
+| ble-notify | mode | `0xEE/0x05` | [0] subcmd; 1 manual, 2 thermo [gear,target], 3 DIY [humidity] | `H5770ModeCmd.java` |
+| ble-notify | switch | `0xEE/0x01` | bit0 master, bit1 socket1, bit2 socket2 | `H5770SwitchCmd.java` |
+| ble-notify | socket setting | `0xEE/0x02` | thermo1,thermo2,diy1,diy2 | `H5770SocketSettingCmd.java` |
+| ble-notify | common switch | `0xEE/0x1F` | [0] Fahrenheit, [1] child lock | `H5770CommonSwitchCmd.java` |
+| ble-notify | screen setting | `0xEE/0x16` | [0] en,[1] minutes,[2] flag | `H5770ScreenSettingCmd.java` |
+| ble-notify | auto cooling | `0xEE/0x25` | [0] en,[1] minutes | `H5770AutoCoolingDelayCmd.java` |
+| ble-notify | delay close | `0xEE/0x26` | [0] en,[1..2] setMin,[3..4] remainSec | `H5770DelayCloseCmd.java` |
+| ble-notify | abnormal state | `0xEE/0x17` | bit0 overload, bit1 relay1, bit2 relay2 | `H5770AbnormalStateCmd.java` |
+| ble-notify | thermo bind | `0xEE/0x08` | MAC6 + supportsHumidity | `H5770ThermoBindCmd.java` |
+| ble-notify | thermo realtime | `0xEE/0x10` | temp24, offsetMin, selfTempBE16/10, humidityBE16/10 | `H5770ThermoRealtimeCmd.java` |
+| ble-notify | alarm settings | `0xEE/0x27` | 15 bytes (see commands) | `H5770AlarmSettingsCmd.java` |
+| ble-notify | fluctuation range | `0xEE/0x29` | category,indep,idx,lowBE16,highBE16 | `H5770FluctuationRangeCmd.java` |
+| ble-notify | schedule running | `0xEE/0x24` | [0] index,[1] running | `H5770ScheduleRunningCmd.java` |
+| ble-notify | chart data | `char ...2015` | segmented chart records; 3-byte (runMin, kWh BE16/10000) | `h5770/chart/ble/H5770ChartReadSkuSubVM.java; H5770ChartCons.java` |
+| iot-status | status | `status` | {"switch.master":"bool","switch.socket1":"bool","switch.socket2":"bool","mode.scene":"THERMO\|DIY\|MANUAL","mode.gear":"STOP\|AUTO\|HEAT\|COOL","targetTemp":"float °C (wire F for thermo mode/schedules/alarms)","targetHumidity":"float %","ambientTemp":"float °C (BE16/10)","humidity":"float % (BE16/10)","todayRuntimeSec":"BE24 seconds","todayKwh":"BE24/10000 kWh","currentWorkingRuntimeMin":"BE16 minutes","lastStartTimestampSec":"BE32 epoch seconds","thermo.bound":"bool","thermo.mac":"reversed 6-byte MAC","thermo.supportsHumidity":"bool","alarms.volume":"0-3","alarms.temp.enabled":"bool","alarms.temp.type":"0 below,1 above,2 range","alarms.temp.lowF/highF/belowF/aboveF":"BE16/10 °F","alarms.power.enabled":"bool","alarms.power.watts":"100-1800 W","alarms.power.minutes":"1-10","scheduleRunning.index":"int","scheduleRunning.running":"bool"} | `h5770/ble/cmd/*.java; h5770/utils/H5770AaPayload.java` |
+
+## split_pact_thnew
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | heart | `0xEE/0x01` | format-selected: COMMON [0..1] temp BE16, [2..3] hum BE16, [4..5] third BE16, [6] battery, [7] flags; WITH_THIRD adds probe mask; DUAL_PROBE [0..1] temp, [2..3] hum, [4] battery, [5] flags; H5220 [0..1] temp, [2..3] hum, [4] battery, [5] switch | `Controller4HeartV1; ThHeartDispatcher` |
+| ble-notify | battery | `0xAA/0x08` | [0] 0-100% | `Controller4Battery` |
+| ble-notify | remain / chart | `char 494e...2013` | 16-byte records, 2-byte relative minute stamp + temp/hum x100 | `ThChartDataManager` |
+| iot-status | status | `status` | {"tem":"int degC x100","hum":"int %RH x100","pm25":"int ug/m3 0-999","co2":"int ppm 0-5000","bat":"int 0-100","online":"bool","signal":"int dBm","tuType":"int 0=C 1=F","temCali":"int x100","humCali":"int x100","temMin":"int x100","temMax":"int x100","humMin":"int x100","humMax":"int x100","co2GradeMin":"int ppm","co2GradeMax":"int ppm","dndIsOpen":"bool","dndStartHour":"int","dndEndHour":"int"} | `ui/op/IotOpManager.java; pact/h51*/Iot*` |
+
+## split_pact_tvlightv4
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi connected | `0xEE/0x11 (notify)` | [0]==0 -> connected | `pact_tvlightv4/ble/WifiNotifyParse.java` |
+| ble-notify | brightness | `notify 0x20` | [0] level | `pact_tvlightv3/ble/BrightnessNotifyParse.java` |
+| ble-notify | device/switch status | `notify 0x30` | [0]==1, [1] bitfield | `base2light/ble/DeviceStatusNotifyParse (registered in v3/v4 BleNotifyComm)` |
+| ble-notify | check camera response | `0xAA/0x32` | [0] 0/1 | `pact_tvlightv4/ble/CheckCameraController.java` |
+| ble-notify | heart/power | `0xAA/0x01` | [0] state, [1] feast flag | `pact_tvlightv4/ble/TvHeartController.java` |
+| ble-notify | mode read-back | `0xAA/0x05` | [0]=submode then payload | `pact_tvlightv4/ble/Mode.java` |
+| ble-notify | white balance / whole brightness / border | `0xAA/0xA9 (0x00/0x02/0x0B)` | read replies for white balance (0), whole-RL brightness (2), black-border (11) | `pact_tvlightv4/detail/Info4Detail.java` |
+| iot-status | status | `status` | {"on":"bool (StateWithSubOnOff.onOff)","brightness":"int","subOnOff":"int[2] main/background","mode":"sub-mode byte + payload","video":"screenState,drama,vivid,voiceOn,voice,rlBrightness","timer/sleep/wakeup":"base TimerConfig payloads","whiteBalance":"enabled,r,g,b,r2,g2"} | `pact_tvlightv4/detail/Info4Detail.java` |
+
+## split_pfdv1
+
+| Transport | Name | Op / cmd | Layout / fields | Source |
+|---|---|---|---|---|
+| ble-notify | wifi state (H7024) | `0xEE/0x11` | [0]==0 connected | `h7024/ble/WifiNotifyParse.java` |
+| ble-notify | mode | `0xEE/0x05` | [0] sub-mode (8 color -> RGB at [1..3]; 9 scene -> type at [1]; 5 mic) | `Mode.parseSubMode` |
+| ble-notify | read bulb colors | `0xEE/0xA2` | [0] group, [1..12] 4xRGB | `ReadBulbColorController` |
+| ble-notify | brightness | `0xEE/0x04` | [0] level | `base BrightnessController` |
+| ble-notify | switch/heart | `0xEE/0x01` | base | `base controllers` |
+| iot-status | status | `status` | {} | `n/a` |

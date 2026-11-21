@@ -1,0 +1,27 @@
+# macOS / editor
+.DS_Store
+*.log
+*.swp
+.idea/
+.vscode/
+
+# Large research inputs (not needed for the site build)
+*.apkm
+apkm/
+apkm700/
+decompiled/
+old/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Site
+site/node_modules/
+site/dist/
+site/public/data/
+site/.vite/
+
+# Misc
+*.tmp
+*.tsbuildinfo

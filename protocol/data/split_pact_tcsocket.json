@@ -1,0 +1,117 @@
+{
+  "split": "split_pact_tcsocket",
+  "families": ["H5770"],
+  "skus": [
+    {"sku": "H5770", "family": "temperature-control socket, 2 outlets + thermo + probe", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 405; dual socket, thermostatic/DIY modes, schedules, alarms, display, energy metering, bindable TH probe."}
+  ],
+  "ble": {
+    "service_uuid": "494e5445-4c4c-495f-524f-434b535f4857",
+    "characteristic_uuid": "494e5445-4c4c-495f-524f-434b535f2014",
+    "frame": "20 bytes: [0]=proType [1]=cmdType [2..18]=payload [19]=XOR BCC; write 0x33, read 0xAA, multi-write 0xA3, multi-read 0xAC, notify 0xEE; chart notify characteristic 494e5445-4c4c-495f-524f-434b535f2015",
+    "commands": [
+      {"name": "master on/off", "op": "0x33/0x01", "payload": "10|01", "layout": "[0]=0x10|(on?1:0)", "response": "0xAA/0x01 -> bit0 master", "source": "h5770/ble/cmd/H5770SwitchCmd.java"},
+      {"name": "socket 1 on/off", "op": "0x33/0x01", "payload": "20|02", "layout": "[0]=0x20|(on?2:0)", "response": "0xAA/0x01 -> bit1", "source": "H5770SwitchCmd.java"},
+      {"name": "socket 2 on/off", "op": "0x33/0x01", "payload": "40|04", "layout": "[0]=0x40|(on?4:0)", "response": "0xAA/0x01 -> bit2", "source": "H5770SwitchCmd.java"},
+      {"name": "socket setting (thermo)", "op": "0x33/0x02", "payload": "01 t1 t2", "layout": "type 1 heat / 2 cool", "response": "0xAA/0x02 -> [0..1] thermo types, [2..3] DIY types", "source": "H5770SocketSettingCmd.java"},
+      {"name": "socket setting (DIY)", "op": "0x33/0x02", "payload": "02 t1 t2", "layout": "type 1 humidify / 2 dehumidify", "response": "same", "source": "H5770SocketSettingCmd.java"},
+      {"name": "mode manual", "op": "0x3A/0x05", "payload": "01", "layout": "subcmd 1", "response": "0xAA/0x05", "source": "H5770ModeCmd.java"},
+      {"name": "mode thermo", "op": "0x3A/0x05", "payload": "02 gear tempBE16", "layout": "gear 0 STOP 1 AUTO 2 HEAT 3 COOL; temp BE16 *10 (F)", "response": "0xAA/0x05", "source": "H5770ModeCmd.java"},
+      {"name": "mode DIY", "op": "0x3A/0x05", "payload": "03 humidityBE16", "layout": "humidity BE16 *10 %", "response": "0xAA/0x05", "source": "H5770ModeCmd.java"},
+      {"name": "delay close", "op": "0x33/0x26", "payload": "en minHi minLo", "layout": "en 0/1; minutes 0-1439", "response": "0xAA/0x26 -> en,setMin,remainSec", "source": "H5770DelayCloseCmd.java"},
+      {"name": "device state read", "op": "0xAA/0x19", "payload": "", "layout": "status, todayRuntime BE24, todayKwh BE24/10000, currentRuntimeMin BE16, lastStartTs BE32", "response": "0xAA/0x19", "source": "H5770DeviceStateCmd.java"},
+      {"name": "common switch", "op": "0x33/0x1F", "payload": "01|02 on", "layout": "sub1 child lock, sub2 Fahrenheit", "response": "0xAA/0x1F -> [0] Fahrenheit,[1] child lock", "source": "H5770CommonSwitchCmd.java"},
+      {"name": "screen setting", "op": "0x33/0x16", "payload": "en minutes flag", "layout": "minutes 1-10", "response": "0xAA/0x16", "source": "H5770ScreenSettingCmd.java"},
+      {"name": "auto cooling delay", "op": "0x33/0x25", "payload": "en minutes", "layout": "minutes 1-10", "response": "0xAA/0x25", "source": "H5770AutoCoolingDelayCmd.java"},
+      {"name": "fluctuation range", "op": "0x33/0x29", "payload": "category indep idx lowBE16 highBE16", "layout": "category 1 temp (F), 2 humidity", "response": "0xAA/0x29", "source": "H5770FluctuationRangeCmd.java"},
+      {"name": "temp calibration write", "op": "0x33/0x1E", "payload": "kind target signMagBE16", "layout": "kind 1 temp,2 hum; target 1 bound,2 device; value*10", "response": "0xAA/0x1E", "source": "H5770TempCalibrationCodec.java"},
+      {"name": "temp calibration read", "op": "0xAA/0x1E", "payload": "kind target", "layout": "returns 4 bytes", "response": "kind,target,value", "source": "H5770TempCalibrationCmd.java"},
+      {"name": "thermo bind", "op": "0x33/0x08", "payload": "macRev6 supportsHum", "layout": "6-byte reversed MAC + flag", "response": "0xAA/0x08 -> MAC + flag", "source": "H5770ThermoBindCmd.java"},
+      {"name": "thermo realtime", "op": "0xAA/0x10", "payload": "", "layout": "temp24, offsetMin, selfTempBE16/10, humidityBE16/10", "response": "0xAA/0x10", "source": "H5770ThermoRealtimeCmd.java"},
+      {"name": "abnormal state", "op": "0xAA/0x17", "payload": "", "layout": "bit0 overload, bit1 relay1, bit2 relay2", "response": "0xAA/0x17", "source": "H5770AbnormalStateCmd.java"},
+      {"name": "clear abnormal", "op": "0x33/0x17", "payload": "01", "layout": "clear", "response": "ack", "source": "H5770AbnormalStateCmd.java"},
+      {"name": "alarm settings read", "op": "0xAA/0x27", "payload": "", "layout": "volume, temp en/type/4xBE16 (F*10), power en/watts/min", "response": "0xAA/0x27", "source": "H5770AlarmSettingsCmd.java"},
+      {"name": "alarm temp write", "op": "0x33/0x27", "payload": "01 en type temps...", "layout": "sub 1", "response": "0xAA/0x27", "source": "H5770AlarmSettingsCmd.java"},
+      {"name": "alarm power write", "op": "0x33/0x27", "payload": "02 en wattsBE16 minutes", "layout": "watts 100-1800, minutes 1-10", "response": "0xAA/0x27", "source": "H5770AlarmSettingsCmd.java"},
+      {"name": "alarm volume write", "op": "0x33/0x27", "payload": "03 level", "layout": "level 0-3", "response": "0xAA/0x27", "source": "H5770AlarmSettingsCmd.java"},
+      {"name": "schedule write", "op": "0xA3/0x14", "payload": "multi-packet schedule items", "layout": "nameLen,name,index,enabled,startH,startM,endH,endM,repeat,mode4", "response": "ack", "source": "H5770ScheduleCmd.java"},
+      {"name": "schedule read", "op": "0xAC/0x01", "payload": "0F", "layout": "multi-read 17-byte chunks", "response": "schedule list", "source": "H5770ScheduleCmd.java"},
+      {"name": "schedule delete", "op": "0x33/0x15", "payload": "index", "layout": "0-254", "response": "ack", "source": "H5770ScheduleDeleteCmd.java"},
+      {"name": "schedule running read", "op": "0xAA/0x24", "payload": "", "layout": "[0] index,[1] status", "response": "0xAA/0x24", "source": "H5770ScheduleRunningCmd.java"},
+      {"name": "schedule running end", "op": "0x33/0x24", "payload": "01", "layout": "stop running schedule", "response": "ack", "source": "H5770ScheduleRunningCmd.java"},
+      {"name": "full info read", "op": "0xAC/0x01", "payload": "03", "layout": "reply [count,(cmd,len,payload)...]", "response": "re-dispatched as 0xAA/cmd frames", "source": "H5770FullInfoCmd.java"},
+      {"name": "heartbeat read", "op": "0xAA/0x00", "payload": "", "layout": "switch,status,target24,offset,targetBE16,ambientBE16,status,humBE16", "response": "0xAA/0x00", "source": "H5770HeartbeatCmd.java"}
+    ],
+    "notifications": [
+      {"name": "device state", "op": "0xEE/0x19", "layout": "status, todayRuntime BE24, todayKwh BE24/10000, currentRuntimeMin BE16, lastStartTs BE32", "source": "H5770DeviceStateCmd.java"},
+      {"name": "heartbeat", "op": "0xEE/0x00", "layout": "see commands; 0x7FFF invalid", "source": "H5770HeartbeatCmd.java"},
+      {"name": "mode", "op": "0xEE/0x05", "layout": "[0] subcmd; 1 manual, 2 thermo [gear,target], 3 DIY [humidity]", "source": "H5770ModeCmd.java"},
+      {"name": "switch", "op": "0xEE/0x01", "layout": "bit0 master, bit1 socket1, bit2 socket2", "source": "H5770SwitchCmd.java"},
+      {"name": "socket setting", "op": "0xEE/0x02", "layout": "thermo1,thermo2,diy1,diy2", "source": "H5770SocketSettingCmd.java"},
+      {"name": "common switch", "op": "0xEE/0x1F", "layout": "[0] Fahrenheit, [1] child lock", "source": "H5770CommonSwitchCmd.java"},
+      {"name": "screen setting", "op": "0xEE/0x16", "layout": "[0] en,[1] minutes,[2] flag", "source": "H5770ScreenSettingCmd.java"},
+      {"name": "auto cooling", "op": "0xEE/0x25", "layout": "[0] en,[1] minutes", "source": "H5770AutoCoolingDelayCmd.java"},
+      {"name": "delay close", "op": "0xEE/0x26", "layout": "[0] en,[1..2] setMin,[3..4] remainSec", "source": "H5770DelayCloseCmd.java"},
+      {"name": "abnormal state", "op": "0xEE/0x17", "layout": "bit0 overload, bit1 relay1, bit2 relay2", "source": "H5770AbnormalStateCmd.java"},
+      {"name": "thermo bind", "op": "0xEE/0x08", "layout": "MAC6 + supportsHumidity", "source": "H5770ThermoBindCmd.java"},
+      {"name": "thermo realtime", "op": "0xEE/0x10", "layout": "temp24, offsetMin, selfTempBE16/10, humidityBE16/10", "source": "H5770ThermoRealtimeCmd.java"},
+      {"name": "alarm settings", "op": "0xEE/0x27", "layout": "15 bytes (see commands)", "source": "H5770AlarmSettingsCmd.java"},
+      {"name": "fluctuation range", "op": "0xEE/0x29", "layout": "category,indep,idx,lowBE16,highBE16", "source": "H5770FluctuationRangeCmd.java"},
+      {"name": "schedule running", "op": "0xEE/0x24", "layout": "[0] index,[1] running", "source": "H5770ScheduleRunningCmd.java"},
+      {"name": "chart data", "op": "char ...2015", "layout": "segmented chart records; 3-byte (runMin, kWh BE16/10000)", "source": "h5770/chart/ble/H5770ChartReadSkuSubVM.java; H5770ChartCons.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "GX messages Route.PreferBle(true) with IotForm.PtReal (or PtIot for OTA); cloud fallback of the same 20-byte frames",
+    "commands": [
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte frame>"]}, "example": "{\"cmd\":\"ptReal\",\"data\":{\"command\":[\"...\"]}}", "response": "ack/report", "source": "H5770Repository; GxMessageBuilderKt"},
+      {"cmd": "ptIot", "data": {"command": ["<base64 20-byte frame>"]}, "example": "{\"cmd\":\"ptIot\",\"data\":{\"command\":[\"...\"]}}", "response": "ack", "source": "H5770SharedViewModel.writeOtaInfo"},
+      {"cmd": "op", "data": {"command": ["<base64 20-byte frame>"]}, "example": "{\"cmd\":\"op\",\"data\":{\"command\":[\"...\"]}}", "response": "state/report frames", "source": "H5770Repository"},
+      {"cmd": "status", "data": {}, "example": "{\"cmd\":\"status\"}", "response": "status frames", "source": "shared GX status"},
+      {"cmd": "online", "data": {}, "example": "{\"cmd\":\"online\"}", "response": "presence", "source": "shared GX status"}
+    ],
+    "status": {
+      "fields": {
+        "switch.master": "bool",
+        "switch.socket1": "bool",
+        "switch.socket2": "bool",
+        "mode.scene": "THERMO|DIY|MANUAL",
+        "mode.gear": "STOP|AUTO|HEAT|COOL",
+        "targetTemp": "float °C (wire F for thermo mode/schedules/alarms)",
+        "targetHumidity": "float %",
+        "ambientTemp": "float °C (BE16/10)",
+        "humidity": "float % (BE16/10)",
+        "todayRuntimeSec": "BE24 seconds",
+        "todayKwh": "BE24/10000 kWh",
+        "currentWorkingRuntimeMin": "BE16 minutes",
+        "lastStartTimestampSec": "BE32 epoch seconds",
+        "thermo.bound": "bool",
+        "thermo.mac": "reversed 6-byte MAC",
+        "thermo.supportsHumidity": "bool",
+        "alarms.volume": "0-3",
+        "alarms.temp.enabled": "bool",
+        "alarms.temp.type": "0 below,1 above,2 range",
+        "alarms.temp.lowF/highF/belowF/aboveF": "BE16/10 °F",
+        "alarms.power.enabled": "bool",
+        "alarms.power.watts": "100-1800 W",
+        "alarms.power.minutes": "1-10",
+        "scheduleRunning.index": "int",
+        "scheduleRunning.running": "bool"
+      },
+      "source": "h5770/ble/cmd/*.java; h5770/utils/H5770AaPayload.java"
+    }
+  },
+  "other_protocols": [
+    {"name": "cloud-gx-fallback", "details": "GX messages are Route.PreferBle(true); if BLE is unavailable they tunnel as ptReal, or ptIot when OTA pact support says so.", "source": "h5770/vm/H5770Repository.java; H5770SharedViewModel.java"},
+    {"name": "work-mode-cloud-sync", "details": "POST JSON {device,sku,workMode} to a generic settings endpoint to keep cloud/Alexa scene state consistent; workMode = THERMO 2, DIY 3, MANUAL 1.", "source": "h5770/setting/modechange/H5770WorkModeCloudSync.java"},
+    {"name": "email-alarms", "details": "REST: /bff-app/v2/account/notification-emails, /bi/rest/v1/notification-emails, bff-app/v1/device/email-alert/bind-rel, /bff-app/v1/device/email-alert/list-rel.", "source": "h5770/net/IH5770Net.java"},
+    {"name": "chart-upload", "details": "Chart read over BLE char ...2015, upload via /bff-app/v1/device/series-datas; download tasks /device/data-tasks and links /device/data-links.", "source": "h5770/chart/H5770ChartViewModel.java"},
+    {"name": "ota", "details": "Pact report frame {0xAB,2,pactTypeLo,pactTypeHi,pactCode} via ptReal or ptIot.", "source": "H5770SharedViewModel.writeOtaInfo"}
+  ],
+  "dynamic_effects": [
+    {"name": "manual mode", "submode": "0x01", "payload": "01", "attributes": ["relay/manual", "gear STOP"], "source": "H5770ModeCmd.java"},
+    {"name": "thermo mode", "submode": "0x02", "payload": "02 gear tempBE16", "attributes": ["gear STOP/AUTO/HEAT/COOL", "target temp BE16 *10 (F)"], "source": "H5770ModeCmd.java"},
+    {"name": "DIY humidity mode", "submode": "0x03", "payload": "03 humidityBE16", "attributes": ["humidity BE16 *10 %"], "source": "H5770ModeCmd.java"},
+    {"name": "schedule item", "submode": "0x14", "payload": "nameLen,name,index,enabled,startH,startM,endH,endM,repeat,mode4", "attributes": ["repeat bit7 enabled, bits0-6 Mon-Sun", "max 5 schedules", "mode 1 manual / 2 thermo / 3 humidity"], "source": "H5770ScheduleItemCodec.java"}
+  ],
+  "notes": "H5770Support is referenced by H6630 but not present in this split; feature gates are inline. Chart request opcodes are inherited from base_h71xx chart_v2 (split only fixes UUIDs and record parsing). Endianness is mixed: 16/24-bit big-endian, some 32-bit fields big-endian and some little-endian. Thermo mode/schedule/alarm temperatures are Fahrenheit on the wire and Celsius in DeviceState/Heartbeat. No Matter/MQTT code in split."
+}

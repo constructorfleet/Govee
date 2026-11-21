@@ -1,0 +1,88 @@
+{
+  "split": "split_pact_h60ax",
+  "families": ["H60A0", "H60A1", "H80A1", "H60A4", "H80A4", "H60A6", "H60C1", "H1270", "H1232", "H1250", "H1252", "H12D0", "H1141"],
+  "skus": [
+    {"sku": "H60A0", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 188; colour 0x15; colour size 13/14; 2200-6500K; scenes {0,1,2,3}"},
+    {"sku": "H60A1", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 235; colour 0x15; 14; 2200-6500K; scenes {0,1,2,3}"},
+    {"sku": "H80A1", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 235; theme icon shared with H60A0"},
+    {"sku": "H60A4", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 302; colour 0x15; 11; 2700-6500K; DIY 784/851 protocol 0x58 share 80"},
+    {"sku": "H80A4", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 302; theme icon shared with H60A4"},
+    {"sku": "H60A6", "family": "Ceiling / matrix light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 303; colour sub 0x0D; 13; 2700-6500K; scenes {0,1,2,3,5}; DIY 797/798 protocol 0x58"},
+    {"sku": "H60C1", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 324; colour 0x15; 3; 2700-6500K; scenes {0,1,2,3,5}; DIY 878/789"},
+    {"sku": "H1270", "family": "Ceiling / matrix light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 346; colour 0x15; 13; 2700-6500K; scenes {0,5}; DIY 897/898/983; graffiti 82; custom music"},
+    {"sku": "H1232", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 356; colour 0x15; 4; 2700-6500K; scenes {0,1,2,3,5}"},
+    {"sku": "H1250", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 370; colour 0x15; runtime colour size; 2200-6500K; scenes {0,1,2,3,5}; DIY 915/916/982"},
+    {"sku": "H1252", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 373; colour 0x15; 17; 2200-6500K; scenes {0,1,5}; DIY 902/981/941"},
+    {"sku": "H12D0", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 390; colour 0x15; runtime; 2200-6500K; scenes {0,5}; DIY 944/961; graffiti 0xEF"},
+    {"sku": "H1141", "family": "Ceiling light", "transports": ["ble", "iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 410; colour 0x15; 8; 1000-10000K; scenes {0,1,2,3,5,6}; DIY 976/977; graffiti protocol 0x03"}
+  ],
+  "ble": {
+    "service_uuid": "00010203-0405-0607-0809-0a0b0c0d1910",
+    "characteristic_uuid": "00010203-0405-0607-0809-0a0b0c0d2b11",
+    "frame": "20 bytes: [0]=proType (0x33/0xAA) [1]=cmdType [2..18]=payload [19]=XOR BCC; Compose4DefWrite/4Multi for long DIY/segment bodies",
+    "commands": [
+      {"name": "power", "op": "0x33/0x01", "payload": "<0|1>", "layout": "[0]", "response": "0xAA/0x01", "source": "ble/controller/compose/ControllerSwitch.java"},
+      {"name": "brightness", "op": "0x33/0x04", "payload": "<1..100>", "layout": "[0]", "response": "0xAA/0x04", "source": "ble/controller/compose/BrightnessControllerNoEvent.java"},
+      {"name": "color-op0-brightness", "op": "0x33/0x05 sub 0x15", "payload": "15 02 <brightness> <mask...>", "layout": "mask 2 bytes <=16 segments, else BleUtils.X(checkSet,true)", "response": "0xAA/0x05", "source": "ble/v1/SubModeColorV1.java (OP_TYPE_SET_BRIGHTNESS=0)"},
+      {"name": "color-op1-rgb", "op": "0x33/0x05 sub 0x15", "payload": "15 01 R G B <mask...>", "layout": "RGB + segment mask", "response": "0xAA/0x05", "source": "same (OP_TYPE_SET_COLOR=1)"},
+      {"name": "color-op2-kelvin", "op": "0x33/0x05 sub 0x15", "payload": "15 05 kelLo kelHi", "layout": "Kelvin LE16", "response": "0xAA/0x05", "source": "same (OP_TYPE_SET_COLOR_TEMP=2)"},
+      {"name": "color-op3-mode", "op": "0x33/0x05 sub 0x15", "payload": "15 00", "layout": "mode only", "response": "0xAA/0x05", "source": "same (OP_TYPE_SET_MODE=3)"},
+      {"name": "color-op6-brightness-group", "op": "0x33/0x05 sub 0x15", "payload": "15 03 <group> <14 brightness>", "layout": "14 bytes", "response": "0xAA/0x05", "source": "same (OP_TYPE_SET_BRIGHTNESS_GROUP=6)"},
+      {"name": "color-op7-color-group", "op": "0x33/0x05 sub 0x15", "payload": "15 04 <group> R G B x4", "layout": "4 RGB triplets", "response": "0xAA/0x05", "source": "same (OP_TYPE_SET_COLOR_GROUP=7)"},
+      {"name": "color-op11-kelvin-H60A1", "op": "0x33/0x05 sub 0x15", "payload": "15 01 R G B kelLo kelHi tempR G B <mask>", "layout": "H60A1/4/60C1/1270", "response": "0xAA/0x05", "source": "same (OP_TYPE_SET_COLOR_TEMP_H60A1=11)"},
+      {"name": "color-op12-rgb-H60A1", "op": "0x33/0x05 sub 0x15", "payload": "15 01 R G B 00 00 00 00 00 <mask>", "layout": "H60A1/4/60C1/1270", "response": "0xAA/0x05", "source": "same (OP_TYPE_SET_COLOR_H60A1=12)"},
+      {"name": "color-H60A6", "op": "0x33/0x05 sub 0x0D", "payload": "0D ...", "layout": "H60A6-specific 13-pixel colour payload (built by H60A6 colour UI/op writer)", "response": "0xAA/0x05", "source": "ble/BleProtocol.sub_mode_color_h60a6=13; adjust/h60a6/ColorModeH60A6.java"},
+      {"name": "music", "op": "0x33/0x05 sub 0x13", "payload": "13 <code> <sens>", "layout": "default 13 05 64; new-code sets via base lists", "response": "0xAA/0x05", "source": "ble/v1/SubModeMusicV1.java"},
+      {"name": "scene", "op": "0x33/0x05 sub 0x04", "payload": "04 effectLo effectHi", "layout": "16-bit LE", "response": "0xAA/0x05", "source": "ble/v1/SubModeScenesV1.java"},
+      {"name": "diy", "op": "0x33/0x05 sub 0x0A", "payload": "0A diyLo diyHi", "layout": "16-bit LE + protocolCode metadata", "response": "0xAA/0x05", "source": "ble/Sub4Diy.java"},
+      {"name": "graffiti-h12d0", "op": "0x33/0xEF", "payload": "cell-graffiti multi frames", "layout": "sub_graffiti_h12d0=-17", "response": "write result", "source": "ble/BleProtocol.java; adjust/h12d0/diy/*"},
+      {"name": "child-switch", "op": "0x33/0x36", "payload": "<0..2 bools>", "layout": "secondary/child switch", "response": "0xAA/0x36", "source": "ble/controller/ControllerChildSwitch.java; BleProtocol.value_sub_switch=54"},
+      {"name": "onoff-memory", "op": "0x33/0x41", "payload": "<0|1>", "layout": "[0]", "response": "0xAA/0x41", "source": "ble/controller/Controller4OnOffMemory.java"},
+      {"name": "ic-number", "op": "0xAA/0x40", "payload": "", "layout": "empty read", "response": "IC count", "source": "ble/controller/compose/ControllerIcNum.java"},
+      {"name": "other-info", "op": "0xAA/0x07", "payload": "p()={8}", "layout": "read", "response": "Parser4OtherInfo", "source": "ble/controller/compose/ControllerOtherInfo.java"},
+      {"name": "version-hard-dsp", "op": "0xAA/0x07", "payload": "sub", "layout": "version read", "response": "ASCII", "source": "compose/HardVersionController.java; DspVersionController.java"},
+      {"name": "version-soft", "op": "0xAA/0x06", "payload": "", "layout": "empty read", "response": "ASCII", "source": "compose/SoftVersionController.java"},
+      {"name": "sync-time", "op": "0x33/0x09", "payload": "7-byte time", "layout": "time + tz", "response": "write result", "source": "compose/SyncTimeController.java"},
+      {"name": "timer-read", "op": "0xAA/0x23", "payload": "", "layout": "timer all-info", "response": "ParserTimers/Result4TimerAllInfo", "source": "compose/TimerController.java"},
+      {"name": "gradual", "op": "0x33/0xA3", "payload": "<0|1>", "layout": "[0]", "response": "0xAA/0xA3", "source": "compose/GradualController.java"},
+      {"name": "colour-brightness-read", "op": "0xAA/0xA5", "payload": "<index>", "layout": "p()={index}", "response": "ParserMultiColorStrip", "source": "compose/ColorBrightnessController.java"}
+    ],
+    "notifications": [
+      {"name": "brightness", "op": "0x20", "layout": "[0]", "source": "ble/BrightnessParse.java"},
+      {"name": "light-child-status", "op": "0x30", "layout": "[0]==1, [1..3] child bools", "source": "ble/LightChildStatusNotifyParse.java"},
+      {"name": "wifi", "op": "0x11", "layout": "[0]==0 connected", "source": "ble/WifiNotifyParse.java"},
+      {"name": "device-status", "op": "0x30", "layout": "base DeviceStatusNotifyParse", "source": "ble/BleNotifyComm.java"},
+      {"name": "ic-segment", "op": "0x21", "layout": "base CheckIcNumParse", "source": "base"},
+      {"name": "colour-brightness", "op": "0xAA/0xA5", "layout": "[3] type, [4..5] LE16 index/count + RGB/brightness", "source": "compose/ParserMultiColorStrip.java"},
+      {"name": "timer-all-info", "op": "0xAA/0x23", "layout": "ParserTimers", "source": "compose/ParserTimers.java"},
+      {"name": "gradual", "op": "0xAA/0xA3", "layout": "[0]", "source": "compose/ParserGradual.java"}
+    ]
+  },
+  "iot": {
+    "envelope": "IotMsgV2",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"turn\",\"data\":{\"val\":1}}}", "response": "state", "source": "iot/CmdTurn.java"},
+      {"cmd": "brightness", "data": {"val": "1..100"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"brightness\",\"data\":{\"val\":50}}}", "response": "state", "source": "iot/CmdBrightness.java"},
+      {"cmd": "colorwc", "data": {"color": {"r": "int", "g": "int", "b": "int"}, "colorTemInKelvin": "int"}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"colorwc\",\"data\":{\"color\":{\"r\":255,\"g\":0,\"b\":0},\"colorTemInKelvin\":0}}}", "response": "state", "source": "iot/CmdColorWc.java"},
+      {"cmd": "ptReal", "data": {"command": ["<base64 20-byte>"]}, "example": "{\"msg\":{\"type\":1,\"cmd\":\"ptReal\",\"data\":{\"command\":[\"M...\"]}}}", "response": "op.pt[]", "source": "jadx-splits/split_pact_h60ax/sources/com/govee/pact_h60a0/iot/CmdPtReal.java"},
+      {"cmd": "status", "data": {}, "example": "{\"msg\":{\"type\":0,\"cmd\":\"status\"}}", "response": "state/op", "source": "iot/CmdStatus.java"}
+    ],
+    "status": {"fields": {"on": "bool", "brightness": "int 1-100", "color": "r/g/b", "colorTemInKelvin": "int", "pt": "base64 20-byte frames"}, "source": "base state/op parser"}
+  },
+  "other_protocols": [
+    {"name": "wifi-lan", "details": "dynamic domains H60A0/H60A1/H60A4/H60A6/H60C1/H1270/H1232/H1250/H1252/H12D0/H1141; MQTT capability base", "source": "pact/Support.setDynamicApi()"},
+    {"name": "custom-music", "details": "H1270 cloud custom music rooms/effects (get/save/default), effect-name editing", "source": "adjust/h1270/music/CustomMusicApi.java; CustomMusicRoomApi.java; MusicHelper.java"},
+    {"name": "cell-graffiti", "details": "H1270/H1250/H12D0/H1141 layered cell graffiti with image import and AI materials", "source": "adjust/h1270/graffiti/*; h1250/diy/graffiti/*; h12d0/diy/*; h1141/diy/*"},
+    {"name": "ota", "details": "base OTA; AI OTA enabled for all except H60A0", "source": "pact/Support.supportAiOta"}
+  ],
+  "dynamic_effects": [
+    {"name": "color", "submode": "0x15", "payload": "15 <op> ...", "attributes": ["op 0 brightness", "op 1 RGB", "op 2 Kelvin", "op 3 mode", "op 6 14-byte brightness group", "op 7 4x RGB group", "op 11 H60A1 kelvin", "op 12 H60A1 RGB"], "source": "ble/v1/SubModeColorV1.java"},
+    {"name": "color-h60a6", "submode": "0x0D", "payload": "0D ...", "attributes": ["13-pixel H60A6 colour"], "source": "ble/BleProtocol.java; adjust/h60a6/ColorModeH60A6.java"},
+    {"name": "music", "submode": "0x13", "payload": "13 <code> <sens>", "attributes": ["default code 5 sens 100", "base new-music code sets"], "source": "ble/v1/SubModeMusicV1.java"},
+    {"name": "scene", "submode": "0x04", "payload": "04 <effect LE16>", "attributes": ["per-SKU op sets"], "source": "ble/v1/SubModeScenesV1.java"},
+    {"name": "diy", "submode": "0x0A", "payload": "0A <diy LE16>", "attributes": ["H60A4 784/851", "H60A6 797/798", "H60C1 878/789", "H1270 897/898/983", "H1250 915/916/982", "H1252 902/981/941", "H12D0 944/961", "H1141 976/977"], "source": "per-family DiyConfig/DiyParse"},
+    {"name": "graffiti", "submode": "0xEF", "payload": "cell-graffiti layers", "attributes": ["H12D0 0xEF", "H1141 graffiti protocol 0x03", "H1270 graffiti 82"], "source": "ble/BleProtocol.java; adjust/h12d0/diy/*; adjust/h1141/diy/H1141GraffitiParse.java"},
+    {"name": "child-switch", "submode": null, "payload": "36 <0..2 bools>", "attributes": ["secondary light switch"], "source": "ble/controller/ControllerChildSwitch.java"}
+  ],
+  "notes": "Eleven goodsTypes share the H60AX profile. Most use colour sub 0x15 with opType 0/1/2/3/6/7/11/12; H60A6 uses sub 0x0D and its exact body is UI/op-writer built. H1250/H12D0 colour size is runtime ColorPieceConfig. DIY effect constants are explicit only where listed; others are DIY-new config/server driven. H1141 graffiti protocol is 0x03. Custom music (H1270) is cloud-backed."
+}

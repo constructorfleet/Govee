@@ -1,0 +1,51 @@
+{
+  "split": "split_pact_plugv1",
+  "families": ["H5001", "H5081", "H7014"],
+  "skus": [
+    {"sku": "H5081", "family": "WiFi smart plug, 1 socket", "transports": ["iot"], "pact": {"type": 4, "code": 1}, "notes": "goodsType 4; regional SKU variants 101/201/301; AP SSID Govee_plug_<sku>; no BLE."},
+    {"sku": "H5001", "family": "WiFi smart switch, 1 gang", "transports": ["iot"], "pact": {"type": 1, "code": 1}, "notes": "goodsType 26; nightMode support; AP SSID Govee_Switch_<sku>; no BLE."},
+    {"sku": "H7014", "family": "WiFi smart plug, 1 socket (legacy)", "transports": ["iot"], "pact": {"type": null, "code": null}, "notes": "goodsType not declared in split; AbsIotManagerV0; AP SSID Govee_plug; 192.168.1.1; single timer window."}
+  ],
+  "ble": {
+    "service_uuid": null,
+    "characteristic_uuid": null,
+    "frame": "No BLE in this split; control is IoT JSON only. Provisioning is Wi-Fi AP/HTTP.",
+    "commands": [],
+    "notifications": []
+  },
+  "iot": {
+    "envelope": "plugv1: Write/AbsCmdWrite, scenes V2; H7014: AbsIotManagerV0 / IotMsg V0",
+    "commands": [
+      {"cmd": "turn", "data": {"val": "0|1"}, "example": "{\"cmd\":\"turn\",\"data\":{\"val\":1}}", "response": "status", "source": "plugv1/iot/CmdTurn.java; h7014/iot/CmdTurn.java"},
+      {"cmd": "status", "data": {}, "example": "{\"cmd\":\"status\"}", "response": "state+config (V0/V1) or turn/delayClose/timer (H7014)", "source": "plugv1/iot/CmdStatusV0.java; CmdStatusV1.java; h7014/iot/CmdStatusV0.java"},
+      {"cmd": "timer", "data": {"group": "int", "enable": "0|1", "type": "int", "hour": "0-23", "minute": "0-59", "repeat": "byte", "timeOffset": "int hours", "timeOffsetMinute": "int", "timeStamp": "epoch seconds"}, "example": "{\"cmd\":\"timer\",\"data\":{\"group\":0,\"enable\":1,\"hour\":7,\"minute\":30,\"repeat\":127}}", "response": "status", "source": "plugv1/iot/CmdTimer.java"},
+      {"cmd": "delay", "data": {"enable": "0|1", "minutes": "int", "leftMinutes": "int"}, "example": "{\"cmd\":\"delay\",\"data\":{\"enable\":1,\"minutes\":30,\"leftMinutes\":30}}", "response": "config.delay", "source": "plugv1/iot/CmdDelayClose.java"},
+      {"cmd": "delayClose", "data": {"enable": "0|1", "minutes": "int", "leftMinutes": "int"}, "example": "{\"cmd\":\"delayClose\",\"data\":{\"enable\":1,\"minutes\":30}}", "response": "delayClose", "source": "h7014/iot/CmdDelayClose.java"},
+      {"cmd": "nightMode", "data": {"val": "0|1"}, "example": "{\"cmd\":\"nightMode\",\"data\":{\"val\":1}}", "response": "state.nightMode", "source": "plugv1/iot/CmdNightMode.java"},
+      {"cmd": "timer (H7014)", "data": {"enable": "0|1", "time": [{"openHour": "0-23", "openMin": "0-59", "closeHour": "0-23", "closeMin": "0-59"}], "timeOffset": "int", "timeOffsetMinute": "int"}, "example": "{\"cmd\":\"timer\",\"data\":{\"enable\":1,\"time\":[{\"openHour\":7,\"openMin\":0,\"closeHour\":23,\"closeMin\":0}]}}", "response": "status", "source": "h7014/iot/CmdTimer.java"},
+      {"cmd": "online", "data": {}, "example": "{\"cmd\":\"online\"}", "response": "presence", "source": "plugv1/iot/Cmd.java"}
+    ],
+    "status": {
+      "fields": {
+        "state.onOff": "0|1",
+        "state.nightMode": "0|1 (H5001)",
+        "config.delay.enable": "bool",
+        "config.delay.minutes": "int",
+        "config.delay.leftMinutes": "int",
+        "config.timer[]": "NewTimerV1 {enable,type,hour,minute,repeat}",
+        "H7014.turn": "0|1",
+        "H7014.softversion": "string",
+        "H7014.delayClose": "{enable,minutes,leftMinutes}",
+        "H7014.timer.enable": "bool",
+        "H7014.timer.time[0]": "{openHour,openMin,closeHour,closeMin}"
+      },
+      "source": "plugv1/iot/CmdStatusV0.java; CmdStatusV1.java; h7014/iot/CmdStatusV0.java"
+    }
+  },
+  "other_protocols": [
+    {"name": "ap-provisioning", "details": "Device hotspot + HTTP config: SSID Govee_plug_<sku>/Govee_Switch_<sku> (H7014: Govee_plug), AP 192.168.1.1, timeout 7200 s, WiFi input limit 32/64 (H7014 31/31).", "source": "plugv1/pact/Support.java; plugv1/add/ApComm*.java; h7014/sku/Sku.java; h7014/add/ApComm.java"},
+    {"name": "scenes", "details": "IoT switch scene builder: H5001/H5081 use IotMsgV2; H7014 uses IotMsg V0; supportWifi true, supportBle false.", "source": "plugv1/scenes/IotSwitchCmdBuilderV1.java; h7014/scenes/SwitchCmdBuilder.java"}
+  ],
+  "dynamic_effects": [],
+  "notes": "No BLE at all in this split. Exact AP HTTP paths are hidden in shared helpers. H5001/H5081 regional variants 101/201/301 only affect naming/icon, not protocol. H7014 ignores all but time[0] of the timer array. CmdTimer.repeat weekday bit mapping lives in shared NewTimerV1/TimerInfo, not in this split."
+}
