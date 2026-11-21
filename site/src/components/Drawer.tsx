@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import { Check, Copy, ExternalLink, X } from "lucide-react";
-import type { Detail } from "../types";
+import { useEffect, useRef, useState } from "react";
+import { ArrowLeft, Check, Copy, ExternalLink, X } from "lucide-react";
+import type { Detail, SiteData } from "../types";
 import { TryIt } from "./TryIt";
 import { CommandFields } from "./CommandFields";
+import { DeviceCommands } from "./DeviceCommands";
 
 const repoBase = (() => {
   const host = window.location.hostname;
@@ -50,15 +51,29 @@ function CopyButton({ text, onCopied }: { text: string; onCopied: (t: string) =>
 
 export function Drawer({
   detail,
+  data,
   onClose,
   onOpenDoc,
+  onOpenDetail,
+  onBack,
+  backLabel,
   onCopied,
 }: {
   detail: Detail | null;
+  data: SiteData;
   onClose: () => void;
   onOpenDoc: (split: string) => void;
+  onOpenDetail: (detail: Detail) => void;
+  onBack?: () => void;
+  backLabel?: string;
   onCopied: (msg: string) => void;
 }) {
+  const drawerRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    drawerRef.current?.scrollTo({ top: 0 });
+  }, [detail]);
+
   useEffect(() => {
     if (!detail) return;
     const onKey = (e: KeyboardEvent) => {
@@ -94,9 +109,16 @@ export function Drawer({
 
   return (
     <div className="drawer-backdrop" onClick={onClose}>
-      <aside className="drawer" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+      <aside className="drawer" ref={drawerRef} onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
         <div className="drawer-top">
-          <span className={`badge badge-${detail.kind}`}>{detail.kind}</span>
+          <div className="drawer-top-left">
+            {onBack && (
+              <button className="back-btn" onClick={onBack} aria-label="Back">
+                <ArrowLeft size={13} /> {backLabel || "Back"}
+              </button>
+            )}
+            <span className={`badge badge-${detail.kind}`}>{detail.kind}</span>
+          </div>
           <button className="icon-btn" onClick={onClose} aria-label="Close">
             <X size={18} />
           </button>
@@ -131,6 +153,11 @@ export function Drawer({
               <div><span>pact type/code</span><b>{item.pact_type || item.pact_code ? `${item.pact_type ?? "?"}/${item.pact_code ?? "?"}` : "—"}</b></div>
             </div>
             <Field label="Family" value={String(item.family)} />
+            <DeviceCommands
+              device={detail.item}
+              data={data}
+              onOpenCommand={(command) => onOpenDetail({ kind: "command", item: command })}
+            />
             <Field label="Notes" value={String(item.notes)} />
           </>
         )}

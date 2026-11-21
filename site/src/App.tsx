@@ -158,6 +158,7 @@ export default function App() {
   });
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [detail, setDetail] = useState<Detail | null>(null);
+  const [detailBack, setDetailBack] = useState<Detail | null>(null);
   const [toast, setToast] = useState("");
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const saved = localStorage.getItem("atlas-theme");
@@ -218,9 +219,28 @@ export default function App() {
     setSelectedDoc(id);
     setTab("docs");
     setDetail(null);
+    setDetailBack(null);
     setPaletteOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+  const openDetail = useCallback((d: Detail) => {
+    setDetailBack(null);
+    setDetail(d);
+  }, []);
+
+  const openChildDetail = useCallback(
+    (d: Detail) => {
+      setDetailBack(detail);
+      setDetail(d);
+    },
+    [detail],
+  );
+
+  const backDetail = useCallback(() => {
+    setDetail(detailBack);
+    setDetailBack(null);
+  }, [detailBack]);
 
   const copy = useCallback((msg: string) => {
     setToast(msg);
@@ -408,7 +428,7 @@ export default function App() {
 
       <main>
         {tab === "overview" && (
-          <Overview data={data} setTab={setTab} openDoc={openDoc} openDetail={setDetail} />
+          <Overview data={data} setTab={setTab} openDoc={openDoc} openDetail={openDetail} />
         )}
 
         {tab === "devices" && (
@@ -460,7 +480,7 @@ export default function App() {
                   </thead>
                   <tbody>
                     {pagedDevices.map((d) => (
-                      <tr key={d.id} onClick={() => setDetail({ kind: "device", item: d })}>
+                      <tr key={d.id} onClick={() => openDetail({ kind: "device", item: d })}>
                         <td><span className="sku"><Hi text={d.sku} q={devQ} /></span></td>
                         <td className="wide">{d.family}</td>
                         <td>
@@ -552,7 +572,7 @@ export default function App() {
                   </thead>
                   <tbody>
                     {pagedCommands.map((c) => (
-                      <tr key={c.id} onClick={() => setDetail({ kind: "command", item: c })}>
+                      <tr key={c.id} onClick={() => openDetail({ kind: "command", item: c })}>
                         <td><TransportBadge t={c.transport} /></td>
                         <td className="name-cell"><Hi text={c.name} q={cmdQ} /></td>
                         <td className="format-cell">
@@ -568,7 +588,7 @@ export default function App() {
                               className="try-mini"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setDetail({ kind: "command", item: c });
+                                openDetail({ kind: "command", item: c });
                               }}
                             >
                               <Play size={11} /> Try
@@ -619,9 +639,9 @@ export default function App() {
                     key={e.id}
                     role="button"
                     tabIndex={0}
-                    onClick={() => setDetail({ kind: "effect", item: e })}
+                    onClick={() => openDetail({ kind: "effect", item: e })}
                     onKeyDown={(ev) => {
-                      if (ev.key === "Enter" || ev.key === " ") setDetail({ kind: "effect", item: e });
+                      if (ev.key === "Enter" || ev.key === " ") openDetail({ kind: "effect", item: e });
                     }}
                   >
                     <div className="effect-top">
@@ -670,7 +690,7 @@ export default function App() {
                   </thead>
                   <tbody>
                     {pagedReadings.map((r) => (
-                      <tr key={r.id} onClick={() => setDetail({ kind: "reading", item: r })}>
+                      <tr key={r.id} onClick={() => openDetail({ kind: "reading", item: r })}>
                         <td><span className="badge badge-other">{r.transport.replace("ble-notify", "notify")}</span></td>
                         <td className="name-cell"><Hi text={r.name} q={rdQ} /></td>
                         <td className="mono op-cell"><Hi text={r.op} q={rdQ} /></td>
@@ -758,7 +778,7 @@ export default function App() {
                 <thead><tr><th>Property</th><th>Kind</th><th>Meaning</th><th>Carrier</th><th>Split</th></tr></thead>
                 <tbody>
                   {statusProps.map((s) => (
-                    <tr key={s.id} onClick={() => setDetail({ kind: "status", item: s })}>
+                    <tr key={s.id} onClick={() => openDetail({ kind: "status", item: s })}>
                       <td><span className="sku"><Hi text={s.property} q={stQ} /></span></td>
                       <td><span className="badge badge-mode">{s.kind}</span></td>
                       <td className="wide"><Hi text={s.meaning} q={stQ} /></td>
@@ -779,13 +799,33 @@ export default function App() {
         <span className="muted">Not affiliated with Govee. Research use.</span>
       </footer>
 
-      <Drawer detail={detail} onClose={() => setDetail(null)} onOpenDoc={openDoc} onCopied={copy} />
+      <Drawer
+        detail={detail}
+        data={data}
+        onClose={() => {
+          setDetail(null);
+          setDetailBack(null);
+        }}
+        onOpenDoc={openDoc}
+        onOpenDetail={openChildDetail}
+        onBack={detailBack ? backDetail : undefined}
+        backLabel={
+          detailBack
+            ? detailBack.kind === "device"
+              ? `Back to ${detailBack.item.sku}`
+              : detailBack.kind === "command"
+                ? `Back to ${detailBack.item.name}`
+                : "Back"
+            : undefined
+        }
+        onCopied={copy}
+      />
       <CommandPalette
         data={data}
         open={paletteOpen}
         onClose={() => setPaletteOpen(false)}
         onSelect={(d) => {
-          setDetail(d);
+          openDetail(d);
           setPaletteOpen(false);
         }}
         onOpenDoc={openDoc}
