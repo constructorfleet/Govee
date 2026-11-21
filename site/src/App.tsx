@@ -669,7 +669,7 @@ export default function App() {
                         <GitBranch size={14} /> GitHub
                       </a>
                     </div>
-                    <Markdown md={activeDoc.md} />
+                    <Markdown md={activeDoc.md.replace(/^#\s+.+\n+/, "")} />
                   </>
                 ) : (
                   <Empty text="No doc selected." />
